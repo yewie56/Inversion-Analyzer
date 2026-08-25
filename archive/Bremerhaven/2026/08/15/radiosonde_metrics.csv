@@ -1,0 +1,5 @@
+time,radiosonde_index,radiosonde_max_positive_gradient_K_per_100m,radiosonde_inversion_deltaT_K,radiosonde_inversion_depth_m,radiosonde_inversion_base_m,radiosonde_inversion_top_m,radiosonde_profile_points,radiosonde_binned_levels
+2026-08-15 02:00:00+02:00,0.0,0.0,0.0,0.0,0.0,0.0,318,101
+2026-08-15 08:00:00+02:00,0.0,0.0,0.0,0.0,0.0,0.0,349,101
+2026-08-15 14:00:00+02:00,0.0,0.0,0.0,0.0,0.0,0.0,290,101
+2026-08-15 20:00:00+02:00,0.0,0.0,0.0,0.0,0.0,0.0,354,101

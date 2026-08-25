@@ -1,0 +1,52 @@
+{
+  "selected_date": "2026-08-11",
+  "model_requested": "icon_d2",
+  "endpoint": "https://historical-forecast-api.open-meteo.com/v1/forecast",
+  "pressure_levels_requested_hPa": [
+    1000,
+    975,
+    950,
+    925,
+    900,
+    850
+  ],
+  "used_for_primary_index": false,
+  "used_for_kit_index": false,
+  "fallback_to_other_model": false,
+  "algorithm_version": "ICON_D2_PROFILE_AGL_2M_v1",
+  "attempt_used": "FULL",
+  "pressure_levels_used_hPa": [
+    1000,
+    975,
+    950,
+    925,
+    900,
+    850
+  ],
+  "missing_pressure_levels": [],
+  "returned_hourly_non_null_counts": {
+    "time": 24,
+    "temperature_2m": 24,
+    "temperature_1000hPa": 24,
+    "geopotential_height_1000hPa": 24,
+    "temperature_975hPa": 24,
+    "geopotential_height_975hPa": 24,
+    "temperature_950hPa": 24,
+    "geopotential_height_950hPa": 24,
+    "temperature_925hPa": 24,
+    "geopotential_height_925hPa": 24,
+    "temperature_900hPa": 24,
+    "geopotential_height_900hPa": 24,
+    "temperature_850hPa": 24,
+    "geopotential_height_850hPa": 24
+  },
+  "latitude_returned": 49.54,
+  "longitude_returned": 8.58,
+  "elevation_returned": 102.0,
+  "timezone_returned": "Europe/Berlin",
+  "hourly_rows": 24,
+  "valid_metric_rows": 24,
+  "positive_index_rows": 10,
+  "raw_profile_rows": 168,
+  "attempt_errors": []
+}

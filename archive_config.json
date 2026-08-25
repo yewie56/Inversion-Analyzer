@@ -1,0 +1,25 @@
+{
+  "archive_dir": "archive",
+  "auto_fetch_missing": true,
+  "remote_archive": {
+    "enabled": false,
+    "provider": "github_raw",
+    "owner": "",
+    "repository": "",
+    "branch": "main",
+    "archive_path": "archive"
+  },
+  "github_actions": {
+    "daily_fetch_local_hour": 22,
+    "retry_delay_hours": 3,
+    "max_retries": 5,
+    "retry_only_missing": true,
+    "required_sources": [
+      "dwd",
+      "profile",
+      "sonde",
+      "kit_mast",
+      "icon_d2"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+[
+  {
+    "url": "https://opendata.dwd.de/weather/weather_reports/radiosonde/trajectories/Sondenflug_20260825000000_10618_20260824224540.kmz",
+    "filename": "Sondenflug_20260825000000_10618_20260824224540.kmz",
+    "nominal_time": "20260825000000",
+    "launch_time": "20260824224540",
+    "points": 4906,
+    "start_lat": 49.6927,
+    "start_lon": 7.3263,
+    "start_alt_m": 0.0,
+    "end_lat": 49.91848,
+    "end_lon": 8.17066,
+    "end_alt_m": 597.0,
+    "min_alt_m": 0.0,
+    "max_alt_m": 36029.2,
+    "horizontal_drift_km": 65.58864800724864,
+    "temperature_profile_available": false,
+    "used_for_inversion_index": false,
+    "from_cache": false
+  },
+  {
+    "url": "https://opendata.dwd.de/weather/weather_reports/radiosonde/trajectories/Sondenflug_20260825060000_10618_20260825044520.kmz",
+    "filename": "Sondenflug_20260825060000_10618_20260825044520.kmz",
+    "nominal_time": "20260825060000",
+    "launch_time": "20260825044520",
+    "points": 4955,
+    "start_lat": 49.6927,
+    "start_lon": 7.3263,
+    "start_alt_m": 0.0,
+    "end_lat": 49.99618,
+    "end_lon": 7.60266,
+    "end_alt_m": 872.6,
+    "min_alt_m": 0.0,
+    "max_alt_m": 36140.3,
+    "horizontal_drift_km": 39.13370213243865,
+    "temperature_profile_available": false,
+    "used_for_inversion_index": false,
+    "from_cache": false
+  }
+]

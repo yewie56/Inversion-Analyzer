@@ -1,0 +1,31 @@
+{
+  "active": "Viernheim",
+  "locations": {
+    "Viernheim": {
+      "name": "Viernheim",
+      "latitude": 49.5412,
+      "longitude": 8.5785,
+      "timezone": "Europe/Berlin",
+      "elevation_m": 100.0,
+      "country_code": "DE",
+      "admin1": "Hessen",
+      "geocoding_source": "legacy/manual",
+      "dwd_max_distance_km": 50.0,
+      "radiosonde_wmo": "10618",
+      "kit_mast_enabled": true
+    },
+    "Bremerhaven": {
+      "name": "Bremerhaven",
+      "latitude": 53.545833,
+      "longitude": 8.58,
+      "timezone": "Europe/Berlin",
+      "elevation_m": 2.6,
+      "country_code": "DE",
+      "admin1": "Bremen",
+      "geocoding_source": "Bremerhaven city reference",
+      "dwd_max_distance_km": 50.0,
+      "radiosonde_wmo": "10618",
+      "kit_mast_enabled": true
+    }
+  }
+}

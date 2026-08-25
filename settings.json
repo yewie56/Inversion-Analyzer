@@ -1,0 +1,23 @@
+{
+  "geometry": "1450x900",
+  "user_mode": "normal",
+  "display": {
+    "model": true,
+    "gradient": true,
+    "icon_d2": true,
+    "kit": true,
+    "radiosonde": true,
+    "legend": true,
+    "figure_info": true
+  },
+  "sources": {
+    "icon_d2_update": true,
+    "kit_update": true,
+    "radiosonde_update": true
+  },
+  "advanced": {
+    "show_side_panel": true,
+    "show_log": true
+  },
+  "version": "0.14.0"
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "launch_time": "2026-08-24T02:00:00+02:00",
+    "profile_points": 351,
+    "binned_levels": 101,
+    "index": 2.0395833333333337,
+    "deltaT_K": 0.35000000000000053,
+    "depth_m": 50.0,
+    "used_for_inversion_index": true,
+    "source": "DWD CDC high_resolution"
+  },
+  {
+    "launch_time": "2026-08-24T08:00:00+02:00",
+    "profile_points": 375,
+    "binned_levels": 101,
+    "index": 3.1250000000000004,
+    "deltaT_K": 0.7000000000000011,
+    "depth_m": 75.0,
+    "used_for_inversion_index": true,
+    "source": "DWD CDC high_resolution"
+  },
+  {
+    "launch_time": "2026-08-24T14:00:00+02:00",
+    "profile_points": 285,
+    "binned_levels": 101,
+    "index": 0.883333333333344,
+    "deltaT_K": 0.20000000000000107,
+    "depth_m": 50.0,
+    "used_for_inversion_index": true,
+    "source": "DWD CDC high_resolution"
+  },
+  {
+    "launch_time": "2026-08-24T20:00:00+02:00",
+    "profile_points": 290,
+    "binned_levels": 101,
+    "index": 1.400000000000003,
+    "deltaT_K": 0.40000000000000036,
+    "depth_m": 100.0,
+    "used_for_inversion_index": true,
+    "source": "DWD CDC high_resolution"
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "app_version": "0.12.4",
+  "location": {
+    "name": "Viernheim",
+    "slug": "Viernheim"
+  },
+  "date": "2026-08-07",
+  "saved_at": "2026-08-25T13:01:38.717740+02:00",
+  "run_id": "20260825_130135",
+  "quality_class": "C",
+  "quality_text": "Vertikalprofil vorhanden; DWD-Bodenmessung für gewählten Tag fehlt | ICON-D2 Historical Forecast separat",
+  "complete": false,
+  "missing_sources": [
+    "dwd",
+    "sonde",
+    "kit_mast"
+  ],
+  "attempts": 1,
+  "last_attempt": "2026-08-25T13:01:38.717740+02:00",
+  "attempt_reason": "EXPLICIT_UPDATE",
+  "files": {
+    "dwd_data": null,
+    "profile_data": "openmeteo_profile.csv",
+    "result_data": "inversion_model.csv",
+    "kit_mast_metrics": null,
+    "icon_d2_data": "icon_d2.csv",
+    "icon_d2_profile_data": "icon_d2_profile.csv",
+    "station_info": "station_info.json",
+    "sonde_profiles": "sonde_profiles.json",
+    "sonde_flights": "sonde_flights.json",
+    "kit_mast_info": "kit_mast_info.json",
+    "kit_mast_data": "kit_mast_data.json",
+    "icon_d2_info": "icon_d2_info.json",
+    "source_status": "source_status.json"
+  }
+}
