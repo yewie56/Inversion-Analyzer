@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
-import json, threading, traceback, textwrap
+import json, threading, traceback, textwrap, os
 from pathlib import Path
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
@@ -16,12 +16,14 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from .config import APP_NAME,VERSION,TIMEZONE,OUTPUT_DIR,SETTINGS_FILE,PRESSURE_LEVELS
 from .pipeline import load_data_for_date
 from .archive_service import load_archive_day, update_day, bundle_has_plot_data
-from .archive import load_bundle, missing_sources
+from .archive import load_bundle, missing_sources, read_origin_marker
 from .config import LOCATION_NAME, LOCATION_SLUG, TIMEZONE, LAT, LON
 from .inversion_engine import inversion_label,calculate_profile_metrics
 from .weather_sources import haversine_km
 from .logger import LOGGER
 from .location_service import add_and_activate_location, list_locations, LocationError
+from .runtime_location import activate_runtime_location
+from .remote_archive import fetch_remote_day
 
 class InversionApp(tk.Tk):
     DEFAULT_SETTINGS = {
@@ -55,6 +57,9 @@ class InversionApp(tk.Tk):
         self.loading=False
         self.selected_date=datetime.now(ZoneInfo(TIMEZONE)).date()
         self.settings_data={}
+        self.data_origin='Noch keine Daten'
+        self.data_origin_detail=''
+        self.source_origin_map={}
         self._nav_press_after_id=None
         self._nav_long_press_fired=False
         self._nav_press_delta=0
@@ -155,11 +160,11 @@ class InversionApp(tk.Tk):
         top.columnconfigure(0,weight=1)
         top.columnconfigure(1,weight=0)
 
-        ttk.Label(
-            top,
-            text=f'Tägliche Inversionskurve – {LOCATION_NAME}',
+        self.title_label=ttk.Label(
+            top,text=f'Tägliche Inversionskurve – {LOCATION_NAME}',
             font=('Segoe UI',16,'bold')
-        ).grid(row=0,column=0,sticky='w')
+        )
+        self.title_label.grid(row=0,column=0,sticky='w')
 
         self.time_label=ttk.Label(top,text='Noch keine Daten geladen')
         self.time_label.grid(row=0,column=1,sticky='e',padx=(12,0))
@@ -476,11 +481,26 @@ class InversionApp(tk.Tk):
             wraplength=540,justify='left'
         ).grid(row=0,column=0,columnspan=2,sticky='w',pady=(0,7))
 
-        ttk.Label(
-            location_box,
-            text='Neuen Ort nur mit Ortsnamen eingeben:'
-        ).grid(row=1,column=0,columnspan=2,sticky='w')
-
+        active_key,known_locations=list_locations()
+        ttk.Label(location_box,text='Vorhandenen Ort auswählen:').grid(
+            row=1,column=0,columnspan=2,sticky='w'
+        )
+        self.location_select_var=tk.StringVar(value=active_key or LOCATION_NAME)
+        location_combo=ttk.Combobox(
+            location_box,textvariable=self.location_select_var,
+            values=list(known_locations.keys()),state='readonly',font=('Segoe UI',11)
+        )
+        location_combo.grid(row=2,column=0,sticky='ew',ipady=5,padx=(0,6),pady=(5,7))
+        ttk.Button(
+            location_box,text='Ort wechseln',style='Touch.TButton',
+            command=lambda:self._switch_location_runtime(self.location_select_var.get(),win)
+        ).grid(row=2,column=1,sticky='ew',pady=(5,7))
+        ttk.Separator(location_box,orient='horizontal').grid(
+            row=3,column=0,columnspan=2,sticky='ew',pady=(3,8)
+        )
+        ttk.Label(location_box,text='Neuen Ort nur mit Ortsnamen eingeben:').grid(
+            row=4,column=0,columnspan=2,sticky='w'
+        )
         self.location_name_var=tk.StringVar(value='')
         location_entry=ttk.Entry(
             location_box,
@@ -488,7 +508,7 @@ class InversionApp(tk.Tk):
             font=('Segoe UI',11)
         )
         location_entry.grid(
-            row=2,column=0,sticky='ew',ipady=7,padx=(0,6),pady=(5,5)
+            row=5,column=0,sticky='ew',ipady=7,padx=(0,6),pady=(5,5)
         )
 
         def add_location_from_name():
@@ -505,41 +525,29 @@ class InversionApp(tk.Tk):
                     'Ort konnte nicht angelegt werden',str(exc),parent=win
                 )
                 return
-            text=(
-                f"Ort gespeichert und aktiviert:\\n\\n"
-                f"{resolved['name']}\\n"
-                f"{resolved['latitude']:.5f}, {resolved['longitude']:.5f}\\n"
-                f"Höhe: {resolved.get('elevation_m',0):.1f} m\\n"
-                f"Zeitzone: {resolved.get('timezone','–')}\\n"
-                f"Region: {resolved.get('admin1','–')}\\n\\n"
-                "Das Archiv dieses Ortes wird automatisch als eigener "
-                "Unterordner geführt. Vorhandene Archive anderer Orte bleiben "
-                "unverändert.\\n\\n"
-                "Damit alle bereits importierten Python-Module die neuen "
-                "Koordinaten verwenden, das Programm bitte jetzt neu starten."
-            )
-            messagebox.showinfo('Ort aktiviert',text,parent=win)
             self.log(
-                f"Ort '{key}' in locations.json aktiviert. "
-                "Programmneustart erforderlich."
+                f"Neuer Ort '{key}' gespeichert: "
+                f"{resolved['latitude']:.5f}, {resolved['longitude']:.5f}"
             )
+            self._switch_location_runtime(key,win)
 
         ttk.Button(
             location_box,
             text='Ort hinzufügen / aktivieren',
             style='Touch.TButton',
             command=add_location_from_name
-        ).grid(row=2,column=1,sticky='ew',pady=(5,5))
+        ).grid(row=5,column=1,sticky='ew',pady=(5,5))
 
         ttk.Label(
             location_box,
             text=(
                 'Die Koordinaten, Höhe und Zeitzone werden automatisch über '
                 'die Ortsauflösung bestimmt. DWD-Bodenstationen werden nur '
-                'innerhalb des für den Ort definierten Radius verwendet.'
+                'innerhalb des für den Ort definierten Radius verwendet. '
+                'Der Ortswechsel erfolgt sofort ohne Programmneustart.'
             ),
             wraplength=540,justify='left'
-        ).grid(row=3,column=0,columnspan=2,sticky='w',pady=(4,0))
+        ).grid(row=6,column=0,columnspan=2,sticky='w',pady=(4,0))
 
         mode_box=ttk.LabelFrame(host,text='Bedienmodus',padding=10)
         mode_box.grid(row=1,column=0,sticky='ew',pady=(0,10))
@@ -654,6 +662,20 @@ class InversionApp(tk.Tk):
         ).grid(row=7,column=0,sticky='ew',pady=(4,0))
     def _status(self,p):
         b=ttk.LabelFrame(p,text='Aktueller Status',padding=10); b.grid(row=0,column=0,sticky='ew',pady=(0,8)); b.columnconfigure(1,weight=1); self.status_var=tk.StringVar(value='Bereit'); self.station_var=tk.StringVar(value='–'); ttk.Label(b,text='Status:').grid(row=0,column=0,sticky='w'); ttk.Label(b,textvariable=self.status_var).grid(row=0,column=1,sticky='w',padx=(8,0)); ttk.Label(b,text='DWD-Station:').grid(row=1,column=0,sticky='nw',pady=(5,0)); ttk.Label(b,textvariable=self.station_var,wraplength=340).grid(row=1,column=1,sticky='w',padx=(8,0),pady=(5,0))
+        self.data_origin_var=tk.StringVar(value='Noch keine Daten')
+        ttk.Label(
+            b,
+            text='Datenherkunft:',
+            font=('Segoe UI',9,'bold')
+        ).grid(row=2,column=0,sticky='nw',pady=(7,0))
+        ttk.Label(
+            b,
+            textvariable=self.data_origin_var,
+            wraplength=330,
+            justify='left'
+        ).grid(row=2,column=1,sticky='ew',padx=(8,0),pady=(7,0))
+
+
     def _quality_class_definitions(self):
         return {
             'A': 'sehr gute Datenbasis: geeignete Bodenbeobachtung + zwei unabhängige ortsbezogene Vertikalprofile',
@@ -739,8 +761,10 @@ class InversionApp(tk.Tk):
         max_text=self.max_var.get() if hasattr(self,'max_var') else '–'
         min_text=self.min_var.get() if hasattr(self,'min_var') else '–'
 
+        origin=getattr(self,'data_origin_detail','') or getattr(self,'data_origin','–')
         lines=[
             f"Datenqualität {qclass} — {qtext}",
+            f"Datenherkunft: {origin}",
             f"Status: {status} | DWD-Station: {station}",
             f"Aktuell: {now_text}",
             f"Maximum: {max_text}",
@@ -760,8 +784,8 @@ class InversionApp(tk.Tk):
             ) or [line]
             wrapped.extend(parts)
 
-        if len(wrapped) > 7:
-            wrapped = wrapped[:7]
+        if len(wrapped) > 8:
+            wrapped = wrapped[:8]
             if len(wrapped[-1]) > 130:
                 wrapped[-1] = wrapped[-1][:127] + '...'
         return wrapped
@@ -901,19 +925,23 @@ class InversionApp(tk.Tk):
             return
 
         self.dwd_state_var.set(
-            self._status_text(self.bundle.source_status.get('dwd'))
+            self._status_text(self.bundle.source_status.get('dwd'))+
+            f"\nHerkunft: {self._source_origin_text('dwd')}"
         )
         self.profile_state_var.set(
-            self._status_text(self.bundle.source_status.get('profile'))
+            self._status_text(self.bundle.source_status.get('profile'))+
+            f"\nHerkunft: {self._source_origin_text('profile')}"
         )
         sonde_text=self._status_text(self.bundle.source_status.get('sonde'))
         if not self.source_vars['radiosonde_update'].get():
             sonde_text='ABRUF DEAKTIVIERT – vorhandenes Archiv bleibt erhalten\n' + sonde_text
+        sonde_text += f"\nHerkunft: {self._source_origin_text('sonde')}"
         self.sonde_state_var.set(sonde_text)
 
         kit_text=self._status_text(self.bundle.source_status.get('kit_mast'))
         if not self.source_vars['kit_update'].get():
             kit_text='ABRUF DEAKTIVIERT – vorhandenes Archiv bleibt erhalten\n' + kit_text
+        kit_text += f"\nHerkunft: {self._source_origin_text('kit_mast')}"
         self.kit_state_var.set(kit_text)
 
         icon_status_text = self._status_text(
@@ -967,6 +995,76 @@ class InversionApp(tk.Tk):
         self.log_text.configure(yscrollcommand=sb.set)
     def log(self,text): self.after(0,self._append_log,f"[{datetime.now(ZoneInfo(TIMEZONE)):%H:%M:%S}] {text}\n")
     def _append_log(self,line): self.log_text.configure(state='normal'); self.log_text.insert('end',line); self.log_text.see('end'); self.log_text.configure(state='disabled')
+    def _origin_label(self,origin):
+        return {
+            'LOCAL_ARCHIVE':'Lokales Archiv',
+            'LOCAL_ARCHIVE_PARTIAL':'Lokales Archiv (unvollständig)',
+            'LOCAL_ARCHIVE_COMPLETE':'Lokales Archiv',
+            'LOCAL_ARCHIVE_FROM_GITHUB':'Lokales Archiv – ursprünglich aus GitHub',
+            'LOCAL_ARCHIVE_FROM_GITHUB_PARTIAL':'Lokales Archiv – ursprünglich aus GitHub (unvollständig)',
+            'LOCAL_ARCHIVE_FROM_ONLINE':'Lokales Archiv – zuletzt online aktualisiert',
+            'LOCAL_ARCHIVE_FROM_ONLINE_PARTIAL':'Lokales Archiv – zuletzt online aktualisiert (unvollständig)',
+            'GITHUB_ARCHIVE':'GitHub-Archiv',
+            'UPDATED_SAFE_MERGE':'Online-Update + Safe-Merge',
+        }.get(str(origin),str(origin or 'Unbekannt'))
+
+    def _set_data_origin(self,origin,manifest=None):
+        self.data_origin=self._origin_label(origin)
+        marker=read_origin_marker(self.selected_date) or {}
+        sm=dict(marker.get('source_map') or {})
+        if origin=='GITHUB_ARCHIVE':
+            sm={k:'GitHub-Archiv' for k in ('dwd','profile','sonde','kit_mast','icon_d2')}
+        elif not sm:
+            sm={k:'Lokales Archiv' for k in ('dwd','profile','sonde','kit_mast','icon_d2')}
+        self.source_origin_map=sm
+        saved=(manifest or {}).get('saved_at','–')
+        self.data_origin_detail=f"{self.data_origin} | Archivstand: {saved}"
+        self.data_origin_var.set(self.data_origin_detail)
+
+    def _source_origin_text(self,key):
+        return self.source_origin_map.get(key,self.data_origin or '–')
+
+    def _switch_location_runtime(self,key,settings_window=None):
+        global APP_NAME,VERSION,TIMEZONE,OUTPUT_DIR,SETTINGS_FILE,PRESSURE_LEVELS
+        global LOCATION_NAME,LOCATION_SLUG,LAT,LON
+        global load_data_for_date,load_archive_day,update_day,bundle_has_plot_data
+        global load_bundle,missing_sources,read_origin_marker,haversine_km
+        global inversion_label,calculate_profile_metrics,fetch_remote_day
+        if self.loading:
+            messagebox.showwarning('Ortswechsel','Während eines Datenabrufs nicht möglich.',parent=settings_window or self)
+            return False
+        old_name=LOCATION_NAME
+        try:
+            mods=activate_runtime_location(key); c=mods['config']
+            APP_NAME=c.APP_NAME;VERSION=c.VERSION;TIMEZONE=c.TIMEZONE
+            OUTPUT_DIR=c.OUTPUT_DIR;SETTINGS_FILE=c.SETTINGS_FILE;PRESSURE_LEVELS=c.PRESSURE_LEVELS
+            LOCATION_NAME=c.LOCATION_NAME;LOCATION_SLUG=c.LOCATION_SLUG;LAT=c.LAT;LON=c.LON
+            a=mods['archive'];s=mods['archive_service'];p=mods['pipeline']
+            w=mods['weather_sources'];ie=mods['inversion_engine'];r=mods['remote_archive']
+            load_data_for_date=p.load_data_for_date;load_archive_day=s.load_archive_day
+            update_day=s.update_day;bundle_has_plot_data=s.bundle_has_plot_data
+            load_bundle=a.load_bundle;missing_sources=a.missing_sources;read_origin_marker=a.read_origin_marker
+            haversine_km=w.haversine_km;inversion_label=ie.inversion_label
+            calculate_profile_metrics=ie.calculate_profile_metrics;fetch_remote_day=r.fetch_remote_day
+            self.bundle=None;self.source_origin_map={};self.data_origin='Noch keine Daten';self.data_origin_detail=''
+            self.title_label.configure(text=f'Tägliche Inversionskurve – {LOCATION_NAME}')
+            self.title(f'{APP_NAME} – {LOCATION_NAME} – v{VERSION}')
+            self.selected_date=min(self.selected_date,datetime.now(ZoneInfo(TIMEZONE)).date())
+            self.date_var.set(self.selected_date.isoformat())
+            self.log(f"Ortswechsel ohne Neustart: {old_name} -> {LOCATION_NAME} ({LAT:.5f}, {LON:.5f})")
+            self.status_var.set(f'Ort gewechselt: {LOCATION_NAME}')
+            self.station_var.set('–');self.now_var.set('–');self.max_var.set('–');self.min_var.set('–')
+            self.data_origin_var.set('Noch keine Daten für neuen Ort geladen')
+            self.clear_plot(f'{LOCATION_NAME}: Daten werden geladen ...')
+            self.load_mode='archive'
+            if settings_window is not None: settings_window.destroy()
+            self.after(50,self.start_update)
+            return True
+        except Exception as exc:
+            LOGGER.exception('Ortswechsel fehlgeschlagen')
+            messagebox.showerror('Ortswechsel fehlgeschlagen',str(exc),parent=settings_window or self)
+            return False
+
     def start_archive_load(self):
         if self.loading:
             return
@@ -1054,17 +1152,17 @@ class InversionApp(tk.Tk):
                 self.after(0,self.finish_update,bundle,manifest,origin)
                 return
 
-            # No usable plot data in archive: clear previous day's chart first,
-            # then perform exactly one automatic update.
-            self.log(
-                f"Archiv für {self.selected_date} enthält keine darstellbaren "
-                "Plotdaten. Einmaliger automatischer Update-Abruf wird gestartet."
-            )
-            self.after(
-                0,self.clear_plot,
-                f'Daten für {self.selected_date} werden abgerufen ...'
-            )
-
+            self.log(f"Lokales Archiv für {self.selected_date} ohne Plotdaten. GitHub-Archiv wird geprüft.")
+            self.after(0,self.clear_plot,f'{LOCATION_NAME}: GitHub-Archiv wird geprüft ...')
+            remote_ok,remote_state=fetch_remote_day(self.selected_date,self.log)
+            if remote_ok:
+                rb,rm,ro=load_archive_day(self.selected_date,self.log)
+                if rb is not None and bundle_has_plot_data(rb):
+                    self.load_mode='archive'
+                    self.after(0,self.finish_update,rb,rm,'GITHUB_ARCHIVE')
+                    return
+            self.log(f"GitHub-Archiv nicht verwendbar ({remote_state}); direkter Online-Abruf.")
+            self.after(0,self.clear_plot,f'{LOCATION_NAME}: Wetterdaten werden online abgerufen ...')
             bundle2,manifest2,origin2=update_day(
                 self.selected_date,self.log,only_missing=False
             )
@@ -1156,6 +1254,7 @@ class InversionApp(tk.Tk):
         self.online_button.configure(state='normal')
         self.save_png_button.configure(state='normal')
         self.bundle=bundle
+        self._set_data_origin(origin,manifest)
         self._update_export_buttons()
 
         diag=self._normalize_bundle_for_display(bundle)

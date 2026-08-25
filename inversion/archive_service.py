@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
-from .archive import load_bundle,save_bundle,missing_sources,merge_bundles,bundle_diagnostics
+from .archive import load_bundle,save_bundle,missing_sources,missing_optional_sources,merge_bundles,bundle_diagnostics,read_origin_marker,write_origin_marker
 from .pipeline import load_data_for_date
 
 def bundle_has_plot_data(bundle):
@@ -28,16 +28,20 @@ f"KIT={diag['kit_rows']} | ICON-D2={diag['icon_rows']} | "
         f"ICON-Rohprofil={diag['icon_profile_rows']} | DWD={diag['dwd_rows']}"
     )
 
+    marker=read_origin_marker(selected_date) or {}
+    marker_origin=str(marker.get("origin","")).upper()
     miss=missing_sources(old)
+    if marker_origin=="GITHUB_ARCHIVE":
+        origin="LOCAL_ARCHIVE_FROM_GITHUB_PARTIAL" if miss else "LOCAL_ARCHIVE_FROM_GITHUB"
+    elif marker_origin=="ONLINE_UPDATE":
+        origin="LOCAL_ARCHIVE_FROM_ONLINE_PARTIAL" if miss else "LOCAL_ARCHIVE_FROM_ONLINE"
+    else:
+        origin="LOCAL_ARCHIVE_PARTIAL" if miss else "LOCAL_ARCHIVE"
     if miss:
-        log(
-            f"Archiv: {selected_date} geladen; unvollständig: {', '.join(miss)}. "
-            "Kein automatischer Internetabruf."
-        )
-        return old,manifest,"LOCAL_ARCHIVE_PARTIAL"
-
-    log(f"Archiv: {selected_date} lokal vollständig geladen.")
-    return old,manifest,"LOCAL_ARCHIVE"
+        log(f"Archiv: {selected_date} geladen; unvollständig: {', '.join(miss)}. Herkunft: {origin}.")
+        return old,manifest,origin
+    log(f"Archiv: {selected_date} lokal vollständig geladen. Herkunft: {origin}.")
+    return old,manifest,origin
 
 def update_day(selected_date,log_cb=None,only_missing=False,requested_sources=None):
     """
@@ -52,6 +56,14 @@ def update_day(selected_date,log_cb=None,only_missing=False,requested_sources=No
 
     if only_missing and old is not None:
         wanted=set(missing_sources(old))
+
+        # Optionale Zusatzquellen (Radiosonde, KIT) lösen standardmäßig
+        # keine Retry-Schleifen aus. Nur explizite Konfiguration aktiviert dies.
+        from .config import ARCHIVE_CONFIG
+        ga=ARCHIVE_CONFIG.get("github_actions",{})
+        if bool(ga.get("retry_optional_sources",False)):
+            wanted.update(missing_optional_sources(old))
+
         if requested is not None:
             wanted &= requested
         if not wanted:
@@ -88,6 +100,12 @@ def update_day(selected_date,log_cb=None,only_missing=False,requested_sources=No
             "increment_attempt":True
         },
         touched_sources=(wanted if wanted is not None else None)
+    )
+    touched=set(wanted) if wanted is not None else {"dwd","profile","sonde","kit_mast","icon_d2"}
+    write_origin_marker(
+        selected_date,"ONLINE_UPDATE",detail="Safe-Merge",
+        source_map={k:("Online-Update" if k in touched else "Lokales Archiv")
+                    for k in ("dwd","profile","sonde","kit_mast","icon_d2")}
     )
     return merged,manifest,"UPDATED_SAFE_MERGE"
 

@@ -2,13 +2,36 @@
 # -*- coding: utf-8 -*-
 """
 Inversionskurve.py
-Version: 0.15.3
+Version: 0.15.6
 Datum: 2026-08-24
 
 STARTDATEI: In Spyder nur diese Datei starten.
 
 Versionshistorie
 ----------------
+0.15.6 - GitHub-Completeness/Retry-Policy korrigiert:
+         KIT-Mast und DWD-Radiosonde sind jetzt echte optionale Zusatzquellen.
+         Sie beeinflussen complete=True/False nicht mehr und lösen standardmäßig
+         keine automatischen GitHub-Retries aus.
+         Kernquellen für Vollständigkeit: dwd, profile, icon_d2.
+         Optionale Quellen: sonde, kit_mast.
+         Manifeste speichern zusätzlich completion_sources, optional_sources
+         und optional_missing_sources.
+         Server-Logs weisen fehlende optionale Quellen separat aus.
+         Alte Konfigurationen mit required_sources werden kompatibel migriert.
+
+0.15.5 - GUI-Startfehler behoben:
+         Die neue Datenherkunftsanzeige in _status() verwendete versehentlich
+         die nicht existente Frame-Variable 'f' statt des Statusrahmens 'b'.
+         Dadurch brach v0.15.4 beim Start mit NameError ab.
+         Die Datenherkunft wird jetzt korrekt im Statusrahmen angezeigt.
+         Regressionstest schützt diesen Fehler künftig ab.
+
+0.15.4 - Datenherkunft + Ortswechsel ohne Neustart:
+         Datenherkunft im Diagrammfooter und im Advanced-Bereich.
+         GitHub-Archiv wird vor einem direkten Onlineabruf geprüft.
+         Vorhandene sowie neu geocodierte Orte werden ohne Neustart aktiviert.
+
 0.15.3 - Safe-Merge/Retry-Härtung für GitHub:
          Teilabrufe schreiben nur noch Dateien der tatsächlich berührten
          Quelle neu. Nicht angeforderte Archivdateien bleiben bytegenau

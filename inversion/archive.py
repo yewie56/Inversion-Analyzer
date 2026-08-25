@@ -30,6 +30,31 @@ def day_dir(selected_date):
 def manifest_path(selected_date):
     return day_dir(selected_date)/"manifest.json"
 
+def origin_marker_path(selected_date):
+    return day_dir(selected_date)/"_origin.json"
+
+def write_origin_marker(selected_date,origin,detail="",source_map=None):
+    d=day_dir(selected_date);d.mkdir(parents=True,exist_ok=True)
+    payload={
+        "origin":str(origin),"detail":str(detail or ""),
+        "recorded_at":datetime.now(ZoneInfo(TIMEZONE)).isoformat(),
+        "source_map":dict(source_map or {})
+    }
+    origin_marker_path(selected_date).write_text(
+        json.dumps(payload,indent=2,ensure_ascii=False,default=_json_default),
+        encoding="utf-8"
+    )
+    return payload
+
+def read_origin_marker(selected_date):
+    p=origin_marker_path(selected_date)
+    if not p.exists(): return None
+    try:
+        x=json.loads(p.read_text(encoding="utf-8"))
+        return x if isinstance(x,dict) else None
+    except Exception:
+        return None
+
 def archive_exists(selected_date):
     return manifest_path(selected_date).exists()
 
@@ -97,11 +122,49 @@ def source_ok(key,status):
         return state in ("OK","OK_CORE_RETRY")
     return state=="OK"
 
+def completion_sources():
+    """Quellen, die den Tagesbestand für GitHub/Retry als vollständig definieren."""
+    ga=ARCHIVE_CONFIG.get("github_actions",{})
+    configured=ga.get("completion_sources")
+    if isinstance(configured,list) and configured:
+        return [x for x in configured if x in SOURCE_KEYS]
+
+    # Rückwärtskompatibilität für alte archive_config.json.
+    legacy=ga.get("required_sources")
+    if isinstance(legacy,list) and legacy:
+        core=[x for x in legacy if x in SOURCE_KEYS and x not in ("sonde","kit_mast")]
+        if core:
+            return core
+    return ["dwd","profile","icon_d2"]
+
+
+def optional_sources():
+    """Zusatzquellen, die dokumentiert, aber nicht für complete benötigt werden."""
+    ga=ARCHIVE_CONFIG.get("github_actions",{})
+    configured=ga.get("optional_sources")
+    if isinstance(configured,list):
+        return [x for x in configured if x in SOURCE_KEYS]
+    return ["sonde","kit_mast"]
+
+
 def missing_sources(bundle, required=None):
-    if required is None:
-        required=ARCHIVE_CONFIG.get("github_actions",{}).get("required_sources",list(SOURCE_KEYS))
+    """
+    Fehlende Kernquellen.
+
+    Seit v0.15.6 bestimmen KIT-Mast und Radiosonde standardmäßig NICHT mehr,
+    ob ein Tagesbestand vollständig ist.
+    """
+    required=completion_sources() if required is None else required
     result=[]
     for k in required:
+        if not source_ok(k,bundle.source_status.get(k)):
+            result.append(k)
+    return result
+
+
+def missing_optional_sources(bundle):
+    result=[]
+    for k in optional_sources():
         if not source_ok(k,bundle.source_status.get(k)):
             result.append(k)
     return result
@@ -349,6 +412,7 @@ def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
     files["source_status"]=status_fn
 
     miss=missing_sources(bundle)
+    optional_miss=missing_optional_sources(bundle)
     now=datetime.now(ZoneInfo(TIMEZONE))
     attempts=int(previous.get("attempts",0))
     if attempt_meta and attempt_meta.get("increment_attempt",True):
@@ -371,7 +435,10 @@ def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
         "quality_class":bundle.quality_class,
         "quality_text":bundle.quality_text,
         "complete":len(miss)==0,
+        "completion_sources":completion_sources(),
         "missing_sources":miss,
+        "optional_sources":optional_sources(),
+        "optional_missing_sources":optional_miss,
         "attempts":attempts,
         "last_attempt": now.isoformat() if attempt_meta else previous.get("last_attempt"),
         "attempt_reason": (attempt_meta or {}).get("reason"),

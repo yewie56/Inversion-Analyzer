@@ -1,4 +1,4 @@
-Inversionskurve v0.15.3
+Inversionskurve v0.15.6
 =========================
 
 START WINDOWS-GUI
@@ -125,7 +125,7 @@ archive_config.json:
   "archive_path": "archive"
 }
 
-Diese v0.15.3-Implementierung verwendet dafür GitHub Raw und ist daher für ein
+Diese v0.15.6-Implementierung verwendet dafür GitHub Raw und ist daher für ein
 öffentlich lesbares Repository gedacht. Für private Repositories wird später
 der geplante laienfreundliche GitHub-Login/Setup-Assistent ergänzt.
 
@@ -142,12 +142,12 @@ ABHÄNGIGKEITEN
 ---------------
 pip install requests pandas numpy matplotlib bokeh
 
-v0.15.3 verändert die Berechnung der bestehenden Modell-, KIT- und ICON-D2-
+v0.15.6 verändert die Berechnung der bestehenden Modell-, KIT- und ICON-D2-
 Kurven nicht absichtlich. Schwerpunkt dieser Version ist Archivierung,
 Headless-Betrieb, Teil-Reparatur und GitHub-Ausführung.
 
 
-KORREKTUR v0.15.3
+KORREKTUR v0.15.6
 -----------------
 GUI:
 - -7 / -1 / +1 / +7: nur lokales Archiv
@@ -162,12 +162,12 @@ Neuabruf gelöscht. Neue Profile werden nach Zeitstempel ergänzt.
 ARCHIV AUS v0.12.0 WEITERVERWENDEN:
 Ja. Das Format bleibt kompatibel.
 
-Wenn v0.15.3 in einen neuen Ordner entpackt wird, bitte den vorhandenen
+Wenn v0.15.6 in einen neuen Ordner entpackt wird, bitte den vorhandenen
 Ordner "archive" aus dem v0.12.0-Projekt unverändert in den
-v0.15.3-Projektordner kopieren.
+v0.15.6-Projektordner kopieren.
 
 
-ICON-D2-KORREKTUR v0.15.3
+ICON-D2-KORREKTUR v0.15.6
 -------------------------
 Die bisherige ICON-D2-Auswertung betrachtete nur Druckflächen untereinander.
 Dadurch konnte eine bodennahe Inversion vollständig übersehen werden.
@@ -198,7 +198,7 @@ Für bereits archivierte Tage wird icon_d2_profile.csv erst beim nächsten
 expliziten "Update" ergänzt.
 
 
-KORREKTUR v0.15.3 – ARCHIVANZEIGE
+KORREKTUR v0.15.6 – ARCHIVANZEIGE
 ---------------------------------
 Beim Steppen wird weiterhin ausschließlich das lokale Archiv gelesen.
 
@@ -219,7 +219,7 @@ Das bestehende Archiv aus v0.12.0–v0.12.2 weiterverwenden.
 Es ist keine Archivkonvertierung erforderlich.
 
 
-STEPPING-LOGIK v0.15.3
+STEPPING-LOGIK v0.15.6
 ----------------------
 Beim Wechsel eines Tages:
 
@@ -248,7 +248,7 @@ werden.
 Der KIT-Archivschutz aus v0.12.1 bleibt unverändert aktiv.
 
 
-KORREKTUR v0.15.3
+KORREKTUR v0.15.6
 -----------------
 Behoben:
 AttributeError:
@@ -258,7 +258,7 @@ Die Quellenanzeige aktualisiert wieder:
 DWD Boden, Vertikalprofil, Idar-Oberstein, KIT 200-m-Mast und ICON-D2.
 
 
-NEU v0.15.3
+NEU v0.15.6
 -----------
 DATENQUELLEN-LOG IM TAGESARCHIV
 
@@ -282,7 +282,7 @@ FESTE KURVENFARBEN
 Für KIT und ICON-D2 wird keine automatische Matplotlib-Farbe mehr verwendet.
 
 
-NEU v0.15.3 – RADIOSONDE ALS MESSKURVE
+NEU v0.15.6 – RADIOSONDE ALS MESSKURVE
 --------------------------------------
 Quelle:
 DWD CDC Radiosonden, high_resolution
@@ -323,12 +323,12 @@ ICON-D2                      = grün
 Radiosonde Idar-Oberstein    = rot
 
 
-KORREKTUR v0.15.3 – RADIOSONDEN-PARSER/DIAGNOSE
+KORREKTUR v0.15.6 – RADIOSONDEN-PARSER/DIAGNOSE
 -----------------------------------------------
 Der DWD-Download selbst funktionierte in v0.13.0, aber ein reales ZIP konnte
 ohne sichtbare Parserdiagnose zu 0 Radiosondenprofilen führen.
 
-v0.15.3 protokolliert deshalb beim Radiosondenimport ausdrücklich:
+v0.15.6 protokolliert deshalb beim Radiosondenimport ausdrücklich:
 
 - Anzahl und Namen der ZIP-Member
 - Größe der Kandidaten
@@ -358,7 +358,7 @@ mit übernommen werden, damit die rund 100-MB-Datei nicht erneut geladen
 werden muss.
 
 
-KORREKTUR v0.15.3 – REALES DWD HIGH-RESOLUTION-FORMAT
+KORREKTUR v0.15.6 – REALES DWD HIGH-RESOLUTION-FORMAT
 -----------------------------------------------------
 Die Diagnose aus v0.13.1 zeigte den echten DWD-Header:
 
@@ -376,7 +376,7 @@ AE_FF
 AE_DD
 AE_RF
 
-v0.15.3 verwendet deshalb explizit:
+v0.15.6 verwendet deshalb explizit:
 
 AE_TT   = Lufttemperatur
 AE_P    = Luftdruck
@@ -417,7 +417,7 @@ durchprobiert.
 Der bestehende große Radiosonden-ZIP-Cache kann weiterverwendet werden.
 
 
-NEU v0.15.3 – DATENQUALITÄTSKLASSEN IM PLOT UND IN DER GUI
+NEU v0.15.6 – DATENQUALITÄTSKLASSEN IM PLOT UND IN DER GUI
 ----------------------------------------------------------
 Die Definition der Datenqualitätsklassen ist jetzt direkt in die Anzeige
 integriert.
@@ -447,7 +447,7 @@ passender Erklärung zurückgesetzt, damit keine alte Qualitätsanzeige
 irreführend stehen bleibt.
 
 
-NEU v0.15.3 – DATENQUALITÄT UNTER DER GRAFIK, KLASSENINFO PER KLICK
+NEU v0.15.6 – DATENQUALITÄT UNTER DER GRAFIK, KLASSENINFO PER KLICK
 -------------------------------------------------------------------
 ÄNDERUNGEN:
 - Keine Legende mehr in der Grafik
@@ -472,7 +472,7 @@ RÜCKSETZUNG:
   wird die Anzeige unter der Grafik wieder auf X mit passender Meldung gesetzt.
 
 
-NEU v0.15.3 – QUALITÄTSBEWERTUNG IN DER GESPEICHERTEN GRAFIK
+NEU v0.15.6 – QUALITÄTSBEWERTUNG IN DER GESPEICHERTEN GRAFIK
 -------------------------------------------------------------
 Die aktuelle Datenqualitätsbewertung befindet sich jetzt INNERHALB der
 Matplotlib-Figure unterhalb der X-Achse.
@@ -494,7 +494,7 @@ Die vollständige Klassendefinition öffnet sich weiterhin ausschließlich
 durch einen Klick in die Grafik in einem eigenen Fenster.
 
 
-NEU v0.15.3 – STATUSINFO MIT IN DER GRAFIK
+NEU v0.15.6 – STATUSINFO MIT IN DER GRAFIK
 ------------------------------------------
 Unterhalb der X-Achse werden jetzt innerhalb der Matplotlib-Figure zwei
 Informationsbereiche mit abgespeichert:
@@ -518,7 +518,7 @@ Zusätzlich:
   in die GUI-/Figure-Anzeige übernommen.
 
 
-NEU v0.15.3 – TAGESWERTE AUCH IN DER GRAFIK, LINKSBÜNDIG
+NEU v0.15.6 – TAGESWERTE AUCH IN DER GRAFIK, LINKSBÜNDIG
 --------------------------------------------------------
 Unterhalb der X-Achse werden jetzt linksbündig in der Figure angezeigt:
 
@@ -538,7 +538,7 @@ WICHTIG:
   Diagramm wesentlich kleiner zu machen.
 
 
-NEU v0.15.3 – PNG IMMER AKTIV
+NEU v0.15.6 – PNG IMMER AKTIV
 -----------------------------
 "PNG speichern" ist jetzt bewusst immer aktiv.
 
@@ -559,7 +559,7 @@ Zusätzlich werden Fehler beim PNG-Speichern in das Protokoll geschrieben
 und als Fehlermeldung angezeigt.
 
 
-NEU v0.15.3 – KURVENLEGENDE WIEDER DA + BREITERER INFOBEREICH
+NEU v0.15.6 – KURVENLEGENDE WIEDER DA + BREITERER INFOBEREICH
 -------------------------------------------------------------
 ÄNDERUNGEN:
 - Die Kurvenlegende ist wieder sichtbar.
@@ -585,7 +585,7 @@ wurde etwas verbreitert, damit die Informationen ruhiger und besser lesbar
 dargestellt werden können.
 
 
-NEU v0.15.3 – NORMAL / ADVANCED + ⋮-PANEL + TOUCH-GUI
+NEU v0.15.6 – NORMAL / ADVANCED + ⋮-PANEL + TOUCH-GUI
 ------------------------------------------------------
 NORMAL:
 - rechter Diagnosebereich ist vollständig ausgeblendet
@@ -629,7 +629,7 @@ Tkinter-Oberfläche in settings.json gehalten und können später von einer
 Android-Oberfläche semantisch übernommen werden.
 
 
-NEU v0.15.3 – MAUSRAD + LONG-PRESS FÜR TAGESNAVIGATION
+NEU v0.15.6 – MAUSRAD + LONG-PRESS FÜR TAGESNAVIGATION
 -------------------------------------------------------
 ⋮ EINSTELLUNGEN:
 - Unter Windows kann das Einstellungsfenster jetzt mit dem Mausrad gescrollt
@@ -649,7 +649,7 @@ Die Implementierung nutzt Press/Release-Events und ist damit bewusst bereits
 für spätere Touch-/Android-Bedienung vorbereitet.
 
 
-NEU v0.15.3 – ORTSNEUTRAL / MEHRERE ORTE
+NEU v0.15.6 – ORTSNEUTRAL / MEHRERE ORTE
 -----------------------------------------
 CODE-DATEINAMEN:
 - Inversionskurve.py
@@ -713,7 +713,7 @@ aktiv bleiben. Ihre räumliche Entfernung muss bei der Interpretation
 berücksichtigt werden.
 
 
-NEU v0.15.3 – ORTSNAME IM DIAGRAMMTITEL
+NEU v0.15.6 – ORTSNAME IM DIAGRAMMTITEL
 ----------------------------------------
 Im Diagrammtitel wird jetzt der aktive Ort mit angezeigt.
 
@@ -724,7 +724,7 @@ Das gilt auch für Leer-/Hinweisplots, damit ein gespeichertes PNG sofort
 erkennen lässt, für welchen Ort es erzeugt wurde.
 
 
-NEU v0.15.3 – SERVER- UND GITHUB-TESTSTUFE
+NEU v0.15.6 – SERVER- UND GITHUB-TESTSTUFE
 ==========================================
 
 Diese Version dient bewusst zuerst der Prüfung des Headless-Servers und der
@@ -806,7 +806,7 @@ periodisch; Inversion_Server.py entscheidet anhand archive_config.json, ob
 für einen Tag ein Retry bereits fällig ist.
 
 
-NEU v0.15.3 – NO-TOUCH SAFE-MERGE + FINALQUALITÄT + GITHUB-CACHE
+NEU v0.15.6 – NO-TOUCH SAFE-MERGE + FINALQUALITÄT + GITHUB-CACHE
 =================================================================
 
 NO-TOUCH-ARCHIVSCHUTZ
@@ -857,3 +857,64 @@ Aktualisiert auf:
     actions/cache@v6
 
 Damit werden Node-24-kompatible Action-Versionen verwendet.
+
+
+NEU v0.15.6 – DATENHERKUNFT + ORTSWECHSEL OHNE NEUSTART
+=========================================================
+Im Diagrammfooter und im Advanced-Bereich wird die Datenherkunft angezeigt.
+
+Ladereihenfolge:
+1. Lokales Archiv
+2. GitHub-Archiv yewie56/Inversion-Analyzer
+3. Direkter Online-Abruf
+
+Unter ⋮ -> Ort können vorhandene Orte sofort gewechselt werden. Auch ein
+neu geocodierter Ort wird ohne Programmneustart aktiviert.
+
+Lokale _origin.json-Dateien speichern die Herkunft, werden aber nicht in Git
+versioniert.
+
+
+NEU v0.15.6 – GUI-STARTFEHLER BEHOBEN
+======================================
+Fehler in v0.15.4:
+    NameError: name 'f' is not defined
+
+Ursache:
+Die neue Zeile Datenherkunft wurde in _status() an einen nicht existierenden
+Frame 'f' gebunden. Der Statusrahmen heißt dort 'b'.
+
+Korrektur:
+- Datenherkunft wird korrekt im Statusrahmen 'b' angezeigt.
+- Regressionstest prüft _status() auf diesen Fehler.
+
+
+NEU v0.15.6 – KERNQUELLEN UND OPTIONALE ZUSATZQUELLEN
+======================================================
+
+Kernquellen für GitHub-Vollständigkeit:
+    dwd
+    profile
+    icon_d2
+
+Optionale Zusatzquellen:
+    sonde
+    kit_mast
+
+Folgen:
+- Fehlende Radiosonde oder fehlendes KIT machen einen Tag NICHT mehr
+  unvollständig.
+- Nur wegen fehlender Radiosonde/KIT wird KEIN automatischer Retry gestartet.
+- Beim normalen Erstabruf werden die Zusatzquellen weiterhin mit abgerufen.
+- Fehlen sie, wird dies weiterhin transparent protokolliert.
+- manifest.json enthält jetzt:
+      completion_sources
+      missing_sources
+      optional_sources
+      optional_missing_sources
+- retry_optional_sources ist standardmäßig false.
+
+Rückwärtskompatibilität:
+Eine alte archive_config.json mit required_sources wird beim Einlesen
+automatisch so interpretiert, dass sonde und kit_mast nicht mehr zu den
+Kernquellen gehören.

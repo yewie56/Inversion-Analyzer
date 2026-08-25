@@ -3,7 +3,7 @@ from pathlib import Path
 import json, os, re
 
 APP_NAME = "Inversionskurve"
-VERSION = "0.15.3"
+VERSION = "0.15.6"
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = PROJECT_DIR / "output_inversion"
 LOG_DIR = PROJECT_DIR / "logs"
@@ -86,13 +86,37 @@ def load_archive_config():
         "archive_dir":"archive",
         "auto_fetch_missing":True,
         "remote_archive":{"enabled":False,"provider":"github_raw","owner":"","repository":"","branch":"main","archive_path":"archive"},
-        "github_actions":{"daily_fetch_local_hour":22,"retry_delay_hours":3,"max_retries":5,"retry_only_missing":True,
-                          "required_sources":["dwd","profile","sonde","kit_mast","icon_d2"]}
+        "github_actions":{
+            "daily_fetch_local_hour":22,
+            "retry_delay_hours":3,
+            "max_retries":5,
+            "retry_only_missing":True,
+            "completion_sources":["dwd","profile","icon_d2"],
+            "optional_sources":["sonde","kit_mast"],
+            "retry_optional_sources":False
+        }
     }
     try:
         data=json.loads(ARCHIVE_CONFIG_FILE.read_text(encoding="utf-8"))
         for k,v in default.items():
             if k not in data: data[k]=v
+
+        # v0.15.6: alte Konfigurationen mit "required_sources" werden
+        # kompatibel auf Kern- und optionale Quellen abgebildet.
+        ga=data.setdefault("github_actions",{})
+        dga=default["github_actions"]
+        legacy=ga.get("required_sources")
+        if "completion_sources" not in ga:
+            if isinstance(legacy,list):
+                ga["completion_sources"]=[
+                    x for x in legacy if x not in ("sonde","kit_mast")
+                ] or list(dga["completion_sources"])
+            else:
+                ga["completion_sources"]=list(dga["completion_sources"])
+        if "optional_sources" not in ga:
+            ga["optional_sources"]=list(dga["optional_sources"])
+        if "retry_optional_sources" not in ga:
+            ga["retry_optional_sources"]=False
         return data
     except Exception:
         return default

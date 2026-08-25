@@ -2,10 +2,10 @@
   "archive_dir": "archive",
   "auto_fetch_missing": true,
   "remote_archive": {
-    "enabled": false,
+    "enabled": true,
     "provider": "github_raw",
-    "owner": "",
-    "repository": "",
+    "owner": "yewie56",
+    "repository": "Inversion-Analyzer",
     "branch": "main",
     "archive_path": "archive"
   },
@@ -14,12 +14,15 @@
     "retry_delay_hours": 3,
     "max_retries": 5,
     "retry_only_missing": true,
-    "required_sources": [
+    "completion_sources": [
       "dwd",
       "profile",
-      "sonde",
-      "kit_mast",
       "icon_d2"
-    ]
+    ],
+    "optional_sources": [
+      "sonde",
+      "kit_mast"
+    ],
+    "retry_optional_sources": false
   }
 }

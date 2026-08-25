@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Inversion_Server.py – v0.15.3
+Inversion_Server.py – v0.15.6
 
 Headless collector / archive repair tool.
 
@@ -25,7 +25,8 @@ from inversion.config import (
     ACTIVE_LOCATION_KEY, LAT, LON, LOCATION_ELEVATION_M,
     DWD_MAX_STATION_DISTANCE_KM, _LOCATIONS
 )
-from inversion.archive import load_bundle,missing_sources,save_bundle,day_dir
+from inversion.archive import (load_bundle,missing_sources,missing_optional_sources,
+                               completion_sources,optional_sources,save_bundle,day_dir)
 from inversion.archive_service import update_day
 
 
@@ -68,9 +69,13 @@ def show_config():
         "project_dir":str(PROJECT_DIR),
         "archive_dir":str(ARCHIVE_DIR),
         "active_archive_root":str(active_archive_root()),
-        "required_sources":ARCHIVE_CONFIG.get(
-            "github_actions",{}
-        ).get("required_sources",[]),
+        "completion_sources":completion_sources(),
+        "optional_sources":optional_sources(),
+        "retry_optional_sources":bool(
+            ARCHIVE_CONFIG.get("github_actions",{}).get(
+                "retry_optional_sources",False
+            )
+        ),
     }
     print(json.dumps(data,indent=2,ensure_ascii=False))
     return 0
@@ -186,17 +191,33 @@ def selftest():
         str(probe_path)
     )
 
-    required=ARCHIVE_CONFIG.get("github_actions",{}).get("required_sources",[])
+    core=completion_sources()
+    optional=optional_sources()
     allowed={"dwd","profile","sonde","kit_mast","icon_d2"}
     check(
-        isinstance(required,list) and bool(required),
-        "required_sources konfiguriert",
-        ", ".join(required) if isinstance(required,list) else str(required)
+        isinstance(core,list) and bool(core),
+        "completion_sources konfiguriert",
+        ", ".join(core) if isinstance(core,list) else str(core)
     )
     check(
-        isinstance(required,list) and set(required).issubset(allowed),
-        "required_sources bekannt",
-        ", ".join(required) if isinstance(required,list) else str(required)
+        isinstance(core,list) and set(core).issubset(allowed),
+        "completion_sources bekannt",
+        ", ".join(core) if isinstance(core,list) else str(core)
+    )
+    check(
+        isinstance(optional,list) and set(optional).issubset(allowed),
+        "optional_sources bekannt",
+        ", ".join(optional) if isinstance(optional,list) else str(optional)
+    )
+    check(
+        not (set(core) & set(optional)),
+        "Kern- und optionale Quellen getrennt",
+        f"Kern={core} | Optional={optional}"
+    )
+    check(
+        "sonde" not in core and "kit_mast" not in core,
+        "KIT/Radiosonde beeinflussen complete nicht",
+        f"Kern={core}"
     )
 
     # Imports needed for the real collection pipeline.
@@ -301,9 +322,11 @@ def run_one(day,force=False):
     )
 
     miss=missing_sources(b) if b else ["ALL"]
+    optional_miss=missing_optional_sources(b) if b else []
     log(
         f"ERGEBNIS | Ort={LOCATION_NAME} | Datum={day} | "
-        f"origin={origin} | complete={not miss} | missing={miss}"
+        f"origin={origin} | complete={not miss} | missing={miss} | "
+        f"optional_missing={optional_miss}"
     )
     log(f"ARCHIV | {day_dir(day)}")
     return 0 if b else 2
@@ -340,8 +363,16 @@ def scheduled():
             continue
 
         miss=missing_sources(b)
+        optional_miss=missing_optional_sources(b)
         if not miss:
-            log(f"Scheduled: {day} vollständig.")
+            if optional_miss:
+                log(
+                    f"Scheduled: {day} vollständig (Kernquellen); "
+                    f"optionale Zusatzquellen fehlen: {optional_miss}. "
+                    "Kein Retry nur wegen optionaler Quellen."
+                )
+            else:
+                log(f"Scheduled: {day} vollständig.")
             continue
 
         attempts=int((m or {}).get("attempts",0))

@@ -3,7 +3,7 @@ from __future__ import annotations
 import json, requests
 from pathlib import Path
 from .config import ARCHIVE_CONFIG, ARCHIVE_DIR, LOCATION_SLUG, REQUEST_TIMEOUT
-from .archive import day_dir
+from .archive import day_dir, write_origin_marker
 
 def _raw_base(selected_date):
     cfg=ARCHIVE_CONFIG.get("remote_archive",{})
@@ -40,6 +40,10 @@ def fetch_remote_day(selected_date,log_cb=None):
             rr=requests.get(base+"/"+fn,timeout=REQUEST_TIMEOUT)
             rr.raise_for_status()
             (target/fn).write_bytes(rr.content)
+        write_origin_marker(
+            selected_date,"GITHUB_ARCHIVE",detail=base,
+            source_map={k:"GitHub-Archiv" for k in ("dwd","profile","sonde","kit_mast","icon_d2")}
+        )
         log(f"Remote-Archiv: Tagespaket {selected_date} heruntergeladen.")
         return True,"OK"
     except Exception as exc:
