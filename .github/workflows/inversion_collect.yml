@@ -36,17 +36,27 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
       - name: Install dependencies
         run: python -m pip install requests pandas numpy matplotlib bokeh
+
+      - name: Restore radiosonde cache
+        uses: actions/cache@v6
+        with:
+          path: cache/radiosonde_highres
+          # A stable base key plus restore prefix lets a cache produced by an
+          # earlier run be reused, while GitHub can save updated contents.
+          key: radiosonde-highres-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            radiosonde-highres-${{ runner.os }}-
 
       - name: Resolve locations
         id: locations

@@ -272,40 +272,84 @@ def append_source_log(selected_date,bundle,reason="SAVE"):
     return p
 
 
-def save_bundle(selected_date,bundle,attempt_meta=None):
+def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
     d=day_dir(selected_date)
     d.mkdir(parents=True,exist_ok=True)
-    files={}
-    files["dwd_data"]=_write_df(d/"dwd_ground.csv",bundle.dwd_data)
-    files["profile_data"]=_write_df(d/"openmeteo_profile.csv",bundle.profile_data)
-    files["result_data"]=_write_df(d/"inversion_model.csv",bundle.result_data)
-    files["sonde_profile_data"]=_write_df(d/"radiosonde_profile.csv",bundle.sonde_profile_data)
-    files["sonde_metrics"]=_write_df(d/"radiosonde_metrics.csv",bundle.sonde_metrics)
-    files["kit_mast_metrics"]=_write_df(d/"kit_mast.csv",bundle.kit_mast_metrics)
-    files["icon_d2_data"]=_write_df(d/"icon_d2.csv",bundle.icon_d2_data)
-    files["icon_d2_profile_data"]=_write_df(d/"icon_d2_profile.csv",bundle.icon_d2_profile_data)
 
-    json_items={
-        "station_info":bundle.station_info,
-        "sonde_profiles":bundle.sonde_profiles,
-        "sonde_flights":bundle.sonde_flights,
-        "kit_mast_info":bundle.kit_mast_info,
-        "kit_mast_data":bundle.kit_mast_data,
-        "icon_d2_info":bundle.icon_d2_info,
-        "source_status":{k:_status_dict(v) for k,v in bundle.source_status.items()},
+    mp=d/"manifest.json"
+    previous={}
+    if mp.exists():
+        try:
+            previous=json.loads(mp.read_text(encoding="utf-8"))
+        except Exception:
+            previous={}
+
+    # v0.15.3 NO-TOUCH:
+    # Bei einem Teil-/Retry-Lauf bleiben Dateien nicht angeforderter Quellen
+    # bytegenau unangetastet. Das Manifest übernimmt deren bisherige Dateinamen.
+    touched=set(touched_sources) if touched_sources is not None else set(SOURCE_KEYS)
+    files=dict(previous.get("files",{}) or {})
+
+    def write_source_df(source_key,file_key,filename,df):
+        if source_key not in touched:
+            return
+        written=_write_df(d/filename,df)
+        if written:
+            files[file_key]=written
+        elif file_key not in files:
+            files[file_key]=None
+
+    write_source_df("dwd","dwd_data","dwd_ground.csv",bundle.dwd_data)
+    write_source_df("profile","profile_data","openmeteo_profile.csv",bundle.profile_data)
+    write_source_df("profile","result_data","inversion_model.csv",bundle.result_data)
+    write_source_df("sonde","sonde_profile_data","radiosonde_profile.csv",bundle.sonde_profile_data)
+    write_source_df("sonde","sonde_metrics","radiosonde_metrics.csv",bundle.sonde_metrics)
+    write_source_df("kit_mast","kit_mast_metrics","kit_mast.csv",bundle.kit_mast_metrics)
+    write_source_df("icon_d2","icon_d2_data","icon_d2.csv",bundle.icon_d2_data)
+    write_source_df("icon_d2","icon_d2_profile_data","icon_d2_profile.csv",bundle.icon_d2_profile_data)
+
+    # Source-specific JSON is only rewritten when its source was touched.
+    source_json_items={
+        "dwd":{
+            "station_info":bundle.station_info,
+        },
+        "sonde":{
+            "sonde_profiles":bundle.sonde_profiles,
+            "sonde_flights":bundle.sonde_flights,
+        },
+        "kit_mast":{
+            "kit_mast_info":bundle.kit_mast_info,
+            "kit_mast_data":bundle.kit_mast_data,
+        },
+        "icon_d2":{
+            "icon_d2_info":bundle.icon_d2_info,
+        },
     }
-    for key,val in json_items.items():
-        fn=f"{key}.json"
-        (d/fn).write_text(json.dumps(val,indent=2,ensure_ascii=False,default=_json_default),encoding="utf-8")
-        files[key]=fn
+    for source_key,items in source_json_items.items():
+        if source_key not in touched:
+            continue
+        for key,val in items.items():
+            fn=f"{key}.json"
+            (d/fn).write_text(
+                json.dumps(val,indent=2,ensure_ascii=False,default=_json_default),
+                encoding="utf-8"
+            )
+            files[key]=fn
+
+    # source_status and manifest are intentionally global daily metadata and
+    # therefore may change after every retry.
+    status_fn="source_status.json"
+    (d/status_fn).write_text(
+        json.dumps(
+            {k:_status_dict(v) for k,v in bundle.source_status.items()},
+            indent=2,ensure_ascii=False,default=_json_default
+        ),
+        encoding="utf-8"
+    )
+    files["source_status"]=status_fn
 
     miss=missing_sources(bundle)
     now=datetime.now(ZoneInfo(TIMEZONE))
-    previous={}
-    mp=d/"manifest.json"
-    if mp.exists():
-        try: previous=json.loads(mp.read_text(encoding="utf-8"))
-        except Exception: previous={}
     attempts=int(previous.get("attempts",0))
     if attempt_meta and attempt_meta.get("increment_attempt",True):
         attempts += 1

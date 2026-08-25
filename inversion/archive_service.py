@@ -72,10 +72,22 @@ def update_day(selected_date,log_cb=None,only_missing=False,requested_sources=No
     merge_keys=wanted if wanted is not None else None
     merged=merge_bundles(old,fresh,merge_keys) if old is not None else fresh
 
+    # Nach dem Safe-Merge ist dies die belastbare Qualitätsbewertung des
+    # endgültigen Tagesbestands, nicht die des eventuell unvollständigen
+    # Teillaufs.
+    log(
+        f"FINALER TAGESBESTAND | Datenqualität {merged.quality_class}: "
+        f"{merged.quality_text}"
+    )
+
     manifest=save_bundle(
-        selected_date, merged,
-        {"reason":"EXPLICIT_UPDATE" if not only_missing else "MISSING_REPAIR",
-         "increment_attempt":True}
+        selected_date,
+        merged,
+        {
+            "reason":"EXPLICIT_UPDATE" if not only_missing else "MISSING_REPAIR",
+            "increment_attempt":True
+        },
+        touched_sources=(wanted if wanted is not None else None)
     )
     return merged,manifest,"UPDATED_SAFE_MERGE"
 

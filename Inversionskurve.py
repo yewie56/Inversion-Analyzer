@@ -2,13 +2,28 @@
 # -*- coding: utf-8 -*-
 """
 Inversionskurve.py
-Version: 0.15.2
+Version: 0.15.3
 Datum: 2026-08-24
 
 STARTDATEI: In Spyder nur diese Datei starten.
 
 Versionshistorie
 ----------------
+0.15.3 - Safe-Merge/Retry-Härtung für GitHub:
+         Teilabrufe schreiben nur noch Dateien der tatsächlich berührten
+         Quelle neu. Nicht angeforderte Archivdateien bleiben bytegenau
+         unverändert (No-Touch-Prinzip).
+         Nach dem Safe-Merge wird die Qualität des finalen Tagesbestands
+         ausdrücklich geloggt. Die Qualität eines reinen Teillaufs wird
+         als NICHT FINAL markiert.
+         GitHub Actions cacht cache/radiosonde_highres, damit die große
+         DWD-Radiosonden-ZIP bei wiederholtem NO_DATA_DATE nicht bei jedem
+         Runner neu geladen werden muss.
+         GitHub-Actions auf Node-24-kompatible Generationen aktualisiert:
+         checkout@v6, setup-python@v7, cache@v6.
+         Regressionstest prüft per SHA256, dass ein reiner Sonde-Retry
+         icon_d2_profile.csv nicht verändert.
+
 0.15.2 - Server-/GitHub-Testversion:
          Inversion_Server.py erhält --selftest, --show-config und
          --verify-archive. Der Selbsttest ist netzwerkfrei und schreibt keine

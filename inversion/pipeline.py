@@ -102,8 +102,18 @@ def load_data_for_date(selected_date, log_cb=None, only_sources=None):
     if bundle.source_status.get("icon_d2") and bundle.source_status["icon_d2"].state in ("OK","OK_CORE_RETRY"):
         bundle.quality_text += " | ICON-D2 Historical Forecast separat"
 
-    log(f"Datenqualität {bundle.quality_class}: {bundle.quality_text}")
-    log(f"RUN {run_id} | ENDE | Datenqualität {bundle.quality_class}")
+    is_partial=(wanted != ALL_SOURCES)
+    if is_partial:
+        log(
+            f"TEILLAUF-DATENQUALITÄT {bundle.quality_class} (NICHT FINAL): "
+            f"{bundle.quality_text}"
+        )
+        log(
+            f"RUN {run_id} | ENDE | Teillauf; finale Qualität erst nach Safe-Merge"
+        )
+    else:
+        log(f"Datenqualität {bundle.quality_class}: {bundle.quality_text}")
+        log(f"RUN {run_id} | ENDE | Datenqualität {bundle.quality_class}")
     log(separator)
     return bundle
 

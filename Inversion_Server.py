@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Inversion_Server.py – v0.15.2
+Inversion_Server.py – v0.15.3
 
 Headless collector / archive repair tool.
 
