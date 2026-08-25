@@ -35,7 +35,7 @@
     "name": "Radiosonde Idar-Oberstein 10618 / DWD 02385",
     "state": "NO_DATA_DATE",
     "message": "NO_DATA_DATE: DWD-Radiosondenprodukt enthält 2026-01-01 bis 2026-08-24; gewählter Tag 2026-08-25 ist nicht enthalten",
-    "last_attempt": "2026-08-25T17:33:08.522633+02:00",
+    "last_attempt": "2026-08-25T18:16:36.710264+02:00",
     "last_success": null,
     "http_status": null,
     "data_age_minutes": null,
