@@ -2,13 +2,23 @@
 # -*- coding: utf-8 -*-
 """
 Inversionskurve.py
-Version: 0.15.6
+Version: 0.15.7
 Datum: 2026-08-24
 
 STARTDATEI: In Spyder nur diese Datei starten.
 
 Versionshistorie
 ----------------
+0.15.7 - Kontinuierliche KIT-Langzeitarchivierung + 24h-Prüfung:
+         KIT wird bei jedem Scheduled-Lauf separat für den aktuellen Tag
+         abgerufen und kumulativ nach Zeitstempel gesichert.
+         Der Sicherungsabruf verändert weder complete noch Retry-Zähler/-Uhr.
+         Typische Messperiode wird aus Zeitstempeln als Median erkannt;
+         keine starre 24-Profil-Annahme.
+         Manifest/GUI zeigen Profilzahl, erwartete Profilzahl, Abdeckung,
+         ersten/letzten Zeitstempel und größte Lücke.
+         VOLLSTÄNDIG nur bei erwarteter Profilzahl und ohne große Lücke.
+
 0.15.6 - GitHub-Completeness/Retry-Policy korrigiert:
          KIT-Mast und DWD-Radiosonde sind jetzt echte optionale Zusatzquellen.
          Sie beeinflussen complete=True/False nicht mehr und lösen standardmäßig

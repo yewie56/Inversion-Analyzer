@@ -16,7 +16,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from .config import APP_NAME,VERSION,TIMEZONE,OUTPUT_DIR,SETTINGS_FILE,PRESSURE_LEVELS
 from .pipeline import load_data_for_date
 from .archive_service import load_archive_day, update_day, bundle_has_plot_data
-from .archive import load_bundle, missing_sources, read_origin_marker
+from .archive import load_bundle, missing_sources, read_origin_marker, kit_archive_coverage
 from .config import LOCATION_NAME, LOCATION_SLUG, TIMEZONE, LAT, LON
 from .inversion_engine import inversion_label,calculate_profile_metrics
 from .weather_sources import haversine_km
@@ -762,9 +762,11 @@ class InversionApp(tk.Tk):
         min_text=self.min_var.get() if hasattr(self,'min_var') else '–'
 
         origin=getattr(self,'data_origin_detail','') or getattr(self,'data_origin','–')
+        kit_archive=self._kit_archive_text() if getattr(self,'bundle',None) is not None else "KIT-Archiv: keine Daten"
         lines=[
             f"Datenqualität {qclass} — {qtext}",
             f"Datenherkunft: {origin}",
+            kit_archive,
             f"Status: {status} | DWD-Station: {station}",
             f"Aktuell: {now_text}",
             f"Maximum: {max_text}",
@@ -784,8 +786,8 @@ class InversionApp(tk.Tk):
             ) or [line]
             wrapped.extend(parts)
 
-        if len(wrapped) > 8:
-            wrapped = wrapped[:8]
+        if len(wrapped) > 9:
+            wrapped = wrapped[:9]
             if len(wrapped[-1]) > 130:
                 wrapped[-1] = wrapped[-1][:127] + '...'
         return wrapped
@@ -919,6 +921,28 @@ class InversionApp(tk.Tk):
             text += "\n" + detail
         return text
 
+    def _kit_archive_text(self):
+        bundle=getattr(self,'bundle',None)
+        if bundle is None:
+            return "KIT-Archiv: keine Daten"
+        cov=kit_archive_coverage(bundle,self.selected_date)
+        st=cov.get("status")
+        if st=="COMPLETE":
+            return (
+                f"KIT-Archiv: VOLLSTÄNDIG | {cov.get('profile_count')}/{cov.get('expected_profiles')} Profile | "
+                f"{cov.get('coverage_percent'):.1f}% | Takt≈{cov.get('cadence_minutes'):.1f} min | "
+                f"größte Lücke {cov.get('largest_gap_minutes'):.1f} min"
+            )
+        if st=="PARTIAL":
+            return (
+                f"KIT-Archiv: UNVOLLSTÄNDIG | {cov.get('profile_count')}/{cov.get('expected_profiles')} Profile | "
+                f"{cov.get('coverage_percent'):.1f}% | Takt≈{cov.get('cadence_minutes'):.1f} min | "
+                f"größte Lücke {cov.get('largest_gap_minutes'):.1f} min"
+            )
+        if st=="INSUFFICIENT_FOR_CADENCE":
+            return f"KIT-Archiv: {cov.get('profile_count')} Profil(e); noch keine sichere 24h-/Taktbewertung"
+        return "KIT-Archiv: keine Profile für diesen Tag"
+
     def _update_source_status(self):
         """Update all five source-status fields and refresh the source panel."""
         if getattr(self, 'bundle', None) is None:
@@ -942,6 +966,7 @@ class InversionApp(tk.Tk):
         if not self.source_vars['kit_update'].get():
             kit_text='ABRUF DEAKTIVIERT – vorhandenes Archiv bleibt erhalten\n' + kit_text
         kit_text += f"\nHerkunft: {self._source_origin_text('kit_mast')}"
+        kit_text += "\n" + self._kit_archive_text()
         self.kit_state_var.set(kit_text)
 
         icon_status_text = self._status_text(
@@ -1028,7 +1053,7 @@ class InversionApp(tk.Tk):
         global APP_NAME,VERSION,TIMEZONE,OUTPUT_DIR,SETTINGS_FILE,PRESSURE_LEVELS
         global LOCATION_NAME,LOCATION_SLUG,LAT,LON
         global load_data_for_date,load_archive_day,update_day,bundle_has_plot_data
-        global load_bundle,missing_sources,read_origin_marker,haversine_km
+        global load_bundle,missing_sources,read_origin_marker,kit_archive_coverage,haversine_km
         global inversion_label,calculate_profile_metrics,fetch_remote_day
         if self.loading:
             messagebox.showwarning('Ortswechsel','Während eines Datenabrufs nicht möglich.',parent=settings_window or self)
@@ -1044,6 +1069,7 @@ class InversionApp(tk.Tk):
             load_data_for_date=p.load_data_for_date;load_archive_day=s.load_archive_day
             update_day=s.update_day;bundle_has_plot_data=s.bundle_has_plot_data
             load_bundle=a.load_bundle;missing_sources=a.missing_sources;read_origin_marker=a.read_origin_marker
+            kit_archive_coverage=a.kit_archive_coverage
             haversine_km=w.haversine_km;inversion_label=ie.inversion_label
             calculate_profile_metrics=ie.calculate_profile_metrics;fetch_remote_day=r.fetch_remote_day
             self.bundle=None;self.source_origin_map={};self.data_origin='Noch keine Daten';self.data_origin_detail=''

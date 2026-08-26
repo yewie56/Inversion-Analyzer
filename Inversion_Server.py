@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Inversion_Server.py – v0.15.6
+Inversion_Server.py – v0.15.7
 
 Headless collector / archive repair tool.
 
@@ -26,7 +26,7 @@ from inversion.config import (
     DWD_MAX_STATION_DISTANCE_KM, _LOCATIONS
 )
 from inversion.archive import (load_bundle,missing_sources,missing_optional_sources,
-                               completion_sources,optional_sources,save_bundle,day_dir)
+                               completion_sources,optional_sources,kit_archive_coverage,save_bundle,day_dir)
 from inversion.archive_service import update_day
 
 
@@ -74,6 +74,11 @@ def show_config():
         "retry_optional_sources":bool(
             ARCHIVE_CONFIG.get("github_actions",{}).get(
                 "retry_optional_sources",False
+            )
+        ),
+        "kit_continuous_archive":bool(
+            ARCHIVE_CONFIG.get("github_actions",{}).get(
+                "kit_continuous_archive",True
             )
         ),
     }
@@ -219,6 +224,13 @@ def selftest():
         "KIT/Radiosonde beeinflussen complete nicht",
         f"Kern={core}"
     )
+    check(
+        bool(ARCHIVE_CONFIG.get("github_actions",{}).get(
+            "kit_continuous_archive",True
+        )),
+        "kontinuierliche KIT-Archivierung aktiviert",
+        "bei jedem Scheduled-Lauf; unabhängig von core-complete/Retry"
+    )
 
     # Imports needed for the real collection pipeline.
     import requests
@@ -332,6 +344,36 @@ def run_one(day,force=False):
     return 0 if b else 2
 
 
+def scheduled_kit_archive(now):
+    """Sichert KIT bei jedem Scheduled-Lauf kumulativ, ohne Retry-Zähler/-Uhr."""
+    cfg=ARCHIVE_CONFIG.get("github_actions",{})
+    if not bool(cfg.get("kit_continuous_archive",True)):
+        log("KIT-Archiv: kontinuierliche Sicherung deaktiviert.")
+        return False
+    day=now.date()
+    log(
+        f"KIT-ARCHIV: kontinuierlicher Abruf {day}; "
+        "kumulativer Merge, kein Einfluss auf core-complete/Retry."
+    )
+    b,m,origin=update_day(
+        day,log_cb=log,only_missing=False,
+        requested_sources={"kit_mast"},
+        reason="KIT_CONTINUOUS_ARCHIVE",
+        increment_attempt=False,
+        affects_retry_clock=False
+    )
+    cov=kit_archive_coverage(b,day) if b is not None else {"status":"NO_DATA"}
+    log(
+        "KIT-ARCHIV ERGEBNIS | "
+        f"status={cov.get('status')} | "
+        f"profile={cov.get('profile_count')}/{cov.get('expected_profiles')} | "
+        f"coverage={cov.get('coverage_percent')}% | "
+        f"cadence={cov.get('cadence_minutes')} min | "
+        f"largest_gap={cov.get('largest_gap_minutes')} min"
+    )
+    return True
+
+
 def scheduled():
     cfg=ARCHIVE_CONFIG.get("github_actions",{})
     hour=int(cfg.get("daily_fetch_local_hour",22))
@@ -343,6 +385,8 @@ def scheduled():
         f"SCHEDULED START | Ort={LOCATION_NAME} | lokale Zeit={now.isoformat()} | "
         f"Erstabruf ab {hour:02d}:00"
     )
+
+    scheduled_kit_archive(now)
 
     candidates=[]
     if now.hour>=hour:
@@ -407,7 +451,7 @@ def scheduled():
             )
 
     if not did:
-        log("Scheduled: kein Abruf fällig.")
+        log("Scheduled: kein Kernquellen-Abruf fällig.")
     return 0
 
 

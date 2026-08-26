@@ -2,7 +2,7 @@
 from __future__ import annotations
 import json, hashlib, shutil
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from dataclasses import asdict
 import numpy as np
@@ -191,6 +191,122 @@ def _merge_time_df(old_df, new_df, time_col="time"):
 def _fresh_source_success(key,new):
     return source_ok(key,new.source_status.get(key))
 
+
+def kit_archive_coverage(bundle,selected_date):
+    """Bewertet die zeitliche Vollständigkeit des kumulativen KIT-Tagesarchivs."""
+    result={
+        "status":"NO_DATA",
+        "profile_count":0,
+        "expected_profiles":None,
+        "coverage_percent":None,
+        "cadence_minutes":None,
+        "first_timestamp":None,
+        "last_timestamp":None,
+        "largest_gap_minutes":None,
+        "start_gap_minutes":None,
+        "end_gap_minutes":None,
+        "day_minutes":None,
+        "complete":False,
+    }
+    df=getattr(bundle,"kit_mast_metrics",None)
+    if not _df_has_rows(df) or "time" not in df.columns:
+        return result
+
+    times=pd.to_datetime(df["time"],errors="coerce",utc=True).dropna()
+    if len(times)==0:
+        return result
+    local=times.dt.tz_convert(TIMEZONE)
+    local=local[local.dt.date==selected_date].drop_duplicates().sort_values()
+    n=int(len(local))
+    result["profile_count"]=n
+    if n==0:
+        return result
+
+    result["first_timestamp"]=local.iloc[0].isoformat()
+    result["last_timestamp"]=local.iloc[-1].isoformat()
+
+    zone=ZoneInfo(TIMEZONE)
+    start=datetime(selected_date.year,selected_date.month,selected_date.day,tzinfo=zone)
+    nd=selected_date+timedelta(days=1)
+    end=datetime(nd.year,nd.month,nd.day,tzinfo=zone)
+    su=start.astimezone(timezone.utc); eu=end.astimezone(timezone.utc)
+    day_minutes=(eu-su).total_seconds()/60.0
+    result["day_minutes"]=round(day_minutes,3)
+
+    min_n=int(ARCHIVE_CONFIG.get("github_actions",{}).get(
+        "kit_coverage_min_profiles_for_cadence",3
+    ))
+    if n<max(2,min_n):
+        result["status"]="INSUFFICIENT_FOR_CADENCE"
+        return result
+
+    utc=[x.to_pydatetime().astimezone(timezone.utc) for x in local]
+    diffs=[(utc[i]-utc[i-1]).total_seconds()/60.0 for i in range(1,len(utc))
+           if (utc[i]-utc[i-1]).total_seconds()>0]
+    if not diffs:
+        result["status"]="INSUFFICIENT_FOR_CADENCE"
+        return result
+
+    cadence=float(pd.Series(diffs).median())
+    if cadence<=0:
+        result["status"]="INSUFFICIENT_FOR_CADENCE"
+        return result
+
+    expected=max(1,int(round(day_minutes/cadence)))
+    coverage=min(100.0,100.0*n/expected)
+    start_gap=(utc[0]-su).total_seconds()/60.0
+    end_gap=(eu-utc[-1]).total_seconds()/60.0
+    largest=max([max(0.0,start_gap),max(0.0,end_gap)]+diffs)
+    gap_factor=float(ARCHIVE_CONFIG.get("github_actions",{}).get(
+        "kit_complete_gap_factor",1.5
+    ))
+    complete=(n>=expected and largest<=cadence*gap_factor)
+
+    result.update({
+        "status":"COMPLETE" if complete else "PARTIAL",
+        "expected_profiles":expected,
+        "coverage_percent":round(coverage,1),
+        "cadence_minutes":round(cadence,2),
+        "largest_gap_minutes":round(largest,2),
+        "start_gap_minutes":round(start_gap,2),
+        "end_gap_minutes":round(end_gap,2),
+        "complete":bool(complete),
+    })
+    return result
+
+
+def apply_kit_archive_coverage(bundle,selected_date):
+    cov=kit_archive_coverage(bundle,selected_date)
+    if not isinstance(getattr(bundle,"kit_mast_info",None),dict):
+        bundle.kit_mast_info={}
+    bundle.kit_mast_info["archive_coverage"]=cov
+
+    status=(getattr(bundle,"source_status",{}) or {}).get("kit_mast")
+    if status is not None:
+        status.rows=cov.get("profile_count")
+        status.expected_rows=cov.get("expected_profiles")
+        status.coverage_percent=cov.get("coverage_percent")
+        status.first_timestamp=cov.get("first_timestamp")
+        status.last_timestamp=cov.get("last_timestamp")
+        status.largest_gap_minutes=cov.get("largest_gap_minutes")
+        base=(status.detail or "").split(" | KIT-Archiv:")[0]
+        cs=cov.get("status")
+        if cs=="COMPLETE":
+            extra=(f"KIT-Archiv: VOLLSTÄNDIG; {cov['profile_count']}/{cov['expected_profiles']} "
+                   f"Profile, {cov['coverage_percent']:.1f} %, Takt≈{cov['cadence_minutes']:.1f} min, "
+                   f"größte Lücke {cov['largest_gap_minutes']:.1f} min")
+        elif cs=="PARTIAL":
+            extra=(f"KIT-Archiv: UNVOLLSTÄNDIG; {cov['profile_count']}/{cov['expected_profiles']} "
+                   f"Profile, {cov['coverage_percent']:.1f} %, Takt≈{cov['cadence_minutes']:.1f} min, "
+                   f"größte Lücke {cov['largest_gap_minutes']:.1f} min")
+        elif cs=="INSUFFICIENT_FOR_CADENCE":
+            extra=(f"KIT-Archiv: {cov['profile_count']} Profil(e); "
+                   "noch zu wenig Daten zur sicheren Takt-/24h-Bewertung")
+        else:
+            extra="KIT-Archiv: keine Profile für diesen Tag"
+        status.detail=(base+" | "+extra).strip(" |")
+    return cov
+
 def merge_bundles(old,new, replace_sources):
     """
     Sicheres Zusammenführen.
@@ -325,6 +441,17 @@ def append_source_log(selected_date,bundle,reason="SAVE"):
             lines.append(f"Letzter Erfolg: {_fmt_log_dt(getattr(s,'last_success',None))}")
         lines.append("-"*78)
 
+    kit_cov=kit_archive_coverage(bundle,selected_date)
+    lines.append("[KIT-Archiv-Abdeckung]")
+    lines.append(
+        f"Status: {kit_cov.get('status')} | "
+        f"Profile: {kit_cov.get('profile_count')}/"
+        f"{kit_cov.get('expected_profiles') if kit_cov.get('expected_profiles') is not None else '–'} | "
+        f"Abdeckung: {kit_cov.get('coverage_percent') if kit_cov.get('coverage_percent') is not None else '–'}% | "
+        f"Takt: {kit_cov.get('cadence_minutes') if kit_cov.get('cadence_minutes') is not None else '–'} min | "
+        f"größte Lücke: {kit_cov.get('largest_gap_minutes') if kit_cov.get('largest_gap_minutes') is not None else '–'} min"
+    )
+    lines.append("-"*78)
     lines.append(f"Datenqualität: {getattr(bundle,'quality_class','–')}")
     lines.append(f"Qualitätstext: {getattr(bundle,'quality_text','') or ''}")
     lines.append(sep)
@@ -341,6 +468,9 @@ def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
 
     mp=d/"manifest.json"
     previous={}
+
+    # v0.15.7: Coverage auf dem finalen kumulativen KIT-Bestand bestimmen.
+    kit_coverage=apply_kit_archive_coverage(bundle,selected_date)
     if mp.exists():
         try:
             previous=json.loads(mp.read_text(encoding="utf-8"))
@@ -418,6 +548,16 @@ def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
     if attempt_meta and attempt_meta.get("increment_attempt",True):
         attempts += 1
 
+    affects_retry_clock=bool((attempt_meta or {}).get("affects_retry_clock",True))
+    retry_last_attempt=(
+        now.isoformat()
+        if attempt_meta and affects_retry_clock
+        else previous.get("last_attempt")
+    )
+    aux_last_attempt=previous.get("last_auxiliary_attempt")
+    if attempt_meta and not affects_retry_clock:
+        aux_last_attempt=now.isoformat()
+
     manifest={
         "schema_version":1,
         "app_version":VERSION,
@@ -439,8 +579,10 @@ def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
         "missing_sources":miss,
         "optional_sources":optional_sources(),
         "optional_missing_sources":optional_miss,
+        "kit_archive":kit_coverage,
         "attempts":attempts,
-        "last_attempt": now.isoformat() if attempt_meta else previous.get("last_attempt"),
+        "last_attempt":retry_last_attempt,
+        "last_auxiliary_attempt":aux_last_attempt,
         "attempt_reason": (attempt_meta or {}).get("reason"),
         "files":files,
     }

@@ -23,6 +23,9 @@
       "sonde",
       "kit_mast"
     ],
-    "retry_optional_sources": false
+    "retry_optional_sources": false,
+    "kit_continuous_archive": true,
+    "kit_coverage_min_profiles_for_cadence": 3,
+    "kit_complete_gap_factor": 1.5
   }
 }

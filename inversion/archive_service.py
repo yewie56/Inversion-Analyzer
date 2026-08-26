@@ -43,7 +43,10 @@ f"KIT={diag['kit_rows']} | ICON-D2={diag['icon_rows']} | "
     log(f"Archiv: {selected_date} lokal vollständig geladen. Herkunft: {origin}.")
     return old,manifest,origin
 
-def update_day(selected_date,log_cb=None,only_missing=False,requested_sources=None):
+def update_day(
+    selected_date,log_cb=None,only_missing=False,requested_sources=None,
+    reason=None,increment_attempt=True,affects_retry_clock=True
+):
     """
     Expliziter Internetabruf.
     Vorhandenes Archiv wird zuerst geladen und danach sicher zusammengeführt.
@@ -96,8 +99,9 @@ def update_day(selected_date,log_cb=None,only_missing=False,requested_sources=No
         selected_date,
         merged,
         {
-            "reason":"EXPLICIT_UPDATE" if not only_missing else "MISSING_REPAIR",
-            "increment_attempt":True
+            "reason":reason or ("EXPLICIT_UPDATE" if not only_missing else "MISSING_REPAIR"),
+            "increment_attempt":bool(increment_attempt),
+            "affects_retry_clock":bool(affects_retry_clock)
         },
         touched_sources=(wanted if wanted is not None else None)
     )

@@ -3,7 +3,7 @@ from pathlib import Path
 import json, os, re
 
 APP_NAME = "Inversionskurve"
-VERSION = "0.15.6"
+VERSION = "0.15.7"
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = PROJECT_DIR / "output_inversion"
 LOG_DIR = PROJECT_DIR / "logs"
@@ -93,7 +93,10 @@ def load_archive_config():
             "retry_only_missing":True,
             "completion_sources":["dwd","profile","icon_d2"],
             "optional_sources":["sonde","kit_mast"],
-            "retry_optional_sources":False
+            "retry_optional_sources":False,
+            "kit_continuous_archive":True,
+            "kit_coverage_min_profiles_for_cadence":3,
+            "kit_complete_gap_factor":1.5
         }
     }
     try:
@@ -117,6 +120,12 @@ def load_archive_config():
             ga["optional_sources"]=list(dga["optional_sources"])
         if "retry_optional_sources" not in ga:
             ga["retry_optional_sources"]=False
+        if "kit_continuous_archive" not in ga:
+            ga["kit_continuous_archive"]=True
+        if "kit_coverage_min_profiles_for_cadence" not in ga:
+            ga["kit_coverage_min_profiles_for_cadence"]=3
+        if "kit_complete_gap_factor" not in ga:
+            ga["kit_complete_gap_factor"]=1.5
         return data
     except Exception:
         return default
