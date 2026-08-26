@@ -1,0 +1,12 @@
+{
+  "origin": "ONLINE_UPDATE",
+  "detail": "Safe-Merge",
+  "recorded_at": "2026-08-26T04:00:03.287734+02:00",
+  "source_map": {
+    "dwd": "Online-Update",
+    "profile": "Lokales Archiv",
+    "sonde": "Lokales Archiv",
+    "kit_mast": "Lokales Archiv",
+    "icon_d2": "Lokales Archiv"
+  }
+}
