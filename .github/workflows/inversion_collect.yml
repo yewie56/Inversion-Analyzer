@@ -22,7 +22,7 @@ on:
     # der letzten Profile bereit. Ein Stundenraster erzeugt deshalb mehrere
     # überlappende Abrufchancen, bevor ein Profil aus dem Quellfenster fällt.
     # Der Python-Server entscheidet weiterhin pro Ort, welche Quellen fällig sind.
-    - cron: "17 * * * *"
+    - cron: "37 * * * *"
 
 permissions:
   contents: write
