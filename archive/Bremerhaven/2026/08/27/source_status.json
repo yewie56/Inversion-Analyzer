@@ -50,18 +50,18 @@
   "kit_mast": {
     "name": "KIT 200-m-Meteomast",
     "state": "KIT_TEMP_OK",
-    "message": "3 gemessene Temperaturprofil(e) für 2026-08-27 ausgewertet",
-    "last_attempt": "2026-08-27T02:48:51.772240+02:00",
-    "last_success": "2026-08-27T02:48:56.297086+02:00",
+    "message": "8 archivierte KIT-Temperaturprofil(e) für den Tag (kumulativ)",
+    "last_attempt": "2026-08-27T16:14:27.804030+02:00",
+    "last_success": "2026-08-27T16:14:34.008355+02:00",
     "http_status": null,
     "data_age_minutes": null,
-    "rows": 3,
-    "detail": "Gemessene KIT-Inversionskurve separat verfügbar. Zeitraum 00:40–02:40. Nicht mit dem Modellindex vermischt. | KIT-Archiv: UNVOLLSTÄNDIG; 3/24 Profile, 12.5 %, Takt≈60.0 min, größte Lücke 1280.0 min",
+    "rows": 8,
+    "detail": "Gemessene KIT-Inversionskurve separat verfügbar. Zeitraum 12:00–16:00. Nicht mit dem Modellindex vermischt. | ARCHIVSCHUTZ: vorhandene KIT-Profile werden nicht durch einen kleineren oder leeren Abruf gelöscht. | KIT-Archiv: UNVOLLSTÄNDIG; 8/24 Profile, 33.3 %, Takt≈60.0 min, größte Lücke 560.0 min",
     "expected_rows": 24,
-    "coverage_percent": 12.5,
+    "coverage_percent": 33.3,
     "first_timestamp": "2026-08-27T00:40:00+02:00",
-    "last_timestamp": "2026-08-27T02:40:00+02:00",
-    "largest_gap_minutes": 1280.0
+    "last_timestamp": "2026-08-27T16:00:00+02:00",
+    "largest_gap_minutes": 560.0
   },
   "icon_d2": {
     "name": "ICON-D2",
