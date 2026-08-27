@@ -1,0 +1,22 @@
+name: Scheduler probe
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show scheduler information
+        run: |
+          echo "SCHEDULER PROBE"
+          echo "UTC time:"
+          date -u
+          echo "Event: ${{ github.event_name }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "SHA: ${{ github.sha }}"
+          
