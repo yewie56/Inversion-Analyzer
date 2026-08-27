@@ -1,0 +1,20 @@
+Inversion Analyzer v0.15.11 – Temperaturschichtung Valencia
+2026-08-27
+
+- Unteres Valencia-Diagramm grundlegend erweitert:
+  * AEMET 8416 València: reale Bodentemperatur
+  * Modell 2 m als Referenz
+  * interpolierte Modelltemperatur 100 m AGL
+  * interpolierte Modelltemperatur 200 m AGL
+  * interpolierte Modelltemperatur 500 m AGL
+  * ΔT-Kurve bis zur höchsten verfügbaren der Ebenen 100/200/500 m.
+- ΔT > 0 bedeutet: die obere Schicht ist wärmer als die bodennahe Referenz;
+  das ist direkt als Inversionsmerkmal interpretierbar.
+- Für die ΔT-Bodenreferenz wird bei vorhandenem Stundenwert AEMET verwendet,
+  andernfalls die Modell-2-m-Temperatur. Es werden keine AEMET-Lücken erfunden.
+- Feste Höhen werden nur innerhalb des vorhandenen Vertikalprofils linear
+  interpoliert; keine Extrapolation außerhalb der verfügbaren Modellschichten.
+- Wichtige Korrektur: AGL-Höhen werden jetzt mit LOCATION_ELEVATION_M
+  berechnet. Der alte feste Abzug von 100 m wurde entfernt.
+  Das ist besonders für Valencia (ca. 15 m) relevant.
+- Inversionsindex und bestehende Viernheim-/Bremerhaven-Funktionen bleiben erhalten.

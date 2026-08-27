@@ -1,0 +1,26 @@
+Inversion Analyzer v0.15.13 – Adaptiver lokaler Schichtungsindex
+2026-08-27
+
+- Lokaler Schichtungsindex neu kalibriert.
+- Keine starre Bewertung Boden->500 m mehr.
+- Stattdessen werden die real vorhandenen Teilschichten separat bewertet:
+    Boden -> 100 m
+    100 m -> 200 m
+    200 m -> 500 m
+- Nur positive Temperaturgradienten / positive DeltaT tragen zum Index bei.
+- Dadurch bleibt eine bodennahe Inversion sichtbar, auch wenn es bei 500 m
+  bereits wieder kälter ist.
+- Empfindlichere Normierung:
+    Gradient-Score: max. positiver Gradient / 0.5 K pro 100 m
+    DeltaT-Score: Summe positiver DeltaT / 2.0 K
+    Tiefen-Score: gesamte inverse Schichttiefe / 300 m
+- Gewichtung bleibt:
+    45 % Gradient
+    35 % positive DeltaT
+    20 % inverse Tiefe
+- Neue Diagnosefelder:
+    local_inverted_layer_count
+    local_strongest_layer
+- Unteres Diagramm zeigt nun statt starrer 500-m-DeltaT die Summe der
+  positiven DeltaT der tatsächlich inversen Teilschichten.
+- Legende präzisiert zu "Lokaler Schichtungsindex (adaptiv)".

@@ -27,6 +27,8 @@ class DataBundle:
     run_id: str = ""
     station_info: Optional[dict] = None
     dwd_data: Any = None
+    aemet_station_info: Optional[dict] = None
+    aemet_data: Any = None
     profile_data: Any = None
     result_data: Any = None
     sonde_flights: list = field(default_factory=list)

@@ -1,0 +1,17 @@
+Inversion Analyzer v0.15.10 – Valencia Diagramm / AEMET sichtbar
+2026-08-27
+
+- Legende "Modell-/DWD-Inversionsindex" neutralisiert zu "Inversionsindex".
+- Display-Option "Inversionsindex anzeigen" statt DWD-spezifischer Bezeichnung.
+- Neue Display-Option:
+  "Bodentemperatur / Modell-2-m-Temperatur anzeigen".
+- Wenn reale AEMET-Daten vorhanden sind, erhält Valencia automatisch ein
+  zweites Diagrammfeld unterhalb des Inversionsindex:
+    * AEMET 8416 València – gemessene Bodentemperatur
+    * Open-Meteo – modellierte 2-m-Temperatur
+- AEMET-Zeitpunkte werden als tatsächlich vorhandene Messpunkte dargestellt.
+  Fehlende Stunden werden nicht künstlich erzeugt oder interpoliert.
+- Ohne AEMET-Daten bleibt das bisherige Ein-Diagramm-Layout erhalten.
+- Viernheim/Bremerhaven werden dadurch grafisch nicht umgebaut.
+- AEMET-Daten werden in Archiv-Zeitnormalisierung und CSV-Export berücksichtigt.
+- AEMET-CSV wird separat als *_AEMET_8416.csv gespeichert.

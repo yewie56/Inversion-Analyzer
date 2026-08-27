@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+# =============================================================================
+# Modul-History
+# 0.15.18 - Verwendung im stündlichen GitHub-Sicherungszyklus bestätigt
+# 0.15.7  - KIT-Kurzfenster kumulativ archiviert
+# =============================================================================
+
 from __future__ import annotations
 
 import json

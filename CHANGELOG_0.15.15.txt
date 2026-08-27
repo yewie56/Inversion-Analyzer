@@ -1,0 +1,20 @@
+Inversion Analyzer v0.15.15 – Schichtungsdiagramm auch ohne AEMET
+2026-08-27
+
+- Das untere Temperaturschichtungsdiagramm wird jetzt auch dann angezeigt,
+  wenn für den ausgewählten Tag noch keine AEMET-Bodenmessung vorliegt.
+- Auf Modell-only-Tagen werden weiterhin dargestellt:
+    * Modell 2 m
+    * Modell 100 m AGL
+    * Modell 200 m AGL
+    * Modell 500 m AGL
+    * Summe positiver DeltaT der inversen Teilschichten
+- Sobald AEMET-Daten vorhanden sind, wird die reale Bodentemperatur zusätzlich
+  als Messkurve eingeblendet.
+- Der lokale Schichtungsindex wird jetzt nach Datenherkunft sichtbar getrennt:
+    * Lokaler Schichtungsindex (AEMET + Vollprofil)
+    * Lokaler Schichtungsindex (nur Modell)
+- Stunden mit realem Bodenanker und Stunden mit Modell-Bodenanker werden
+  getrennt gezeichnet.
+- Titel des unteren Diagramms zeigt ausdrücklich, ob AEMET vorhanden ist.
+- Keine Interpolation oder Erfindung fehlender AEMET-Messwerte.

@@ -1,6 +1,26 @@
 # -*- coding: utf-8 -*-
+# =============================================================================
+# Inversion Analyzer
+# Version: 0.15.18
+# Datum: 2026-08-27
+#
+# History:
+# 0.15.18 - KIT-GitHub-Abruf stündlich; heute+gestern; Tagesvollständigkeit
+# 0.15.17 - Unteres Temperatur-/Schichtungsdiagramm abschaltbar
+# 0.15.16 - Eindeutige Quellenkennzeichnung in Diagrammlegenden
+# 0.15.15 - Schichtungsdiagramm auch ohne AEMET sichtbar
+# 0.15.14 - Lokaler Schichtungsindex aus Vollprofil bis 600 m AGL
+# 0.15.13 - Adaptiver lokaler Schichtungsindex
+# 0.15.12 - Lokaler Schichtungsindex 0..5 eingeführt
+# 0.15.11 - Temperaturschichtung AEMET + 100/200/500 m
+# 0.15.10 - AEMET-Bodentemperatur im Diagramm
+# 0.15.9  - AEMET OpenData Valencia integriert
+# 0.15.8  - Valencia + standortabhängige Quellenlogik
+# 0.15.7  - Kontinuierliche KIT-Archivierung
+# =============================================================================
+
 """
-Inversion_Server.py – v0.15.7
+Inversion_Server.py – v0.15.18
 
 Headless collector / archive repair tool.
 
@@ -13,6 +33,7 @@ Wichtige Testoptionen:
 from __future__ import annotations
 
 import argparse
+import os
 import json
 import sys
 from datetime import datetime,timedelta
@@ -23,11 +44,14 @@ from inversion.config import (
     TIMEZONE, LOCATION_NAME, LOCATION_SLUG, ARCHIVE_CONFIG, VERSION,
     PROJECT_DIR, ARCHIVE_DIR, LOCATIONS_FILE, ARCHIVE_CONFIG_FILE,
     ACTIVE_LOCATION_KEY, LAT, LON, LOCATION_ELEVATION_M,
-    DWD_MAX_STATION_DISTANCE_KM, _LOCATIONS
+    DWD_MAX_STATION_DISTANCE_KM, _LOCATIONS,
+    DWD_ENABLED, RADIOSONDE_ENABLED, KIT_MAST_ENABLED, ICON_D2_ENABLED,
+    AEMET_ENABLED, AEMET_STATION_ID
 )
 from inversion.archive import (load_bundle,missing_sources,missing_optional_sources,
                                completion_sources,optional_sources,kit_archive_coverage,save_bundle,day_dir)
 from inversion.archive_service import update_day
+from inversion.aemet_source import selftest_aemet_parser
 
 
 def log(msg):
@@ -66,6 +90,16 @@ def show_config():
         "elevation_m":LOCATION_ELEVATION_M,
         "timezone":TIMEZONE,
         "dwd_max_station_distance_km":DWD_MAX_STATION_DISTANCE_KM,
+        "source_enabled":{
+            "dwd":DWD_ENABLED,
+            "aemet":AEMET_ENABLED,
+            "profile":True,
+            "sonde":RADIOSONDE_ENABLED,
+            "kit_mast":KIT_MAST_ENABLED,
+            "icon_d2":ICON_D2_ENABLED
+        },
+        "aemet_station_id":AEMET_STATION_ID,
+        "aemet_api_key_present":bool(os.environ.get("AEMET_API_KEY","").strip()),
         "project_dir":str(PROJECT_DIR),
         "archive_dir":str(ARCHIVE_DIR),
         "active_archive_root":str(active_archive_root()),
@@ -198,7 +232,7 @@ def selftest():
 
     core=completion_sources()
     optional=optional_sources()
-    allowed={"dwd","profile","sonde","kit_mast","icon_d2"}
+    allowed={"dwd","aemet","profile","sonde","kit_mast","icon_d2"}
     check(
         isinstance(core,list) and bool(core),
         "completion_sources konfiguriert",
@@ -224,13 +258,28 @@ def selftest():
         "KIT/Radiosonde beeinflussen complete nicht",
         f"Kern={core}"
     )
+    kit_global=bool(ARCHIVE_CONFIG.get("github_actions",{}).get(
+        "kit_continuous_archive",True
+    ))
     check(
-        bool(ARCHIVE_CONFIG.get("github_actions",{}).get(
-            "kit_continuous_archive",True
-        )),
-        "kontinuierliche KIT-Archivierung aktiviert",
-        "bei jedem Scheduled-Lauf; unabhängig von core-complete/Retry"
+        kit_global,
+        "globale KIT-Archivierungsoption konfiguriert",
+        "aktiv" if kit_global else "deaktiviert"
     )
+    if KIT_MAST_ENABLED:
+        passline("KIT für aktiven Ort aktiviert", "kontinuierliche Zusatzarchivierung möglich")
+    else:
+        passline("KIT für aktiven Ort deaktiviert", "kein unnötiger KIT-Abruf")
+
+    if KIT_MAST_ENABLED:
+        passline(
+            "KIT-Tagesarchivstrategie",
+            "Scheduled: heute + gestern, kumulativer Merge, Vollständigkeitskontrolle"
+        )
+
+    at=selftest_aemet_parser()
+    check(bool(at.get("pass")),"AEMET-Parser-Selbsttest",
+          f"rows={at.get('rows')} | time={at.get('time')}")
 
     # Imports needed for the real collection pipeline.
     import requests
@@ -345,33 +394,101 @@ def run_one(day,force=False):
 
 
 def scheduled_kit_archive(now):
-    """Sichert KIT bei jedem Scheduled-Lauf kumulativ, ohne Retry-Zähler/-Uhr."""
+    """Continuously archive KIT profiles for today and yesterday.
+
+    v0.15.18 rationale:
+    KIT's public dashboard exposes only a short rolling set of recent profiles.
+    Therefore every scheduled GitHub run fetches KIT independently of core
+    completeness and merges by timestamp.  Today and yesterday are queried:
+    shortly after midnight the rolling source window can still contain the last
+    profiles of the previous day.
+
+    This greatly reduces the chance of losing profiles, but cannot create a
+    profile that has already disappeared upstream during a prolonged outage.
+    Completeness is therefore always checked and logged explicitly.
+    """
     cfg=ARCHIVE_CONFIG.get("github_actions",{})
+    if not KIT_MAST_ENABLED:
+        log("KIT-Archiv: für diesen Ort deaktiviert; kein Abruf.")
+        return False
+
     if not bool(cfg.get("kit_continuous_archive",True)):
         log("KIT-Archiv: kontinuierliche Sicherung deaktiviert.")
         return False
-    day=now.date()
-    log(
-        f"KIT-ARCHIV: kontinuierlicher Abruf {day}; "
-        "kumulativer Merge, kein Einfluss auf core-complete/Retry."
-    )
-    b,m,origin=update_day(
-        day,log_cb=log,only_missing=False,
-        requested_sources={"kit_mast"},
-        reason="KIT_CONTINUOUS_ARCHIVE",
-        increment_attempt=False,
-        affects_retry_clock=False
-    )
-    cov=kit_archive_coverage(b,day) if b is not None else {"status":"NO_DATA"}
-    log(
-        "KIT-ARCHIV ERGEBNIS | "
-        f"status={cov.get('status')} | "
-        f"profile={cov.get('profile_count')}/{cov.get('expected_profiles')} | "
-        f"coverage={cov.get('coverage_percent')}% | "
-        f"cadence={cov.get('cadence_minutes')} min | "
-        f"largest_gap={cov.get('largest_gap_minutes')} min"
-    )
-    return True
+
+    did=False
+    days=(now.date(), now.date()-timedelta(days=1))
+
+    for day in days:
+        log(
+            f"KIT-ARCHIV: kontinuierlicher Abruf {day}; "
+            "kumulativer Merge nach Zeitstempel, kein Einfluss auf core-complete/Retry."
+        )
+
+        b,m,origin=update_day(
+            day,
+            log_cb=log,
+            only_missing=False,
+            requested_sources={"kit_mast"},
+            reason="KIT_CONTINUOUS_ARCHIVE",
+            increment_attempt=False,
+            affects_retry_clock=False
+        )
+
+        cov=kit_archive_coverage(b,day) if b is not None else {"status":"NO_DATA"}
+
+        log(
+            "KIT-ARCHIV ERGEBNIS | "
+            f"Datum={day} | "
+            f"status={cov.get('status')} | "
+            f"profile={cov.get('profile_count')}/{cov.get('expected_profiles')} | "
+            f"coverage={cov.get('coverage_percent')}% | "
+            f"cadence={cov.get('cadence_minutes')} min | "
+            f"largest_gap={cov.get('largest_gap_minutes')} min | "
+            f"first={cov.get('first_timestamp')} | "
+            f"last={cov.get('last_timestamp')}"
+        )
+
+        # The previous day should be final by now. Make any incompleteness
+        # unmissable in the GitHub log, without triggering core-source retries.
+        if day < now.date() and cov.get("status") != "COMPLETE":
+            log(
+                "WARNUNG KIT-TAGESARCHIV: "
+                f"{day} ist nach Tagesende NICHT vollständig "
+                f"(Status={cov.get('status')}, "
+                f"{cov.get('profile_count')}/{cov.get('expected_profiles')} Profile, "
+                f"größte Lücke={cov.get('largest_gap_minutes')} min)."
+            )
+        elif day < now.date():
+            log(
+                f"KIT-TAGESARCHIV BESTÄTIGT: {day} vollständig "
+                f"({cov.get('profile_count')}/{cov.get('expected_profiles')} Profile)."
+            )
+        did=True
+
+    return did
+
+
+
+def scheduled_aemet_archive(now):
+    if not AEMET_ENABLED:
+        return False
+    if not os.environ.get("AEMET_API_KEY","").strip():
+        log("AEMET-Archiv: AEMET_API_KEY fehlt; kein Abruf.")
+        return False
+    did=False
+    for day in (now.date(),now.date()-timedelta(days=1)):
+        log(f"AEMET-ARCHIV: kumulativer Abruf {day}; kein Einfluss auf core-complete/Retry.")
+        b,m,origin=update_day(
+            day,log_cb=log,only_missing=False,requested_sources={"aemet"},
+            reason="AEMET_CONTINUOUS_ARCHIVE",increment_attempt=False,
+            affects_retry_clock=False
+        )
+        rows=0 if b is None or getattr(b,"aemet_data",None) is None else len(b.aemet_data)
+        state="NO_STATUS" if b is None or b.source_status.get("aemet") is None else b.source_status["aemet"].state
+        log(f"AEMET-ARCHIV ERGEBNIS | Datum={day} | status={state} | rows={rows}")
+        did=True
+    return did
 
 
 def scheduled():
@@ -387,6 +504,7 @@ def scheduled():
     )
 
     scheduled_kit_archive(now)
+    scheduled_aemet_archive(now)
 
     candidates=[]
     if now.hour>=hour:

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "app_version": "0.15.18",
+  "location": {
+    "name": "Valencia",
+    "slug": "Valencia",
+    "latitude": 39.4699,
+    "longitude": -0.3763,
+    "elevation_m": 15.0,
+    "timezone": "Europe/Madrid"
+  },
+  "date": "2026-08-27",
+  "saved_at": "2026-08-27T16:40:41.931190+02:00",
+  "run_id": "20260827_164041",
+  "quality_class": "B",
+  "quality_text": "AEMET-Bodenmessung + vertikales Modell-/Archivprofil",
+  "complete": true,
+  "completion_sources": [
+    "profile"
+  ],
+  "missing_sources": [],
+  "optional_sources": [
+    "aemet"
+  ],
+  "optional_missing_sources": [],
+  "kit_archive": {
+    "status": "NO_DATA",
+    "profile_count": 0,
+    "expected_profiles": null,
+    "coverage_percent": null,
+    "cadence_minutes": null,
+    "first_timestamp": null,
+    "last_timestamp": null,
+    "largest_gap_minutes": null,
+    "start_gap_minutes": null,
+    "end_gap_minutes": null,
+    "day_minutes": null,
+    "complete": false
+  },
+  "attempts": 2,
+  "last_attempt": "2026-08-27T16:40:41.931190+02:00",
+  "last_auxiliary_attempt": null,
+  "attempt_reason": "EXPLICIT_UPDATE",
+  "files": {
+    "dwd_data": null,
+    "aemet_data": "aemet_ground.csv",
+    "profile_data": "openmeteo_profile.csv",
+    "result_data": "inversion_model.csv",
+    "sonde_profile_data": null,
+    "sonde_metrics": null,
+    "kit_mast_metrics": null,
+    "icon_d2_data": null,
+    "icon_d2_profile_data": null,
+    "station_info": "station_info.json",
+    "sonde_profiles": "sonde_profiles.json",
+    "sonde_flights": "sonde_flights.json",
+    "kit_mast_info": "kit_mast_info.json",
+    "kit_mast_data": "kit_mast_data.json",
+    "icon_d2_info": "icon_d2_info.json",
+    "source_status": "source_status.json"
+  }
+}

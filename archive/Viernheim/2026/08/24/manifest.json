@@ -1,22 +1,52 @@
 {
   "schema_version": 1,
-  "app_version": "0.13.5",
+  "app_version": "0.15.18",
   "location": {
     "name": "Viernheim",
-    "slug": "Viernheim"
+    "slug": "Viernheim",
+    "latitude": 49.5412,
+    "longitude": 8.5785,
+    "elevation_m": 100.0,
+    "timezone": "Europe/Berlin"
   },
   "date": "2026-08-24",
-  "saved_at": "2026-08-25T14:14:47.435447+02:00",
-  "run_id": "20260825_141415",
+  "saved_at": "2026-08-27T16:45:20.072185+02:00",
+  "run_id": "20260827_164436",
   "quality_class": "C",
-  "quality_text": "Vertikalprofil vorhanden; DWD-Bodenmessung für gewählten Tag fehlt | DWD-Radiosonde Idar-Oberstein gemessen separat | ICON-D2 Historical Forecast separat",
+  "quality_text": "Vertikalprofil vorhanden; lokale Bodenmessung für diesen Tag fehlt | DWD-Radiosonde Idar-Oberstein gemessen separat | ICON-D2 Historical Forecast separat",
   "complete": false,
-  "missing_sources": [
+  "completion_sources": [
     "dwd",
+    "profile",
+    "icon_d2"
+  ],
+  "missing_sources": [
+    "dwd"
+  ],
+  "optional_sources": [
+    "sonde",
     "kit_mast"
   ],
-  "attempts": 7,
-  "last_attempt": "2026-08-25T14:14:47.435447+02:00",
+  "optional_missing_sources": [
+    "kit_mast"
+  ],
+  "kit_archive": {
+    "status": "NO_DATA",
+    "profile_count": 0,
+    "expected_profiles": null,
+    "coverage_percent": null,
+    "cadence_minutes": null,
+    "first_timestamp": null,
+    "last_timestamp": null,
+    "largest_gap_minutes": null,
+    "start_gap_minutes": null,
+    "end_gap_minutes": null,
+    "day_minutes": null,
+    "complete": false
+  },
+  "attempts": 8,
+  "last_attempt": "2026-08-27T16:45:20.072185+02:00",
+  "last_auxiliary_attempt": null,
   "attempt_reason": "EXPLICIT_UPDATE",
   "files": {
     "dwd_data": null,

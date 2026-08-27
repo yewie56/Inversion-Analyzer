@@ -1,0 +1,28 @@
+Inversion Analyzer v0.15.12 – Lokaler Schichtungsindex
+2026-08-27
+
+- Neuer "Lokaler Schichtungsindex" 0–5.
+- Der Index wird aus der in v0.15.11 eingeführten festen Schichtung
+  Boden / 100 m / 200 m / 500 m AGL berechnet.
+- Wenn für eine Stunde eine reale Bodenmessung vorhanden ist, wird diese
+  als unterer Messanker verwendet; andernfalls bleibt die Modell-2-m-
+  Temperatur die explizite Ersatzreferenz.
+- Formel:
+    Index = 5 * (
+        0.45 * Gradient-Score
+      + 0.35 * DeltaT-Score
+      + 0.20 * Tiefen-Score
+    )
+- Normierungen:
+    Gradient-Score: max. positiver Gradient / 1.5 K pro 100 m
+    DeltaT-Score: Summe positiver DeltaT / 4 K
+    Tiefen-Score: positive Inversionstiefe / 500 m
+- Zusätzliche Ergebnisgrößen:
+    local_max_gradient_K_per_100m
+    local_positive_deltaT_K
+    local_inversion_depth_m
+    local_surface_measured
+- Neue Kurve "Lokaler Schichtungsindex" im oberen Diagramm.
+- Neue Anzeigeoption "Lokalen Schichtungsindex anzeigen".
+- Der Haupt-Inversionsindex und der KIT-Mast-Index bleiben unverändert und
+  werden bewusst nicht mit dem neuen Index vermischt.

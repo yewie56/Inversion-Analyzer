@@ -1,0 +1,12 @@
+Inversion Analyzer v0.15.17 – Unteres Temperaturdiagramm abschaltbar
+2026-08-27
+
+- Neue/klargestellte persistente Anzeigeoption:
+    "Unteres Temperatur-/Schichtungsdiagramm anzeigen"
+- Die Option schaltet das komplette untere Diagramm ein oder aus.
+- Ausgeschaltet bleibt nur das obere Inversionsdiagramm sichtbar.
+- AEMET-, 2-m-, 100-m-, 200-m-, 500-m- und DeltaT-Kurven des unteren
+  Panels werden gemeinsam ausgeblendet.
+- Der lokale Schichtungsindex im oberen Diagramm bleibt davon unabhängig
+  und kann weiterhin über seine eigene Anzeigeoption ein-/ausgeschaltet werden.
+- Einstellung wird wie die übrigen Display-Optionen in settings.json gespeichert.

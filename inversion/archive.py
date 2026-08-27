@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+# =============================================================================
+# Modul-History
+# 0.15.18 - KIT-Tagesvollständigkeitsprüfung als GitHub-Sicherheitskriterium genutzt
+# 0.15.7  - KIT-Coverage: Takt, Sollprofile, Rand-/Maximallücken
+# =============================================================================
+
 from __future__ import annotations
 import json, hashlib, shutil
 from pathlib import Path
@@ -8,11 +14,11 @@ from dataclasses import asdict
 import numpy as np
 import pandas as pd
 
-from .config import ARCHIVE_DIR, LOCATION_NAME, LOCATION_SLUG, TIMEZONE, VERSION, ARCHIVE_CONFIG, LAT, LON, LOCATION_ELEVATION_M
+from .config import (ARCHIVE_DIR, LOCATION_NAME, LOCATION_SLUG, TIMEZONE, VERSION, ARCHIVE_CONFIG, LAT, LON, LOCATION_ELEVATION_M, LOCATION_COMPLETION_SOURCES, LOCATION_OPTIONAL_SOURCES)
 from .models import DataBundle, SourceStatus
 from .quality import determine_quality
 
-SOURCE_KEYS=("dwd","profile","sonde","kit_mast","icon_d2")
+SOURCE_KEYS=("dwd","aemet","profile","sonde","kit_mast","icon_d2")
 
 def _json_default(obj):
     if isinstance(obj,(datetime,pd.Timestamp)):
@@ -123,13 +129,20 @@ def source_ok(key,status):
     return state=="OK"
 
 def completion_sources():
-    """Quellen, die den Tagesbestand für GitHub/Retry als vollständig definieren."""
+    """Quellen, die den Tagesbestand für GitHub/Retry als vollständig definieren.
+
+    Seit v0.15.8 kann jeder Ort eigene completion_sources definieren.
+    Das verhindert z.B., dass Valencia wegen Deutschland-spezifischer
+    DWD-/ICON-D2-Quellen dauerhaft als unvollständig gilt.
+    """
+    if isinstance(LOCATION_COMPLETION_SOURCES,list) and LOCATION_COMPLETION_SOURCES:
+        return [x for x in LOCATION_COMPLETION_SOURCES if x in SOURCE_KEYS]
+
     ga=ARCHIVE_CONFIG.get("github_actions",{})
     configured=ga.get("completion_sources")
     if isinstance(configured,list) and configured:
         return [x for x in configured if x in SOURCE_KEYS]
 
-    # Rückwärtskompatibilität für alte archive_config.json.
     legacy=ga.get("required_sources")
     if isinstance(legacy,list) and legacy:
         core=[x for x in legacy if x in SOURCE_KEYS and x not in ("sonde","kit_mast")]
@@ -140,6 +153,9 @@ def completion_sources():
 
 def optional_sources():
     """Zusatzquellen, die dokumentiert, aber nicht für complete benötigt werden."""
+    if isinstance(LOCATION_OPTIONAL_SOURCES,list):
+        return [x for x in LOCATION_OPTIONAL_SOURCES if x in SOURCE_KEYS]
+
     ga=ARCHIVE_CONFIG.get("github_actions",{})
     configured=ga.get("optional_sources")
     if isinstance(configured,list):
@@ -323,6 +339,17 @@ def merge_bundles(old,new, replace_sources):
             old.dwd_data=new.dwd_data
             old.source_status["dwd"]=new.source_status["dwd"]
 
+    if "aemet" in replace:
+        fresh_ok=_fresh_source_success("aemet",new) and _df_has_rows(new.aemet_data)
+        if fresh_ok:
+            old.aemet_data=_merge_time_df(old.aemet_data,new.aemet_data,"time")
+            old.aemet_station_info=new.aemet_station_info or old.aemet_station_info
+            old.source_status["aemet"]=new.source_status["aemet"]
+            old.source_status["aemet"].rows=len(old.aemet_data)
+            old.source_status["aemet"].message=f"{len(old.aemet_data)} archivierte AEMET-Stundenwert(e) für den Tag (kumulativ)"
+        elif not _df_has_rows(old.aemet_data) and "aemet" in new.source_status:
+            old.source_status["aemet"]=new.source_status["aemet"]
+
     if "profile" in replace:
         if _fresh_source_success("profile",new) and _df_has_rows(new.profile_data):
             old.profile_data=new.profile_data
@@ -414,6 +441,7 @@ def append_source_log(selected_date,bundle,reason="SAVE"):
 
     labels=[
         ("dwd","DWD Boden"),
+        ("aemet","AEMET Boden"),
         ("profile","Vertikalprofil"),
         ("sonde","Idar-Oberstein"),
         ("kit_mast","KIT 200-m-Mast"),
@@ -493,6 +521,7 @@ def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
             files[file_key]=None
 
     write_source_df("dwd","dwd_data","dwd_ground.csv",bundle.dwd_data)
+    write_source_df("aemet","aemet_data","aemet_ground.csv",bundle.aemet_data)
     write_source_df("profile","profile_data","openmeteo_profile.csv",bundle.profile_data)
     write_source_df("profile","result_data","inversion_model.csv",bundle.result_data)
     write_source_df("sonde","sonde_profile_data","radiosonde_profile.csv",bundle.sonde_profile_data)
@@ -599,6 +628,7 @@ def bundle_diagnostics(bundle):
         return int(len(x)) if x is not None and hasattr(x,"__len__") else 0
     return {
         "dwd_rows":nrows(bundle.dwd_data),
+        "aemet_rows":nrows(bundle.aemet_data),
         "profile_rows":nrows(bundle.profile_data),
         "result_rows":nrows(bundle.result_data),
         "sonde_rows":nrows(bundle.sonde_metrics),
@@ -619,6 +649,7 @@ def load_bundle(selected_date):
     b.quality_text=manifest.get("quality_text","")
     files=manifest.get("files",{})
     b.dwd_data=_read_df(d/files["dwd_data"]) if files.get("dwd_data") else None
+    b.aemet_data=_read_df(d/files["aemet_data"]) if files.get("aemet_data") else None
     b.profile_data=_read_df(d/files["profile_data"]) if files.get("profile_data") else None
     b.result_data=_read_df(d/files["result_data"]) if files.get("result_data") else None
     b.sonde_profile_data=_read_df(d/files["sonde_profile_data"]) if files.get("sonde_profile_data") else None
@@ -632,6 +663,7 @@ def load_bundle(selected_date):
         try: return json.loads((d/fn).read_text(encoding="utf-8"))
         except Exception: return default
     b.station_info=j("station_info",None)
+    b.aemet_station_info=j("aemet_station_info",None)
     b.sonde_profiles=j("sonde_profiles",[])
     b.sonde_flights=j("sonde_flights",[])
     b.kit_mast_info=j("kit_mast_info",{})

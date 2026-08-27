@@ -1,0 +1,14 @@
+Inversion Analyzer v0.15.9 – AEMET Valencia
+2026-08-26
+
+- AEMET OpenData als reale Bodenmessquelle integriert.
+- Valencia Station 8416.
+- API-Key ausschließlich über AEMET_API_KEY.
+- Kumulative AEMET-Tagesarchivierung.
+- Scheduled-Lauf sammelt heute + gestern bei jedem 3-h-Lauf.
+- Safe-Merge schützt vorhandene AEMET-Werte.
+- AEMET zunächst optional, daher blockiert fehlender Key den Kernbetrieb nicht.
+- Qualität B bei Open-Meteo-Profil + AEMET-Bodenmessung.
+- Qualität C ohne AEMET-Messung.
+- Network-free AEMET Parser Regressionstest.
+- KIT-Zeitstempel-Test wird bei Valencia nicht mehr im Lauf-Log ausgegeben.

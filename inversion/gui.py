@@ -35,6 +35,8 @@ class InversionApp(tk.Tk):
             "icon_d2": True,
             "kit": True,
             "radiosonde": True,
+            "ground_temperature": True,
+            "local_stratification_index": True,
             "legend": True,
             "figure_info": True
         },
@@ -287,6 +289,8 @@ class InversionApp(tk.Tk):
             'icon_d2':tk.BooleanVar(value=bool(display.get('icon_d2',True))),
             'kit':tk.BooleanVar(value=bool(display.get('kit',True))),
             'radiosonde':tk.BooleanVar(value=bool(display.get('radiosonde',True))),
+            'ground_temperature':tk.BooleanVar(value=bool(display.get('ground_temperature',True))),
+            'local_stratification_index':tk.BooleanVar(value=bool(display.get('local_stratification_index',True))),
             'legend':tk.BooleanVar(value=bool(display.get('legend',True))),
             'figure_info':tk.BooleanVar(value=bool(display.get('figure_info',True))),
         }
@@ -542,8 +546,8 @@ class InversionApp(tk.Tk):
             location_box,
             text=(
                 'Die Koordinaten, Höhe und Zeitzone werden automatisch über '
-                'die Ortsauflösung bestimmt. DWD-Bodenstationen werden nur '
-                'innerhalb des für den Ort definierten Radius verwendet. '
+                'die Ortsauflösung bestimmt. Deutschland-spezifische Quellen '
+                'werden nur für dafür konfigurierte Orte benutzt. '
                 'Der Ortswechsel erfolgt sofort ohne Programmneustart.'
             ),
             wraplength=540,justify='left'
@@ -567,11 +571,13 @@ class InversionApp(tk.Tk):
         display_box=ttk.LabelFrame(host,text='Display',padding=10)
         display_box.grid(row=2,column=0,sticky='ew',pady=(0,10))
         display_items=[
-            ('model','Modell-/DWD-Kurve anzeigen'),
+            ('model','Inversionsindex anzeigen'),
             ('gradient','rechten Modellgradienten anzeigen'),
             ('icon_d2','ICON-D2 anzeigen'),
             ('kit','KIT-Mast anzeigen'),
             ('radiosonde','Radiosonde anzeigen'),
+            ('ground_temperature','Unteres Temperatur-/Schichtungsdiagramm anzeigen'),
+            ('local_stratification_index','Lokalen Schichtungsindex anzeigen'),
             ('legend','Kurvenlegende anzeigen'),
             ('figure_info','Status / Qualität / Tageswerte im PNG anzeigen'),
         ]
@@ -821,6 +827,7 @@ class InversionApp(tk.Tk):
             return False
         names=(
             'result_data',
+            'aemet_data',
             'sonde_metrics',
             'sonde_profile_data',
             'kit_mast_metrics',
@@ -1217,7 +1224,7 @@ class InversionApp(tk.Tk):
         """
         diag={}
         for name in (
-            'dwd_data','profile_data','result_data','sonde_profile_data','sonde_metrics',
+            'dwd_data','aemet_data','profile_data','result_data','sonde_profile_data','sonde_metrics',
             'kit_mast_metrics','icon_d2_data','icon_d2_profile_data'
         ):
             df=getattr(bundle,name,None)
@@ -1408,42 +1415,160 @@ class InversionApp(tk.Tk):
     def draw_no_data_plot(self): self.figure.clear(); ax=self.figure.add_subplot(111); ax.text(.5,.5,'KEINE BELASTBARE INVERSIONSKURVE VERFÜGBAR\n\nMindestens eine notwendige Datenquelle ist ausgefallen.\nDetails siehe Datenquellen und Protokoll.',ha='center',va='center',transform=ax.transAxes,fontsize=13); ax.set_axis_off(); self.canvas.draw_idle()
     def draw_plot(self):
         model=getattr(self.bundle,'result_data',None)
+        aemet=getattr(self.bundle,'aemet_data',None)
         sonde=getattr(self.bundle,'sonde_metrics',None)
         kit=getattr(self.bundle,'kit_mast_metrics',None)
         icon=getattr(self.bundle,'icon_d2_data',None)
 
         self.log(
             f"Plotdaten: Modell={0 if model is None else len(model)} | "
+            f"AEMET={0 if aemet is None else len(aemet)} | "
             f"Radiosonde={0 if sonde is None else len(sonde)} | "
             f"KIT={0 if kit is None else len(kit)} | "
             f"ICON-D2={0 if icon is None else len(icon)}"
         )
 
         self.figure.clear()
-        ax1=self.figure.add_subplot(111)
-        ax2=ax1.twinx()
-
-        handles=[]
-        labels=[]
 
         show_model=self.display_vars['model'].get()
         show_gradient=self.display_vars['gradient'].get()
         show_sonde=self.display_vars['radiosonde'].get()
         show_kit=self.display_vars['kit'].get()
         show_icon=self.display_vars['icon_d2'].get()
+        # Persistent display option: controls the complete lower
+        # temperature/stratification panel.
+        show_ground_temperature=self.display_vars['ground_temperature'].get()
+        show_local_stratification=self.display_vars['local_stratification_index'].get()
+
+        # v0.15.18: the stratification panel is shown whenever the model
+        # contains usable vertical temperature information. AEMET is overlaid
+        # only when real observations are present. Thus model-only days remain
+        # inspectable instead of hiding the lower panel completely.
+        have_aemet=(
+            aemet is not None
+            and hasattr(aemet,'empty')
+            and not aemet.empty
+            and 'time' in aemet.columns
+            and 'temperature_obs' in aemet.columns
+        )
+        have_model_stratification=(
+            model is not None
+            and hasattr(model,'empty')
+            and not model.empty
+            and (
+                'temperature_100m_agl' in model.columns
+                or 'temperature_200m_agl' in model.columns
+                or 'temperature_500m_agl' in model.columns
+            )
+        )
+        show_stratification_panel=(
+            show_ground_temperature and have_model_stratification
+        )
+
+        if show_stratification_panel:
+            gs=self.figure.add_gridspec(
+                2,1,
+                height_ratios=[3.15,1.25],
+                hspace=0.10
+            )
+            ax1=self.figure.add_subplot(gs[0])
+            ax_temp=self.figure.add_subplot(gs[1],sharex=ax1)
+            ax1.tick_params(axis='x',labelbottom=False)
+        else:
+            ax1=self.figure.add_subplot(111)
+            ax_temp=None
+
+        ax2=ax1.twinx()
+        handles=[]
+        labels=[]
 
         if model is not None and not model.empty:
             if show_model:
-                line_model=ax1.plot(
-                    model['time'],
-                    model['inversion_index_corrected'],
-                    marker='o',
-                    linewidth=2,
-                    color='blue',
-                    label='Modell-/DWD-Inversionsindex'
-                )[0]
-                handles.append(line_model)
-                labels.append('Modell-/DWD-Inversionsindex')
+                # v0.15.18: show clearly whether the corrected main index
+                # is based on model only or on model + measured surface anchor.
+                if 'surface_correction_used' in model.columns:
+                    corrected=model[
+                        model['surface_correction_used'].fillna(False).astype(bool)
+                    ][['time','inversion_index_corrected']].dropna()
+                    uncorrected=model[
+                        ~model['surface_correction_used'].fillna(False).astype(bool)
+                    ][['time','inversion_index_corrected']].dropna()
+                else:
+                    corrected=model.iloc[0:0][['time','inversion_index_corrected']]
+                    uncorrected=model[['time','inversion_index_corrected']].dropna()
+
+                if not corrected.empty:
+                    line_model_corr=ax1.plot(
+                        corrected['time'],
+                        corrected['inversion_index_corrected'],
+                        marker='o',
+                        linewidth=2,
+                        color='blue',
+                        label='Inversionsindex (Modell + Bodenmessung)'
+                    )[0]
+                    handles.append(line_model_corr)
+                    labels.append('Inversionsindex (Modell + Bodenmessung)')
+
+                if not uncorrected.empty:
+                    line_model_only=ax1.plot(
+                        uncorrected['time'],
+                        uncorrected['inversion_index_corrected'],
+                        marker='o',
+                        linewidth=1.8,
+                        linestyle=':',
+                        color='blue',
+                        label='Inversionsindex (nur Modell)'
+                    )[0]
+                    handles.append(line_model_only)
+                    labels.append('Inversionsindex (nur Modell)')
+
+            if (
+                show_local_stratification
+                and 'local_stratification_index' in model.columns
+                and model['local_stratification_index'].notna().any()
+            ):
+                # v0.15.18: make the provenance of the lower anchor visible.
+                # The same local index can use either a real AEMET/DWD surface
+                # measurement or the model 2-m temperature when no observation
+                # is available for that hour.
+                if 'local_surface_measured' in model.columns:
+                    measured=model[
+                        model['local_surface_measured'].fillna(False).astype(bool)
+                    ][['time','local_stratification_index']].dropna()
+                    modeled=model[
+                        ~model['local_surface_measured'].fillna(False).astype(bool)
+                    ][['time','local_stratification_index']].dropna()
+                else:
+                    measured=model.iloc[0:0][['time','local_stratification_index']]
+                    modeled=model[['time','local_stratification_index']].dropna()
+
+                if not measured.empty:
+                    line_local_meas=ax1.plot(
+                        measured['time'],
+                        measured['local_stratification_index'],
+                        marker='x',
+                        markersize=5,
+                        linewidth=1.8,
+                        linestyle='--',
+                        color='purple',
+                        label='Lokaler Schichtungsindex (Bodenmessung + Modellprofil)'
+                    )[0]
+                    handles.append(line_local_meas)
+                    labels.append('Lokaler Schichtungsindex (Bodenmessung + Modellprofil)')
+
+                if not modeled.empty:
+                    line_local_model=ax1.plot(
+                        modeled['time'],
+                        modeled['local_stratification_index'],
+                        marker='x',
+                        markersize=4.5,
+                        linewidth=1.4,
+                        linestyle=':',
+                        color='purple',
+                        label='Lokaler Schichtungsindex (nur Modell)'
+                    )[0]
+                    handles.append(line_local_model)
+                    labels.append('Lokaler Schichtungsindex (nur Modell)')
 
             if show_gradient:
                 line_grad=ax2.plot(
@@ -1452,10 +1577,10 @@ class InversionApp(tk.Tk):
                     linestyle='--',
                     linewidth=1.2,
                     color='gray',
-                    label='Modell: max. positiver Gradient'
+                    label='Max. positiver Gradient (Modell)'
                 )[0]
                 handles.append(line_grad)
-                labels.append('Modell: max. positiver Gradient')
+                labels.append('Max. positiver Gradient (Modell)')
 
         if show_sonde and sonde is not None and not sonde.empty:
             line_sonde=ax1.plot(
@@ -1499,7 +1624,7 @@ class InversionApp(tk.Tk):
         ax1.set_ylabel('Inversionsintensität / empirischer Index [0–5]')
 
         # Rechte Achse bleibt immer geometrisch vorhanden, damit sich das
-        # Diagrammformat beim Ein-/Ausblenden nicht ändert.
+        # Hauptdiagramm beim Ein-/Ausblenden nicht unnötig verschiebt.
         ax2.set_ylabel(
             'Modell-Inversionsgradient [K/100 m]' if show_gradient else ''
         )
@@ -1507,13 +1632,118 @@ class InversionApp(tk.Tk):
             ax2.tick_params(right=False,labelright=False)
             ax2.spines['right'].set_visible(False)
 
-        ax1.set_xlabel(f'Ortszeit {TIMEZONE}')
-        ax1.grid(True,alpha=.3)
-        ax1.xaxis.set_major_locator(mdates.HourLocator(interval=2))
-        ax1.xaxis.set_major_formatter(
-            mdates.DateFormatter('%H:%M',tz=ZoneInfo(TIMEZONE))
-        )
+        if ax_temp is not None:
+            temp_handles=[]
+            temp_labels=[]
 
+            # Real surface measurement is optional. On model-only days the
+            # panel remains visible and simply omits this curve.
+            if have_aemet:
+                at=aemet[['time','temperature_obs']].dropna()
+            else:
+                at=None
+            if at is not None and not at.empty:
+                h_aemet=ax_temp.plot(
+                    at['time'],at['temperature_obs'],
+                    marker='o',
+                    markersize=4.2,
+                    linewidth=1.6,
+                    color='black',
+                    label='AEMET 8416 València – Boden gemessen'
+                )[0]
+                temp_handles.append(h_aemet)
+                temp_labels.append('AEMET 8416 València – Boden gemessen')
+
+            # Keep the model 2-m curve as a thin reference, but the main
+            # information is now the vertical temperature structure.
+            if model is not None and not model.empty and 'temperature_2m' in model.columns:
+                mt=model[['time','temperature_2m']].dropna()
+                if not mt.empty:
+                    h_2m=ax_temp.plot(
+                        mt['time'],mt['temperature_2m'],
+                        linewidth=1.0,
+                        linestyle=':',
+                        color='gray',
+                        label='Temperatur 2 m (Modell)'
+                    )[0]
+                    temp_handles.append(h_2m)
+                    temp_labels.append('Temperatur 2 m (Modell)')
+
+            layer_specs=[
+                ('temperature_100m_agl','Temperatur 100 m AGL (Modell)','--'),
+                ('temperature_200m_agl','Temperatur 200 m AGL (Modell)','-.'),
+                ('temperature_500m_agl','Temperatur 500 m AGL (Modell)','-'),
+            ]
+            for col,label,ls in layer_specs:
+                if model is None or model.empty or col not in model.columns:
+                    continue
+                d=model[['time',col]].dropna()
+                if d.empty:
+                    continue
+                h=ax_temp.plot(
+                    d['time'],d[col],
+                    linewidth=1.35,
+                    linestyle=ls,
+                    label=label
+                )[0]
+                temp_handles.append(h)
+                temp_labels.append(label)
+
+            ax_temp.set_ylabel('Temperatur [°C]')
+            ax_temp.set_xlabel(f'Ortszeit {TIMEZONE}')
+            ax_temp.grid(True,alpha=.25)
+            ax_temp.xaxis.set_major_locator(mdates.HourLocator(interval=2))
+            ax_temp.xaxis.set_major_formatter(
+                mdates.DateFormatter('%H:%M',tz=ZoneInfo(TIMEZONE))
+            )
+
+            # v0.15.18: show the total positive inversion ΔT that is also
+            # used by the adaptive local stratification index. This avoids
+            # hiding a real 0-100 m or 100-200 m inversion merely because
+            # the temperature at 500 m is already lower again.
+            ax_dt=ax_temp.twinx()
+            if (
+                model is not None and not model.empty
+                and 'local_positive_deltaT_K' in model.columns
+                and model['local_positive_deltaT_K'].notna().any()
+            ):
+                dd=model[['time','local_positive_deltaT_K']].dropna()
+                h_dt=ax_dt.plot(
+                    dd['time'],dd['local_positive_deltaT_K'],
+                    linewidth=1.5,
+                    color='red',
+                    label='Σ positive ΔT der inversen Teilschichten (Modellprofil)'
+                )[0]
+                ax_dt.axhline(0.0,linewidth=.8,color='gray',alpha=.6)
+                ax_dt.set_ylabel('positive ΔT [K]')
+                temp_handles.append(h_dt)
+                temp_labels.append('Σ positive ΔT der inversen Teilschichten (Modellprofil)')
+            else:
+                ax_dt.tick_params(right=False,labelright=False)
+                ax_dt.spines['right'].set_visible(False)
+
+            if self.display_vars['legend'].get() and temp_handles:
+                ax_temp.legend(
+                    temp_handles,temp_labels,
+                    loc='upper right',
+                    fontsize=7.2,
+                    ncol=2
+                )
+
+            if have_aemet:
+                temp_title='Temperaturschichtung – Bodenmessung + Modellprofil'
+            else:
+                temp_title='Temperaturschichtung – nur Modell'
+            ax_temp.set_title(temp_title,fontsize=9.5)
+
+        else:
+            ax1.set_xlabel(f'Ortszeit {TIMEZONE}')
+            ax1.xaxis.set_major_locator(mdates.HourLocator(interval=2))
+            ax1.xaxis.set_major_formatter(
+                mdates.DateFormatter('%H:%M',tz=ZoneInfo(TIMEZONE))
+            )
+
+        ax1.grid(True,alpha=.3)
         ax1.set_title(
             f"Inversionsverlauf – {LOCATION_NAME} – {self.selected_date:%d.%m.%Y}"
         )
@@ -1524,16 +1754,22 @@ class InversionApp(tk.Tk):
         if self.display_vars['figure_info'].get():
             self._draw_figure_footer()
 
-        # FESTES Figure-Layout. Rechts bewusst mehr Platz als v0.13.9,
-        # damit die rechte Achsenbeschriftung vollständig lesbar ist.
-        # Unten bleibt unabhängig von Textmenge derselbe Bereich reserviert;
-        # längerer Text wird über kleinere Schrift kompensiert.
-        self.figure.subplots_adjust(
-            left=0.075,
-            right=0.865,
-            top=0.91,
-            bottom=0.275
-        )
+        if ax_temp is not None:
+            # More vertical plot space is needed for the additional measured
+            # temperature panel while retaining the established footer.
+            self.figure.subplots_adjust(
+                left=0.075,
+                right=0.865,
+                top=0.91,
+                bottom=0.305
+            )
+        else:
+            self.figure.subplots_adjust(
+                left=0.075,
+                right=0.865,
+                top=0.91,
+                bottom=0.275
+            )
 
         self.ax=ax1
         self.canvas.draw_idle()
@@ -1570,6 +1806,11 @@ class InversionApp(tk.Tk):
             self.min_var.set('Modell: –')
 
         sonde=getattr(self.bundle,'sonde_metrics',None)
+        if aemet is not None and not aemet.empty:
+            aemet_name=base.with_name(base.stem+'_AEMET_8416'+base.suffix)
+            aemet.to_csv(aemet_name,index=False,encoding='utf-8-sig')
+            self.log(f'AEMET-CSV gespeichert: {aemet_name}')
+
         if sonde is not None and not sonde.empty:
             sv=sonde.dropna(subset=['radiosonde_index'])
             if not sv.empty:
@@ -1650,10 +1891,12 @@ class InversionApp(tk.Tk):
             return
 
         model=self.bundle.result_data
+        aemet=getattr(self.bundle,'aemet_data',None)
         kit=getattr(self.bundle,'kit_mast_metrics',None)
         icon=getattr(self.bundle,'icon_d2_data',None)
         sonde=getattr(self.bundle,'sonde_metrics',None)
-        if ((model is None or model.empty) and (sonde is None or sonde.empty) and (kit is None or kit.empty) and
+        if ((model is None or model.empty) and (aemet is None or aemet.empty) and
+                (sonde is None or sonde.empty) and (kit is None or kit.empty) and
                 (icon is None or icon.empty)):
             return
 

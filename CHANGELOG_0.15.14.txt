@@ -1,0 +1,29 @@
+Inversion Analyzer v0.15.14 – Lokaler Schichtungsindex aus Vollprofil
+2026-08-27
+
+- Der lokale Schichtungsindex verwendet nicht mehr nur die festen
+  Darstellungsstufen Boden / 100 / 200 / 500 m.
+- Für die Indexberechnung werden jetzt alle tatsächlich verfügbaren
+  Modell-Druckflächen bis 600 m AGL verwendet.
+- AEMET bleibt, sofern für die Stunde vorhanden, der reale Bodenanker.
+- Fehlt ein AEMET-Stundenwert, wird weiterhin explizit die Modell-2-m-
+  Temperatur als Ersatz-Bodenreferenz verwendet.
+- Jede benachbarte Modellschicht wird auf positiven Temperaturgradienten
+  geprüft.
+- Nur tatsächlich inverse Teilschichten tragen zum lokalen Index bei.
+- Dadurch können auch Inversionen erkannt werden, die zwischen den festen
+  100/200/500-m-Darstellungsstufen liegen.
+- Gewichtung bleibt:
+    45 % maximaler positiver Gradient
+    35 % Summe positiver DeltaT
+    20 % gesamte inverse Schichttiefe
+- Normierung bleibt:
+    0.5 K / 100 m
+    2.0 K positive DeltaT
+    300 m inverse Tiefe
+- Neue Diagnosefelder:
+    local_profile_top_m
+    local_profile_point_count
+- Die 100/200/500-m-Kurven bleiben ausschließlich als anschauliche
+  Visualisierung im unteren Diagramm erhalten.
+- Legende: "Lokaler Schichtungsindex (Vollprofil)".

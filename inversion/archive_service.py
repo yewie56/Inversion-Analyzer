@@ -25,7 +25,8 @@ def load_archive_day(selected_date,log_cb=None):
         f"Archivdateien gefunden: Modell={diag['result_rows']} | "
         f"Radiosonde={diag.get('sonde_rows',0)} | "
 f"KIT={diag['kit_rows']} | ICON-D2={diag['icon_rows']} | "
-        f"ICON-Rohprofil={diag['icon_profile_rows']} | DWD={diag['dwd_rows']}"
+        f"ICON-Rohprofil={diag['icon_profile_rows']} | DWD={diag['dwd_rows']} | "
+        f"AEMET={diag.get('aemet_rows',0)}"
     )
 
     marker=read_origin_marker(selected_date) or {}
@@ -105,11 +106,11 @@ def update_day(
         },
         touched_sources=(wanted if wanted is not None else None)
     )
-    touched=set(wanted) if wanted is not None else {"dwd","profile","sonde","kit_mast","icon_d2"}
+    touched=set(wanted) if wanted is not None else {"dwd","aemet","profile","sonde","kit_mast","icon_d2"}
     write_origin_marker(
         selected_date,"ONLINE_UPDATE",detail="Safe-Merge",
         source_map={k:("Online-Update" if k in touched else "Lokales Archiv")
-                    for k in ("dwd","profile","sonde","kit_mast","icon_d2")}
+                    for k in ("dwd","aemet","profile","sonde","kit_mast","icon_d2")}
     )
     return merged,manifest,"UPDATED_SAFE_MERGE"
 

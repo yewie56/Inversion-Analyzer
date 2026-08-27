@@ -1,0 +1,15 @@
+Inversion Analyzer v0.15.8 – Valencia / internationale Quellenpolitik
+2026-08-26
+
+- Valencia als vordefinierter Standort ergänzt.
+- Valencia: 39.4699 N, -0.3763 E, Europe/Madrid, ca. 15 m.
+- Standortabhängige Quellenfreigabe eingeführt.
+- DWD, Idar-Oberstein, KIT und ICON-D2 werden für Valencia nicht abgerufen.
+- Valencia completion_sources = ["profile"].
+- Globale completion_sources für Viernheim/Bremerhaven bleiben unverändert.
+- GitHub Actions erkennt Valencia automatisch über locations.json.
+- Scheduled KIT-Abruf wird für Orte mit kit_mast_enabled=false übersprungen.
+- Qualitätsmeldung für internationale Orte neutral formuliert.
+- Geokodierte Nicht-DE-Orte erhalten künftig keine deutschen Quellen automatisch.
+- AEMET/BASS/CEAM noch nicht integriert; folgt separat.
+- Regression: bestehende Viernheim-/Bremerhaven-Konfiguration bleibt erhalten.

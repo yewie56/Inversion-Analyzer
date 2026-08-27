@@ -1,15 +1,35 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# =============================================================================
+# Inversion Analyzer
+# Version: 0.15.18
+# Datum: 2026-08-27
+#
+# History:
+# 0.15.18 - KIT-GitHub-Abruf stündlich; heute+gestern; Tagesvollständigkeit
+# 0.15.17 - Unteres Temperatur-/Schichtungsdiagramm abschaltbar
+# 0.15.16 - Eindeutige Quellenkennzeichnung in Diagrammlegenden
+# 0.15.15 - Schichtungsdiagramm auch ohne AEMET sichtbar
+# 0.15.14 - Lokaler Schichtungsindex aus Vollprofil bis 600 m AGL
+# 0.15.13 - Adaptiver lokaler Schichtungsindex
+# 0.15.12 - Lokaler Schichtungsindex 0..5 eingeführt
+# 0.15.11 - Temperaturschichtung AEMET + 100/200/500 m
+# 0.15.10 - AEMET-Bodentemperatur im Diagramm
+# 0.15.9  - AEMET OpenData Valencia integriert
+# 0.15.8  - Valencia + standortabhängige Quellenlogik
+# 0.15.7  - Kontinuierliche KIT-Archivierung
+# =============================================================================
+
 """
 Inversionskurve.py
-Version: 0.15.7
+Version: 0.15.18
 Datum: 2026-08-24
 
 STARTDATEI: In Spyder nur diese Datei starten.
 
 Versionshistorie
 ----------------
-0.15.7 - Kontinuierliche KIT-Langzeitarchivierung + 24h-Prüfung:
+0.15.18 - Kontinuierliche KIT-Langzeitarchivierung + 24h-Prüfung:
          KIT wird bei jedem Scheduled-Lauf separat für den aktuellen Tag
          abgerufen und kumulativ nach Zeitstempel gesichert.
          Der Sicherungsabruf verändert weder complete noch Retry-Zähler/-Uhr.

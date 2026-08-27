@@ -1,0 +1,24 @@
+Inversion Analyzer v0.15.16 – Eindeutige Quellenkennzeichnung
+2026-08-27
+
+- Alle wichtigen Diagrammkurven tragen nun ihre Datenherkunft direkt in der Legende.
+- Haupt-Inversionsindex wird sichtbar getrennt:
+    * Inversionsindex (Modell + Bodenmessung)
+    * Inversionsindex (nur Modell)
+- Grundlage für die Trennung ist surface_correction_used pro Stunde.
+- Lokaler Schichtungsindex wird sichtbar getrennt:
+    * Lokaler Schichtungsindex (Bodenmessung + Modellprofil)
+    * Lokaler Schichtungsindex (nur Modell)
+- Maximaler positiver Gradient heißt jetzt:
+    * Max. positiver Gradient (Modell)
+- Unteres Schichtungsdiagramm:
+    * Temperatur 2 m (Modell)
+    * Temperatur 100 m AGL (Modell)
+    * Temperatur 200 m AGL (Modell)
+    * Temperatur 500 m AGL (Modell)
+    * AEMET 8416 València – Boden gemessen
+    * Σ positive ΔT der inversen Teilschichten (Modellprofil)
+- Untertitel:
+    * Temperaturschichtung – Bodenmessung + Modellprofil
+    * Temperaturschichtung – nur Modell
+- Keine Messkurve wird als Modell und keine Modellkurve als Messung bezeichnet.

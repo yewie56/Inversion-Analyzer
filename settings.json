@@ -1,5 +1,5 @@
 {
-  "geometry": "1450x900",
+  "geometry": "1317x680+66+60",
   "user_mode": "normal",
   "display": {
     "model": true,
@@ -7,6 +7,8 @@
     "icon_d2": true,
     "kit": true,
     "radiosonde": true,
+    "ground_temperature": true,
+    "local_stratification_index": true,
     "legend": true,
     "figure_info": true
   },
@@ -19,5 +21,5 @@
     "show_side_panel": true,
     "show_log": true
   },
-  "version": "0.14.0"
+  "version": "0.15.18"
 }

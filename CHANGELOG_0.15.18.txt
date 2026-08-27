@@ -1,0 +1,24 @@
+Inversion Analyzer v0.15.18 – KIT-Tagesdaten auf GitHub absichern
+2026-08-27
+
+- GitHub Scheduled Collection von alle 3 Stunden auf stündlich geändert:
+    cron: 17 * * * *
+- KIT wird bei jedem Scheduled-Lauf unabhängig von den Kernquellen abgefragt.
+- Pro Lauf werden jetzt HEUTE und GESTERN für KIT abgefragt.
+  Grund: Kurz nach Mitternacht können die letzten Profile des Vortags noch
+  im rollierenden KIT-Quellfenster vorhanden sein.
+- KIT bleibt kumulativ: Merge nach Zeitstempel, keine Löschung guter Altdaten
+  durch kleinere/leere Neuabrufe.
+- Nach jedem Abruf wird geprüft:
+    Profilanzahl / erwartete Profilanzahl
+    abgeleiteter Takt
+    größte Zeitlücke
+    erste und letzte Zeitmarke
+    COMPLETE / PARTIAL
+- Für den Vortag wird nach Tagesende eine deutlich sichtbare Warnung ausgegeben,
+  falls das KIT-Tagesarchiv nicht vollständig ist.
+- Bei vollständigem Vortag:
+    "KIT-TAGESARCHIV BESTÄTIGT"
+- KIT bleibt optional und löst keinen Kernquellen-Retry aus.
+- Versions-History wieder direkt in Inversionskurve.py und Inversion_Server.py.
+- Eigener Regressionstest test_kit_github_archive_v0_15_18.py.

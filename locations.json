@@ -26,6 +26,35 @@
       "dwd_max_distance_km": 50.0,
       "radiosonde_wmo": "10618",
       "kit_mast_enabled": true
+    },
+    "Valencia": {
+      "name": "Valencia",
+      "latitude": 39.4699,
+      "longitude": -0.3763,
+      "timezone": "Europe/Madrid",
+      "elevation_m": 15.0,
+      "country_code": "ES",
+      "admin1": "Comunitat Valenciana",
+      "geocoding_source": "manual/reference",
+      "dwd_max_distance_km": 50.0,
+      "dwd_enabled": false,
+      "radiosonde_enabled": false,
+      "radiosonde_wmo": null,
+      "kit_mast_enabled": false,
+      "icon_d2_enabled": false,
+      "completion_sources": [
+        "profile"
+      ],
+      "optional_sources": [
+        "aemet"
+      ],
+      "aemet_enabled": true,
+      "aemet_station_id": "8416",
+      "aemet_station_name": "València",
+      "aemet_station_latitude": 39.4805555556,
+      "aemet_station_longitude": -0.3663888889,
+      "aemet_station_elevation_m": 13.0,
+      "notes": "Open-Meteo Kernprofil; AEMET Station 8416 reale Bodenmessung optional/kumulativ; AEMET_API_KEY erforderlich."
     }
   }
 }

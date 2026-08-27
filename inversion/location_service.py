@@ -11,7 +11,7 @@ from .config import (
     LOCATIONS_FILE, GEOCODING_URL, REQUEST_TIMEOUT, _slug
 )
 
-USER_AGENT="Inversion-Analyzer/0.15.0"
+USER_AGENT="Inversion-Analyzer/0.15.8"
 
 
 class LocationError(RuntimeError):
@@ -93,22 +93,28 @@ def geocode_location_name(name, country_code="DE"):
                 f"Geocoding-Ergebnis ist unvollständig: Feld {required} fehlt."
             )
 
+    cc=str(best.get("country_code") or country_code or "").upper()
+    is_de=(cc=="DE")
     return {
         "name":str(best["name"]),
         "latitude":float(best["latitude"]),
         "longitude":float(best["longitude"]),
         "timezone":str(best.get("timezone") or "Europe/Berlin"),
         "elevation_m":float(best.get("elevation") or 0.0),
-        "country_code":str(best.get("country_code") or country_code or ""),
+        "country_code":cc,
         "country":str(best.get("country") or ""),
         "admin1":str(best.get("admin1") or ""),
         "admin2":str(best.get("admin2") or ""),
         "geocoding_id":best.get("id"),
         "geocoding_source":"Open-Meteo / GeoNames",
         "dwd_max_distance_km":50.0,
-        # Optional measured reference sources stay available as auxiliary data.
-        "radiosonde_wmo":"10618",
-        "kit_mast_enabled":True,
+        "dwd_enabled":is_de,
+        "radiosonde_enabled":is_de,
+        "radiosonde_wmo":"10618" if is_de else None,
+        "kit_mast_enabled":is_de,
+        "icon_d2_enabled":is_de,
+        "completion_sources":["dwd","profile","icon_d2"] if is_de else ["profile"],
+        "optional_sources":["sonde","kit_mast"] if is_de else [],
     }
 
 
@@ -134,7 +140,9 @@ def add_and_activate_location(name, country_code="DE"):
     if key in locations:
         existing=locations[key]
         for option in (
-            "kit_mast_enabled","radiosonde_wmo","dwd_max_distance_km"
+            "dwd_enabled","kit_mast_enabled","radiosonde_enabled",
+            "radiosonde_wmo","icon_d2_enabled","dwd_max_distance_km",
+            "completion_sources","optional_sources"
         ):
             if option in existing:
                 resolved[option]=existing[option]

@@ -772,5 +772,19 @@
     "selected_profiles": 5,
     "rejected_non_temperature_sources": 3,
     "rejected_invalid_temperature_sources": 0
+  },
+  "archive_coverage": {
+    "status": "PARTIAL",
+    "profile_count": 29,
+    "expected_profiles": 96,
+    "coverage_percent": 30.2,
+    "cadence_minutes": 15.0,
+    "first_timestamp": "2026-08-25T07:30:00+02:00",
+    "last_timestamp": "2026-08-25T16:30:00+02:00",
+    "largest_gap_minutes": 450.0,
+    "start_gap_minutes": 450.0,
+    "end_gap_minutes": 450.0,
+    "day_minutes": 1440.0,
+    "complete": false
   }
 }

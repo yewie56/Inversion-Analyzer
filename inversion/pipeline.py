@@ -3,6 +3,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from .models import DataBundle, SourceStatus
 from .weather_sources import fetch_dwd_temperature, fetch_open_meteo_profile
+from .aemet_source import fetch_aemet_temperature
 from .radiosonde import fetch_idar_oberstein_profiles
 from .kit_mast import fetch_kit_mast_diagnostics
 from .timestamp_validation import selftest_kit_timestamp
@@ -11,9 +12,9 @@ from .icon_d2_source import fetch_icon_d2_historical
 from .inversion_engine import calculate_profile_metrics, merge_surface_observation
 from .quality import determine_quality
 from .logger import LOGGER
-from .config import TIMEZONE, KIT_MAST_ENABLED
+from .config import (TIMEZONE, KIT_MAST_ENABLED, DWD_ENABLED, RADIOSONDE_ENABLED, ICON_D2_ENABLED, AEMET_ENABLED)
 
-ALL_SOURCES={"dwd","profile","sonde","kit_mast","icon_d2"}
+ALL_SOURCES={"dwd","aemet","profile","sonde","kit_mast","icon_d2"}
 
 def _not_requested(name):
     return SourceStatus(name=name,state="NOT_REQUESTED",message="In diesem Teillauf nicht angefordert")
@@ -28,14 +29,33 @@ def load_data_for_date(selected_date, log_cb=None, only_sources=None):
         if log_cb: log_cb(msg)
     log(separator); log(f"RUN {run_id} | Datum {selected_date} | START"); log(separator)
 
-    ts_test=selftest_kit_timestamp()
-    log(f"KIT-localtime-Selbsttest: {'PASS' if ts_test['pass'] else 'FAIL'} | "
-        f"{ts_test['input_ms']} -> {ts_test['actual']} | erwartet {ts_test['expected']}")
+    if KIT_MAST_ENABLED:
+        ts_test=selftest_kit_timestamp()
+        log(f"KIT-localtime-Selbsttest: {'PASS' if ts_test['pass'] else 'FAIL'} | "
+            f"{ts_test['input_ms']} -> {ts_test['actual']} | erwartet {ts_test['expected']}")
 
-    if "dwd" in wanted:
+    if "dwd" in wanted and DWD_ENABLED:
         station,dwd,s=fetch_dwd_temperature(selected_date,log_cb)
         bundle.station_info=station; bundle.dwd_data=dwd; bundle.source_status["dwd"]=s
-    else: bundle.source_status["dwd"]=_not_requested("DWD-Bodentemperatur")
+    elif "dwd" in wanted:
+        bundle.source_status["dwd"]=SourceStatus(
+            name="DWD-Bodentemperatur", state="DISABLED_FOR_LOCATION",
+            message="Für diesen Ort deaktiviert"
+        )
+    else:
+        bundle.source_status["dwd"]=_not_requested("DWD-Bodentemperatur")
+
+    if "aemet" in wanted and AEMET_ENABLED:
+        station,aemet,s=fetch_aemet_temperature(selected_date,log_cb)
+        bundle.aemet_station_info=station
+        bundle.aemet_data=aemet
+        bundle.source_status["aemet"]=s
+    elif "aemet" in wanted:
+        bundle.source_status["aemet"]=SourceStatus(
+            name="AEMET-Bodenmessung",state="DISABLED_FOR_LOCATION",
+            message="Für diesen Ort deaktiviert")
+    else:
+        bundle.source_status["aemet"]=_not_requested("AEMET-Bodenmessung")
 
     if "profile" in wanted:
         profile,s=fetch_open_meteo_profile(selected_date,log_cb)
@@ -47,11 +67,14 @@ def load_data_for_date(selected_date, log_cb=None, only_sources=None):
                 s.state="INCOMPLETE"; s.message="Keine auswertbare vertikale Temperaturdifferenz"
                 s.detail="Es wird ausdrücklich keine Nullkurve dargestellt."
             else:
-                bundle.result_data=merge_surface_observation(metrics,bundle.dwd_data)
+                surface_obs=bundle.dwd_data
+                if (surface_obs is None or getattr(surface_obs,"empty",True)) and AEMET_ENABLED:
+                    surface_obs=bundle.aemet_data
+                bundle.result_data=merge_surface_observation(metrics,surface_obs)
     else:
         bundle.source_status["profile"]=_not_requested("Vertikalprofil")
 
-    if "sonde" in wanted:
+    if "sonde" in wanted and RADIOSONDE_ENABLED:
         raw_profile,metrics,info,s=fetch_idar_oberstein_profiles(selected_date,log_cb)
         bundle.sonde_profile_data=raw_profile
         bundle.sonde_metrics=metrics
@@ -62,6 +85,11 @@ def load_data_for_date(selected_date, log_cb=None, only_sources=None):
             log_cb(f"Radiosonde Status: {s.state} | {s.message}")
             if s.detail:
                 log_cb(f"Radiosonde Details: {s.detail}")
+    elif "sonde" in wanted:
+        bundle.source_status["sonde"]=SourceStatus(
+            name="Radiosonde", state="DISABLED_FOR_LOCATION",
+            message="Für diesen Ort deaktiviert"
+        )
     else:
         bundle.source_status["sonde"]=_not_requested("Radiosonde")
 
@@ -86,13 +114,19 @@ def load_data_for_date(selected_date, log_cb=None, only_sources=None):
                                                        message="Für diesen Ort deaktiviert")
     else: bundle.source_status["kit_mast"]=_not_requested("KIT-Mast")
 
-    if "icon_d2" in wanted:
+    if "icon_d2" in wanted and ICON_D2_ENABLED:
         data,raw_profile,info,s=fetch_icon_d2_historical(selected_date,log_cb=log_cb)
         bundle.icon_d2_data=data
         bundle.icon_d2_profile_data=raw_profile
         bundle.icon_d2_info=info
         bundle.source_status["icon_d2"]=s
-    else: bundle.source_status["icon_d2"]=_not_requested("ICON-D2")
+    elif "icon_d2" in wanted:
+        bundle.source_status["icon_d2"]=SourceStatus(
+            name="ICON-D2", state="DISABLED_FOR_LOCATION",
+            message="Für diesen Ort deaktiviert"
+        )
+    else:
+        bundle.source_status["icon_d2"]=_not_requested("ICON-D2")
 
     determine_quality(bundle)
     if bundle.source_status.get("sonde") and bundle.source_status["sonde"].is_ok():

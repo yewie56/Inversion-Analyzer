@@ -3,7 +3,7 @@ from pathlib import Path
 import json, os, re
 
 APP_NAME = "Inversionskurve"
-VERSION = "0.15.7"
+VERSION = "0.15.18"
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = PROJECT_DIR / "output_inversion"
 LOG_DIR = PROJECT_DIR / "logs"
@@ -78,7 +78,14 @@ LOCATION_ELEVATION_M=float(LOCATION.get("elevation_m",100.0))
 DWD_MAX_STATION_DISTANCE_KM=float(LOCATION.get("dwd_max_distance_km",50.0))
 LOCATION_COUNTRY_CODE=str(LOCATION.get("country_code","DE"))
 LOCATION_ADMIN1=str(LOCATION.get("admin1",""))
-KIT_MAST_ENABLED=bool(LOCATION.get("kit_mast_enabled",True))
+DWD_ENABLED=bool(LOCATION.get("dwd_enabled", LOCATION_COUNTRY_CODE=="DE"))
+RADIOSONDE_ENABLED=bool(LOCATION.get("radiosonde_enabled", LOCATION_COUNTRY_CODE=="DE"))
+KIT_MAST_ENABLED=bool(LOCATION.get("kit_mast_enabled", LOCATION_COUNTRY_CODE=="DE"))
+ICON_D2_ENABLED=bool(LOCATION.get("icon_d2_enabled", LOCATION_COUNTRY_CODE=="DE"))
+LOCATION_COMPLETION_SOURCES=LOCATION.get("completion_sources")
+LOCATION_OPTIONAL_SOURCES=LOCATION.get("optional_sources")
+AEMET_ENABLED=bool(LOCATION.get("aemet_enabled",False))
+AEMET_STATION_ID=LOCATION.get("aemet_station_id")
 GEOCODING_URL="https://geocoding-api.open-meteo.com/v1/search"
 
 def load_archive_config():

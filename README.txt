@@ -1,4 +1,4 @@
-Inversionskurve v0.15.7
+Inversionskurve v0.15.18
 =========================
 
 START WINDOWS-GUI
@@ -125,7 +125,7 @@ archive_config.json:
   "archive_path": "archive"
 }
 
-Diese v0.15.7-Implementierung verwendet dafür GitHub Raw und ist daher für ein
+Diese v0.15.18-Implementierung verwendet dafür GitHub Raw und ist daher für ein
 öffentlich lesbares Repository gedacht. Für private Repositories wird später
 der geplante laienfreundliche GitHub-Login/Setup-Assistent ergänzt.
 
@@ -142,12 +142,12 @@ ABHÄNGIGKEITEN
 ---------------
 pip install requests pandas numpy matplotlib bokeh
 
-v0.15.7 verändert die Berechnung der bestehenden Modell-, KIT- und ICON-D2-
+v0.15.18 verändert die Berechnung der bestehenden Modell-, KIT- und ICON-D2-
 Kurven nicht absichtlich. Schwerpunkt dieser Version ist Archivierung,
 Headless-Betrieb, Teil-Reparatur und GitHub-Ausführung.
 
 
-KORREKTUR v0.15.7
+KORREKTUR v0.15.18
 -----------------
 GUI:
 - -7 / -1 / +1 / +7: nur lokales Archiv
@@ -162,12 +162,12 @@ Neuabruf gelöscht. Neue Profile werden nach Zeitstempel ergänzt.
 ARCHIV AUS v0.12.0 WEITERVERWENDEN:
 Ja. Das Format bleibt kompatibel.
 
-Wenn v0.15.7 in einen neuen Ordner entpackt wird, bitte den vorhandenen
+Wenn v0.15.18 in einen neuen Ordner entpackt wird, bitte den vorhandenen
 Ordner "archive" aus dem v0.12.0-Projekt unverändert in den
-v0.15.7-Projektordner kopieren.
+v0.15.18-Projektordner kopieren.
 
 
-ICON-D2-KORREKTUR v0.15.7
+ICON-D2-KORREKTUR v0.15.18
 -------------------------
 Die bisherige ICON-D2-Auswertung betrachtete nur Druckflächen untereinander.
 Dadurch konnte eine bodennahe Inversion vollständig übersehen werden.
@@ -198,7 +198,7 @@ Für bereits archivierte Tage wird icon_d2_profile.csv erst beim nächsten
 expliziten "Update" ergänzt.
 
 
-KORREKTUR v0.15.7 – ARCHIVANZEIGE
+KORREKTUR v0.15.18 – ARCHIVANZEIGE
 ---------------------------------
 Beim Steppen wird weiterhin ausschließlich das lokale Archiv gelesen.
 
@@ -219,7 +219,7 @@ Das bestehende Archiv aus v0.12.0–v0.12.2 weiterverwenden.
 Es ist keine Archivkonvertierung erforderlich.
 
 
-STEPPING-LOGIK v0.15.7
+STEPPING-LOGIK v0.15.18
 ----------------------
 Beim Wechsel eines Tages:
 
@@ -248,7 +248,7 @@ werden.
 Der KIT-Archivschutz aus v0.12.1 bleibt unverändert aktiv.
 
 
-KORREKTUR v0.15.7
+KORREKTUR v0.15.18
 -----------------
 Behoben:
 AttributeError:
@@ -258,7 +258,7 @@ Die Quellenanzeige aktualisiert wieder:
 DWD Boden, Vertikalprofil, Idar-Oberstein, KIT 200-m-Mast und ICON-D2.
 
 
-NEU v0.15.7
+NEU v0.15.18
 -----------
 DATENQUELLEN-LOG IM TAGESARCHIV
 
@@ -282,7 +282,7 @@ FESTE KURVENFARBEN
 Für KIT und ICON-D2 wird keine automatische Matplotlib-Farbe mehr verwendet.
 
 
-NEU v0.15.7 – RADIOSONDE ALS MESSKURVE
+NEU v0.15.18 – RADIOSONDE ALS MESSKURVE
 --------------------------------------
 Quelle:
 DWD CDC Radiosonden, high_resolution
@@ -323,12 +323,12 @@ ICON-D2                      = grün
 Radiosonde Idar-Oberstein    = rot
 
 
-KORREKTUR v0.15.7 – RADIOSONDEN-PARSER/DIAGNOSE
+KORREKTUR v0.15.18 – RADIOSONDEN-PARSER/DIAGNOSE
 -----------------------------------------------
 Der DWD-Download selbst funktionierte in v0.13.0, aber ein reales ZIP konnte
 ohne sichtbare Parserdiagnose zu 0 Radiosondenprofilen führen.
 
-v0.15.7 protokolliert deshalb beim Radiosondenimport ausdrücklich:
+v0.15.18 protokolliert deshalb beim Radiosondenimport ausdrücklich:
 
 - Anzahl und Namen der ZIP-Member
 - Größe der Kandidaten
@@ -358,7 +358,7 @@ mit übernommen werden, damit die rund 100-MB-Datei nicht erneut geladen
 werden muss.
 
 
-KORREKTUR v0.15.7 – REALES DWD HIGH-RESOLUTION-FORMAT
+KORREKTUR v0.15.18 – REALES DWD HIGH-RESOLUTION-FORMAT
 -----------------------------------------------------
 Die Diagnose aus v0.13.1 zeigte den echten DWD-Header:
 
@@ -376,7 +376,7 @@ AE_FF
 AE_DD
 AE_RF
 
-v0.15.7 verwendet deshalb explizit:
+v0.15.18 verwendet deshalb explizit:
 
 AE_TT   = Lufttemperatur
 AE_P    = Luftdruck
@@ -417,7 +417,7 @@ durchprobiert.
 Der bestehende große Radiosonden-ZIP-Cache kann weiterverwendet werden.
 
 
-NEU v0.15.7 – DATENQUALITÄTSKLASSEN IM PLOT UND IN DER GUI
+NEU v0.15.18 – DATENQUALITÄTSKLASSEN IM PLOT UND IN DER GUI
 ----------------------------------------------------------
 Die Definition der Datenqualitätsklassen ist jetzt direkt in die Anzeige
 integriert.
@@ -447,7 +447,7 @@ passender Erklärung zurückgesetzt, damit keine alte Qualitätsanzeige
 irreführend stehen bleibt.
 
 
-NEU v0.15.7 – DATENQUALITÄT UNTER DER GRAFIK, KLASSENINFO PER KLICK
+NEU v0.15.18 – DATENQUALITÄT UNTER DER GRAFIK, KLASSENINFO PER KLICK
 -------------------------------------------------------------------
 ÄNDERUNGEN:
 - Keine Legende mehr in der Grafik
@@ -472,7 +472,7 @@ RÜCKSETZUNG:
   wird die Anzeige unter der Grafik wieder auf X mit passender Meldung gesetzt.
 
 
-NEU v0.15.7 – QUALITÄTSBEWERTUNG IN DER GESPEICHERTEN GRAFIK
+NEU v0.15.18 – QUALITÄTSBEWERTUNG IN DER GESPEICHERTEN GRAFIK
 -------------------------------------------------------------
 Die aktuelle Datenqualitätsbewertung befindet sich jetzt INNERHALB der
 Matplotlib-Figure unterhalb der X-Achse.
@@ -494,7 +494,7 @@ Die vollständige Klassendefinition öffnet sich weiterhin ausschließlich
 durch einen Klick in die Grafik in einem eigenen Fenster.
 
 
-NEU v0.15.7 – STATUSINFO MIT IN DER GRAFIK
+NEU v0.15.18 – STATUSINFO MIT IN DER GRAFIK
 ------------------------------------------
 Unterhalb der X-Achse werden jetzt innerhalb der Matplotlib-Figure zwei
 Informationsbereiche mit abgespeichert:
@@ -518,7 +518,7 @@ Zusätzlich:
   in die GUI-/Figure-Anzeige übernommen.
 
 
-NEU v0.15.7 – TAGESWERTE AUCH IN DER GRAFIK, LINKSBÜNDIG
+NEU v0.15.18 – TAGESWERTE AUCH IN DER GRAFIK, LINKSBÜNDIG
 --------------------------------------------------------
 Unterhalb der X-Achse werden jetzt linksbündig in der Figure angezeigt:
 
@@ -538,7 +538,7 @@ WICHTIG:
   Diagramm wesentlich kleiner zu machen.
 
 
-NEU v0.15.7 – PNG IMMER AKTIV
+NEU v0.15.18 – PNG IMMER AKTIV
 -----------------------------
 "PNG speichern" ist jetzt bewusst immer aktiv.
 
@@ -559,7 +559,7 @@ Zusätzlich werden Fehler beim PNG-Speichern in das Protokoll geschrieben
 und als Fehlermeldung angezeigt.
 
 
-NEU v0.15.7 – KURVENLEGENDE WIEDER DA + BREITERER INFOBEREICH
+NEU v0.15.18 – KURVENLEGENDE WIEDER DA + BREITERER INFOBEREICH
 -------------------------------------------------------------
 ÄNDERUNGEN:
 - Die Kurvenlegende ist wieder sichtbar.
@@ -585,7 +585,7 @@ wurde etwas verbreitert, damit die Informationen ruhiger und besser lesbar
 dargestellt werden können.
 
 
-NEU v0.15.7 – NORMAL / ADVANCED + ⋮-PANEL + TOUCH-GUI
+NEU v0.15.18 – NORMAL / ADVANCED + ⋮-PANEL + TOUCH-GUI
 ------------------------------------------------------
 NORMAL:
 - rechter Diagnosebereich ist vollständig ausgeblendet
@@ -629,7 +629,7 @@ Tkinter-Oberfläche in settings.json gehalten und können später von einer
 Android-Oberfläche semantisch übernommen werden.
 
 
-NEU v0.15.7 – MAUSRAD + LONG-PRESS FÜR TAGESNAVIGATION
+NEU v0.15.18 – MAUSRAD + LONG-PRESS FÜR TAGESNAVIGATION
 -------------------------------------------------------
 ⋮ EINSTELLUNGEN:
 - Unter Windows kann das Einstellungsfenster jetzt mit dem Mausrad gescrollt
@@ -649,7 +649,7 @@ Die Implementierung nutzt Press/Release-Events und ist damit bewusst bereits
 für spätere Touch-/Android-Bedienung vorbereitet.
 
 
-NEU v0.15.7 – ORTSNEUTRAL / MEHRERE ORTE
+NEU v0.15.18 – ORTSNEUTRAL / MEHRERE ORTE
 -----------------------------------------
 CODE-DATEINAMEN:
 - Inversionskurve.py
@@ -713,7 +713,7 @@ aktiv bleiben. Ihre räumliche Entfernung muss bei der Interpretation
 berücksichtigt werden.
 
 
-NEU v0.15.7 – ORTSNAME IM DIAGRAMMTITEL
+NEU v0.15.18 – ORTSNAME IM DIAGRAMMTITEL
 ----------------------------------------
 Im Diagrammtitel wird jetzt der aktive Ort mit angezeigt.
 
@@ -724,7 +724,7 @@ Das gilt auch für Leer-/Hinweisplots, damit ein gespeichertes PNG sofort
 erkennen lässt, für welchen Ort es erzeugt wurde.
 
 
-NEU v0.15.7 – SERVER- UND GITHUB-TESTSTUFE
+NEU v0.15.18 – SERVER- UND GITHUB-TESTSTUFE
 ==========================================
 
 Diese Version dient bewusst zuerst der Prüfung des Headless-Servers und der
@@ -806,7 +806,7 @@ periodisch; Inversion_Server.py entscheidet anhand archive_config.json, ob
 für einen Tag ein Retry bereits fällig ist.
 
 
-NEU v0.15.7 – NO-TOUCH SAFE-MERGE + FINALQUALITÄT + GITHUB-CACHE
+NEU v0.15.18 – NO-TOUCH SAFE-MERGE + FINALQUALITÄT + GITHUB-CACHE
 =================================================================
 
 NO-TOUCH-ARCHIVSCHUTZ
@@ -859,7 +859,7 @@ Aktualisiert auf:
 Damit werden Node-24-kompatible Action-Versionen verwendet.
 
 
-NEU v0.15.7 – DATENHERKUNFT + ORTSWECHSEL OHNE NEUSTART
+NEU v0.15.18 – DATENHERKUNFT + ORTSWECHSEL OHNE NEUSTART
 =========================================================
 Im Diagrammfooter und im Advanced-Bereich wird die Datenherkunft angezeigt.
 
@@ -875,7 +875,7 @@ Lokale _origin.json-Dateien speichern die Herkunft, werden aber nicht in Git
 versioniert.
 
 
-NEU v0.15.7 – GUI-STARTFEHLER BEHOBEN
+NEU v0.15.18 – GUI-STARTFEHLER BEHOBEN
 ======================================
 Fehler in v0.15.4:
     NameError: name 'f' is not defined
@@ -889,7 +889,7 @@ Korrektur:
 - Regressionstest prüft _status() auf diesen Fehler.
 
 
-NEU v0.15.7 – KERNQUELLEN UND OPTIONALE ZUSATZQUELLEN
+NEU v0.15.18 – KERNQUELLEN UND OPTIONALE ZUSATZQUELLEN
 ======================================================
 
 Kernquellen für GitHub-Vollständigkeit:
@@ -920,7 +920,7 @@ automatisch so interpretiert, dass sonde und kit_mast nicht mehr zu den
 Kernquellen gehören.
 
 
-NEU v0.15.7 – KONTINUIERLICHE KIT-LANGZEITARCHIVIERUNG
+NEU v0.15.18 – KONTINUIERLICHE KIT-LANGZEITARCHIVIERUNG
 =======================================================
 Bei jedem Scheduled-GitHub-Lauf wird KIT für den aktuellen Tag separat
 abgerufen. Die Profile werden kumulativ nach Zeitstempel in kit_mast.csv
@@ -944,3 +944,117 @@ bestimmt. Es wird NICHT starr von 24 Profilen ausgegangen. Gespeichert werden:
 
 Status COMPLETE/VOLLSTÄNDIG wird nur vergeben, wenn die erwartete Profilzahl
 erreicht ist und keine Lücke größer als 1,5 Messperioden ist.
+
+
+v0.15.18 – Valencia / AEMET-Diagramm
+-------------------------------------
+Bei Valencia werden vorhandene AEMET-8416-Messwerte in einem separaten
+Temperaturfeld unter dem Inversionsindex angezeigt und unmittelbar mit der
+modellierten 2-m-Temperatur verglichen. Das Zusatzfeld erscheint nur, wenn
+für den gewählten Tag reale AEMET-Messwerte im Archiv vorhanden sind.
+
+
+v0.15.18 – Temperaturschichtung
+--------------------------------
+Für Valencia zeigt das Zusatzdiagramm jetzt nicht nur die Bodentemperatur,
+sondern die vertikale Temperaturschichtung: AEMET-Bodenmessung sowie
+modellierte Temperaturen bei 100, 200 und 500 m über Grund. Zusätzlich wird
+ΔT zwischen Boden und der höchsten verfügbaren dieser Vergleichshöhen
+angezeigt. Positive ΔT-Werte bedeuten, dass es oben wärmer ist als unten und
+damit eine Inversionsschichtung vorliegt.
+
+Die festen Höhen werden aus den verfügbaren Druckflächen linear interpoliert.
+Außerhalb des vorhandenen Profilbereichs wird nicht extrapoliert.
+
+
+v0.15.18 – Lokaler Schichtungsindex
+------------------------------------
+Aus der festen Temperaturschichtung Boden / 100 / 200 / 500 m AGL wird ein
+eigener lokaler Schichtungsindex von 0 bis 5 gebildet. Er bewertet maximale
+positive Temperaturgradienten, positive Temperaturdifferenz und die vertikale
+Ausdehnung der invers geschichteten Bereiche.
+
+Der lokale Schichtungsindex ist bewusst getrennt vom bisherigen Hauptindex und
+vom KIT-Mast-Index. Bei vorhandenem AEMET-Stundenwert wird dieser als reale
+Bodenreferenz verwendet. Fehlt der Messwert, wird die Modell-2-m-Temperatur
+verwendet und der Messstatus bleibt separat erkennbar.
+
+
+v0.15.18 – Adaptiver lokaler Schichtungsindex
+----------------------------------------------
+Der lokale Schichtungsindex bewertet jetzt nicht mehr starr die Differenz
+zwischen Boden und 500 m. Stattdessen werden die Teilschichten
+Boden-100 m, 100-200 m und 200-500 m separat untersucht. Nur tatsächlich
+positive Temperaturgradienten tragen zum Index bei.
+
+Damit wird eine bodennahe Inversion auch dann erkannt, wenn die Temperatur
+bei 500 m bereits wieder unter die Bodentemperatur gefallen ist.
+
+Neue Normierung:
+  Gradient: 0.5 K pro 100 m -> voller Gradient-Score
+  positive DeltaT: 2.0 K -> voller DeltaT-Score
+  inverse Tiefe: 300 m -> voller Tiefen-Score
+
+Die Gewichtung bleibt 45/35/20 Prozent.
+
+
+v0.15.18 – Lokaler Schichtungsindex aus Vollprofil
+---------------------------------------------------
+Der lokale Schichtungsindex wird nun aus allen verfügbaren Modell-Druckflächen
+bis 600 m über Grund gebildet. AEMET dient, wenn vorhanden, als reale
+Bodenreferenz. Dadurch können auch Inversionen erkannt werden, die zwischen
+den festen Visualisierungshöhen 100, 200 und 500 m liegen.
+
+Die festen 100/200/500-m-Temperaturkurven bleiben zur Darstellung erhalten,
+bestimmen den lokalen Index aber nicht mehr.
+
+
+v0.15.18 – Schichtungsdiagramm auch ohne AEMET
+-----------------------------------------------
+Das untere Temperaturdiagramm bleibt nun auch an Tagen sichtbar, an denen
+AEMET noch keine Messwerte geliefert hat. In diesem Fall werden die
+modellierten 2/100/200/500-m-Temperaturen dargestellt und das Diagramm
+ausdrücklich als "nur Modell" gekennzeichnet.
+
+Der lokale Schichtungsindex zeigt ebenfalls seine Herkunft:
+"AEMET + Vollprofil" bei realem Bodenanker bzw. "nur Modell", wenn die
+Modell-2-m-Temperatur als Bodenreferenz verwendet wurde.
+
+
+v0.15.18 – Eindeutige Datenherkunft in den Diagrammen
+------------------------------------------------------
+Die Legenden zeigen nun ausdrücklich, welche Größen gemessen und welche
+modelliert sind. Auch der Haupt-Inversionsindex wird stundenweise getrennt
+dargestellt, je nachdem ob eine reale Bodenmessung zur Korrektur verwendet
+wurde oder der Index ausschließlich aus dem Modell stammt.
+
+Damit ist insbesondere bei Valencia sofort erkennbar, ob AEMET tatsächlich
+als Bodenanker eingeflossen ist.
+
+
+v0.15.18 – Unteres Temperaturdiagramm abschaltbar
+--------------------------------------------------
+In den Anzeigeeinstellungen gibt es nun die Option
+"Unteres Temperatur-/Schichtungsdiagramm anzeigen".
+Ist sie deaktiviert, wird das komplette untere Temperaturfeld ausgeblendet;
+der obere Inversionsplot bleibt unverändert sichtbar. Die Einstellung wird
+persistent gespeichert.
+
+
+v0.15.18 – KIT-GitHub-Tagesarchiv
+----------------------------------
+Die KIT-Mastdaten werden bei GitHub nun stündlich statt alle drei Stunden
+abgerufen. Jeder Scheduled-Lauf fragt den aktuellen Tag und zusätzlich den
+Vortag ab. Alle gefundenen Profile werden nach Zeitstempel kumulativ
+zusammengeführt.
+
+Der Vortag wird nach Tagesende ausdrücklich auf Vollständigkeit geprüft.
+Im GitHub-Log erscheint entweder "KIT-TAGESARCHIV BESTÄTIGT" oder eine
+deutliche Warnung mit Profilzahl und größter Zeitlücke.
+
+Wichtig: Da die öffentliche KIT-Quelle nur ein rollierendes Kurzzeitfenster
+bereitstellt, kann auch ein stündlicher Collector keine Daten wiederherstellen,
+die während eines länger dauernden GitHub-/KIT-Ausfalls bereits aus dem
+Quellfenster verschwunden sind. Die Kombination aus stündlichem Abruf,
+Überlappung, Vortags-Nachlauf, kumulativem Merge und Vollständigkeitsprüfung
+minimiert dieses Risiko und macht verbleibende Lücken sichtbar.
