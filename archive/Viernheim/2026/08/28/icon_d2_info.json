@@ -46,7 +46,7 @@
   "timezone_returned": "Europe/Berlin",
   "hourly_rows": 24,
   "valid_metric_rows": 24,
-  "positive_index_rows": 9,
+  "positive_index_rows": 10,
   "raw_profile_rows": 168,
   "attempt_errors": []
 }
