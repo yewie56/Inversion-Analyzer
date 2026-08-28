@@ -66,18 +66,18 @@
   "kit_mast": {
     "name": "KIT 200-m-Meteomast",
     "state": "KIT_TEMP_OK",
-    "message": "4 archivierte KIT-Temperaturprofil(e) für den Tag (kumulativ)",
-    "last_attempt": "2026-08-28T03:39:54.454588+02:00",
-    "last_success": "2026-08-28T03:40:00.296779+02:00",
+    "message": "8 archivierte KIT-Temperaturprofil(e) für den Tag (kumulativ)",
+    "last_attempt": "2026-08-28T05:51:39.077422+02:00",
+    "last_success": "2026-08-28T05:51:44.231380+02:00",
     "http_status": null,
     "data_age_minutes": null,
-    "rows": 4,
-    "detail": "Gemessene KIT-Inversionskurve separat verfügbar. Zeitraum 00:30–03:30. Nicht mit dem Modellindex vermischt. | ARCHIVSCHUTZ: vorhandene KIT-Profile werden nicht durch einen kleineren oder leeren Abruf gelöscht. | KIT-Archiv: UNVOLLSTÄNDIG; 4/24 Profile, 16.7 %, Takt≈60.0 min, größte Lücke 1230.0 min",
-    "expected_rows": 24,
-    "coverage_percent": 16.7,
+    "rows": 8,
+    "detail": "Gemessene KIT-Inversionskurve separat verfügbar. Zeitraum 01:40–04:40. Nicht mit dem Modellindex vermischt. | ARCHIVSCHUTZ: vorhandene KIT-Profile werden nicht durch einen kleineren oder leeren Abruf gelöscht. | KIT-Archiv: UNVOLLSTÄNDIG; 8/29 Profile, 27.6 %, Takt≈50.0 min, größte Lücke 1160.0 min",
+    "expected_rows": 29,
+    "coverage_percent": 27.6,
     "first_timestamp": "2026-08-28T00:30:00+02:00",
-    "last_timestamp": "2026-08-28T03:30:00+02:00",
-    "largest_gap_minutes": 1230.0
+    "last_timestamp": "2026-08-28T04:40:00+02:00",
+    "largest_gap_minutes": 1160.0
   },
   "icon_d2": {
     "name": "Open-Meteo ICON-D2 Historical Forecast",
