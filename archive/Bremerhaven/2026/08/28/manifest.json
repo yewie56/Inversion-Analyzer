@@ -10,8 +10,8 @@
     "timezone": "Europe/Berlin"
   },
   "date": "2026-08-28",
-  "saved_at": "2026-08-28T05:51:53.014801+02:00",
-  "run_id": "20260828_055148",
+  "saved_at": "2026-08-28T18:55:03.543739+02:00",
+  "run_id": "20260828_185458",
   "quality_class": "X",
   "quality_text": "Keine belastbare Berechnung möglich: Vertikalprofil fehlt | KIT-Mast gemessen separat",
   "complete": false,
@@ -48,7 +48,7 @@
   },
   "attempts": 0,
   "last_attempt": null,
-  "last_auxiliary_attempt": "2026-08-28T05:51:53.014801+02:00",
+  "last_auxiliary_attempt": "2026-08-28T18:55:03.543739+02:00",
   "attempt_reason": "KIT_CONTINUOUS_ARCHIVE",
   "files": {
     "kit_mast_metrics": "kit_mast.csv",
