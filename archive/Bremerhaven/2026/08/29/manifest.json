@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "app_version": "0.15.18",
+  "location": {
+    "name": "Bremerhaven",
+    "slug": "Bremerhaven",
+    "latitude": 53.545833,
+    "longitude": 8.58,
+    "elevation_m": 2.6,
+    "timezone": "Europe/Berlin"
+  },
+  "date": "2026-08-29",
+  "saved_at": "2026-08-29T03:09:12.035979+02:00",
+  "run_id": "20260829_030906",
+  "quality_class": "X",
+  "quality_text": "Keine belastbare Berechnung möglich: Vertikalprofil fehlt",
+  "complete": false,
+  "completion_sources": [
+    "dwd",
+    "profile",
+    "icon_d2"
+  ],
+  "missing_sources": [
+    "dwd",
+    "profile",
+    "icon_d2"
+  ],
+  "optional_sources": [
+    "sonde",
+    "kit_mast"
+  ],
+  "optional_missing_sources": [
+    "sonde",
+    "kit_mast"
+  ],
+  "kit_archive": {
+    "status": "NO_DATA",
+    "profile_count": 0,
+    "expected_profiles": null,
+    "coverage_percent": null,
+    "cadence_minutes": null,
+    "first_timestamp": null,
+    "last_timestamp": null,
+    "largest_gap_minutes": null,
+    "start_gap_minutes": null,
+    "end_gap_minutes": null,
+    "day_minutes": null,
+    "complete": false
+  },
+  "attempts": 0,
+  "last_attempt": null,
+  "last_auxiliary_attempt": "2026-08-29T03:09:12.035979+02:00",
+  "attempt_reason": "KIT_CONTINUOUS_ARCHIVE",
+  "files": {
+    "kit_mast_metrics": null,
+    "kit_mast_info": "kit_mast_info.json",
+    "kit_mast_data": "kit_mast_data.json",
+    "source_status": "source_status.json"
+  }
+}
