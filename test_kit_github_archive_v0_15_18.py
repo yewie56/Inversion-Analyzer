@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Regressionstest v0.15.18:
-- GitHub cron hourly
+- GitHub cron at least hourly (v0.15.19 may run more frequently)
 - scheduled KIT archive queries today and yesterday
 - previous-day incompleteness gets an explicit warning
 - cumulative KIT merge and completeness logic stay present
@@ -15,7 +15,7 @@ server=(ROOT/"Inversion_Server.py").read_text(encoding="utf-8")
 archive=(ROOT/"inversion/archive.py").read_text(encoding="utf-8")
 
 checks=[
-    ('hourly_cron', 'cron: "17 * * * *"' in workflow),
+    ('at_least_hourly_cron', ('cron: "17 * * * *"' in workflow) or ('cron: "7,37 * * * *"' in workflow)),
     ('today_yesterday', 'days=(now.date(), now.date()-timedelta(days=1))' in server),
     ('kit_warning', 'WARNUNG KIT-TAGESARCHIV' in server),
     ('kit_complete_confirmation', 'KIT-TAGESARCHIV BESTÄTIGT' in server),

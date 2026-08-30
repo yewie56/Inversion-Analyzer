@@ -1,0 +1,23 @@
+Inversion Analyzer v0.15.20 – KIT-Parser-Fix und --kit-only
+Datum: 2026-08-30
+
+Änderungen
+==========
+1. KIT-Temperaturprofile werden nicht mehr vollständig verworfen, wenn eine
+   einzelne Messhöhe None/NaN/inf liefert.
+2. Fehlende Höhen werden pro Profil protokolliert; die Berechnung nutzt die
+   verbleibenden gültigen Höhen.
+3. Mindestens zwei gültige Höhen sind erforderlich.
+4. Zusätzliche Nicht-Temperaturzeilen in einer Bokeh-CDS werden ignoriert,
+   statt das Gesamtprofil zu verwerfen.
+5. Neuer Headless-Schalter:
+       python Inversion_Server.py --kit-only
+   Er aktualisiert ausschließlich KIT für heute und gestern und verwendet
+   denselben kumulativen Safe-Merge wie die kontinuierliche Archivierung.
+6. Die Timeout-/Retry-Logik aus v0.15.19 bleibt unverändert.
+
+Regression
+==========
+Der neue Test bildet den beobachteten KIT-Fall vom 30.08.2026 nach:
+7 gültige Höhen (2..160 m), 200-m-Wert fehlt. Das Profil muss trotzdem
+erkannt, berechnet und archivierungsfähig sein.

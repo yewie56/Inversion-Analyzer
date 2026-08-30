@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # Modul-History
+# 0.15.19 - Bokeh-Abfrage: harter Timeout + begrenzte Retries + explizite Fehlerzustände
 # 0.15.18 - Verwendung im stündlichen GitHub-Sicherungszyklus bestätigt
 # 0.15.7  - KIT-Kurzfenster kumulativ archiviert
 # =============================================================================
@@ -302,11 +303,15 @@ def fetch_kit_mast_diagnostics(selected_date,log_cb=None,run_id="unknown"):
             "Installation z. B. mit: pip install bokeh. "
             f"Details: {client_result.get('detail','')}"
         )
-    elif client_result.get("state")=="BOKEH_CLIENT_ERROR":
-        status.state="BOKEH_CLIENT_ERROR"
-        status.message="Bokeh-Server-Session konnte nicht geladen werden"
+    elif client_result.get("state") in (
+        "BOKEH_CLIENT_TIMEOUT", "BOKEH_CLIENT_CONNECT_ERROR", "BOKEH_CLIENT_ERROR", "BOKEH_CLIENT_EMPTY"
+    ):
+        status.state=client_result.get("state")
+        status.message=client_result.get("message") or "Bokeh-Server-Session konnte nicht geladen werden"
+        attempts=client_result.get("attempts",[]) or []
         status.detail=(
             f"{client_result.get('detail','')}. "
+            f"Versuche={len(attempts)}. "
             f"Diagnose: {info.get('diagnostic_file') or '–'}"
         )
     elif any_cds:

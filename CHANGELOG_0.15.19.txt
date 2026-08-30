@@ -1,0 +1,39 @@
+Inversion Analyzer v0.15.19 – KIT-Abruf robuster
+2026-08-30
+
+Ziel
+- Kurzlebige KIT-Mastprofile zuverlässiger sichern.
+- Hängende Bokeh-Sessions dürfen keinen Collector-Lauf mehr lange blockieren.
+- Ein einzelner transienter KIT-/WebSocket-Fehler soll nicht sofort zum Datenverlust führen.
+
+Änderungen
+- GitHub Scheduled Collection von stündlich auf zweimal pro Stunde geändert:
+    cron: 7,37 * * * *
+  Damit wird bewusst nicht zur vollen Stunde gestartet.
+- Bokeh-Abfrage erhält einen harten Timeout von 20 s pro Versuch.
+  Umsetzung in isoliertem Kindprozess; bei Timeout wird der Prozess beendet.
+- Bis zu 3 Bokeh-Versuche pro KIT-Abruf.
+- Retry-Pausen standardmäßig 5 s und 15 s.
+- Explizite Fehlerzustände:
+    BOKEH_CLIENT_TIMEOUT
+    BOKEH_CLIENT_CONNECT_ERROR
+    BOKEH_CLIENT_EMPTY
+    BOKEH_CLIENT_ERROR
+    BOKEH_CLIENT_MISSING
+- Jeder Versuch wird mit Versuchszahl, Zustand und Laufzeit protokolliert.
+- Vorhandene KIT-Tagesprofile bleiben unverändert durch den bisherigen kumulativen
+  Safe-Merge nach Zeitstempel geschützt. Ein leerer/fehlgeschlagener Abruf kann
+  gute Archivdaten nicht löschen.
+- Heute + gestern bleiben Teil jedes Scheduled-KIT-Abrufs.
+- KIT bleibt optionale Zusatzquelle und beeinflusst core-complete/Retry nicht.
+
+Standardparameter
+- KIT_BOKEH_TIMEOUT = 20 s
+- KIT_BOKEH_MAX_ATTEMPTS = 3
+- KIT_BOKEH_RETRY_DELAYS_SEC = [5, 15]
+- GitHub-Cron = 7,37 * * * *
+
+Hinweis
+Ein robusterer Abruf kann Profile nicht rekonstruieren, die bereits aus dem
+rollierenden KIT-Quellfenster verschwunden sind. Deshalb ist der häufigere
+30-Minuten-Abruf die zweite wichtige Schutzmaßnahme.

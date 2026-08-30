@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # Inversion Analyzer
-# Version: 0.15.18
+# Version: 0.15.20
 # Datum: 2026-08-27
 #
 # History:
+# 0.15.20 - KIT-Parser toleriert einzelne fehlende Höhenwerte; --kit-only im Headless-Collector
+# 0.15.19 - KIT robuster: 30-min GitHub-Takt, Bokeh-Timeout 20 s, 3 Versuche
 # 0.15.18 - KIT-GitHub-Abruf stündlich; heute+gestern; Tagesvollständigkeit
 # 0.15.17 - Unteres Temperatur-/Schichtungsdiagramm abschaltbar
 # 0.15.16 - Eindeutige Quellenkennzeichnung in Diagrammlegenden
@@ -22,13 +24,18 @@
 
 """
 Inversionskurve.py
-Version: 0.15.18
+Version: 0.15.20
 Datum: 2026-08-24
 
 STARTDATEI: In Spyder nur diese Datei starten.
 
 Versionshistorie
 ----------------
+0.15.19 - KIT-Robustheit: GitHub-Sicherung zweimal pro Stunde; Bokeh-Abruf
+         mit hartem 20-s-Timeout und bis zu drei Versuchen (5/15 s Pause).
+         Timeout/Verbindungsfehler/leere Session werden getrennt protokolliert.
+         Vorhandene KIT-Profile bleiben durch Safe-Merge geschützt.
+
 0.15.18 - Kontinuierliche KIT-Langzeitarchivierung + 24h-Prüfung:
          KIT wird bei jedem Scheduled-Lauf separat für den aktuellen Tag
          abgerufen und kumulativ nach Zeitstempel gesichert.

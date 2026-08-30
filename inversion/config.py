@@ -3,7 +3,7 @@ from pathlib import Path
 import json, os, re
 
 APP_NAME = "Inversionskurve"
-VERSION = "0.15.18"
+VERSION = "0.15.20"
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = PROJECT_DIR / "output_inversion"
 LOG_DIR = PROJECT_DIR / "logs"
@@ -103,7 +103,10 @@ def load_archive_config():
             "retry_optional_sources":False,
             "kit_continuous_archive":True,
             "kit_coverage_min_profiles_for_cadence":3,
-            "kit_complete_gap_factor":1.5
+            "kit_complete_gap_factor":1.5,
+            "kit_bokeh_timeout_seconds":20,
+            "kit_bokeh_max_attempts":3,
+            "kit_bokeh_retry_delays_seconds":[5,15]
         }
     }
     try:
@@ -133,11 +136,21 @@ def load_archive_config():
             ga["kit_coverage_min_profiles_for_cadence"]=3
         if "kit_complete_gap_factor" not in ga:
             ga["kit_complete_gap_factor"]=1.5
+        if "kit_bokeh_timeout_seconds" not in ga:
+            ga["kit_bokeh_timeout_seconds"]=20
+        if "kit_bokeh_max_attempts" not in ga:
+            ga["kit_bokeh_max_attempts"]=3
+        if "kit_bokeh_retry_delays_seconds" not in ga:
+            ga["kit_bokeh_retry_delays_seconds"]=[5,15]
         return data
     except Exception:
         return default
 
 ARCHIVE_CONFIG=load_archive_config()
+_GA=ARCHIVE_CONFIG.get("github_actions",{})
+KIT_BOKEH_TIMEOUT=float(_GA.get("kit_bokeh_timeout_seconds",20))
+KIT_BOKEH_MAX_ATTEMPTS=int(_GA.get("kit_bokeh_max_attempts",3))
+KIT_BOKEH_RETRY_DELAYS_SEC=list(_GA.get("kit_bokeh_retry_delays_seconds",[5,15]))
 ARCHIVE_DIR=PROJECT_DIR / str(ARCHIVE_CONFIG.get("archive_dir","archive"))
 
 DWD_STATION_LIST_URL = (

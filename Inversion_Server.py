@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # Inversion Analyzer
-# Version: 0.15.18
-# Datum: 2026-08-27
+# Version: 0.15.20
+# Datum: 2026-08-30
 #
 # History:
+# 0.15.20 - KIT-Parser toleriert fehlende Höhenwerte; neuer --kit-only-Schalter
+# 0.15.19 - KIT robuster: 30-min GitHub-Takt, Bokeh-Timeout 20 s, 3 Versuche
 # 0.15.18 - KIT-GitHub-Abruf stündlich; heute+gestern; Tagesvollständigkeit
 # 0.15.17 - Unteres Temperatur-/Schichtungsdiagramm abschaltbar
 # 0.15.16 - Eindeutige Quellenkennzeichnung in Diagrammlegenden
@@ -20,7 +22,7 @@
 # =============================================================================
 
 """
-Inversion_Server.py – v0.15.18
+Inversion_Server.py – v0.15.20
 
 Headless collector / archive repair tool.
 
@@ -29,6 +31,7 @@ Wichtige Testoptionen:
   --show-config    Zeigt die tatsächlich aktive Orts-/Archivkonfiguration.
   --verify-archive Prüft vorhandene Manifeste des aktiven Orts auf Lesbarkeit
                    und Ortszuordnung, ohne Daten zu verändern.
+  --kit-only       Ruft ausschließlich KIT für heute und gestern ab und merged kumulativ.
 """
 from __future__ import annotations
 
@@ -581,6 +584,7 @@ def main():
     g.add_argument("--date",help="JJJJ-MM-TT")
     g.add_argument("--today",action="store_true")
     g.add_argument("--scheduled",action="store_true")
+    g.add_argument("--kit-only",action="store_true",help="nur KIT für heute und gestern aktualisieren")
     g.add_argument("--selftest",action="store_true")
     g.add_argument("--show-config",action="store_true")
     g.add_argument("--verify-archive",action="store_true")
@@ -604,6 +608,10 @@ def main():
         return verify_archive()
     if args.scheduled:
         return scheduled()
+    if args.kit_only:
+        now=datetime.now(ZoneInfo(TIMEZONE))
+        log(f"KIT-ONLY START | Ort={LOCATION_NAME} | lokale Zeit={now.isoformat()}")
+        return 0 if scheduled_kit_archive(now) else 1
 
     day=(
         parse_date(args.date)

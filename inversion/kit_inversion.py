@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-Measured KIT 200-m mast inversion processing v0.10.0.
+Measured KIT 200-m mast inversion processing.
+
+v0.15.20:
+- einzelne fehlende/NaN-Sensorwerte verwerfen nicht mehr das Gesamtprofil
+- zusätzliche Nicht-Temperaturzeilen in einer CDS werden ignoriert
+- mindestens zwei gültige Temperaturhöhen reichen für die Profilberechnung
+- Diagnose protokolliert verwendete/fehlende Höhen je unvollständigem Profil
 
 Only variables matching
     PT_T_AIR_<height>_AVG
-are accepted as temperature profiles.
+are interpreted as mast temperature values.
 
 The KIT mast index is an empirical diagnostic 0..5 score and is kept
 strictly separate from the existing location model index.
@@ -21,6 +27,15 @@ from .config import TIMEZONE
 TEMP_RX = re.compile(r"^PT_T_AIR_(\d{3})_AVG$")
 
 
+def _finite_float(value):
+    """Return finite float or None for None/NaN/inf/non-numeric values."""
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return None
+    return v if np.isfinite(v) else None
+
+
 def _temperature_source_to_profile(source):
     data = source.get("data", {}) or {}
     variables = data.get("variable", [])
@@ -35,31 +50,47 @@ def _temperature_source_to_profile(source):
         return None
 
     parsed = []
+    missing_levels = []
+    ignored_non_temperature_rows = 0
+    invalid_level_rows = 0
+
     for var, value, altitude in zip(variables, values, altitudes):
         m = TEMP_RX.match(str(var))
         if not m:
-            return None
-        try:
-            h_from_name = int(m.group(1))
-            h = float(altitude)
-            v = float(value)
-        except Exception:
-            return None
+            # A Bokeh ColumnDataSource may contain auxiliary rows.  They must
+            # not invalidate otherwise valid temperature measurements.
+            ignored_non_temperature_rows += 1
+            continue
 
-        # Variable name and altitude must describe the same measurement level.
-        if abs(h_from_name - h) > 0.1:
-            return None
+        h_from_name = int(m.group(1))
+        h = _finite_float(altitude)
+        if h is None or abs(h_from_name - h) > 0.1:
+            invalid_level_rows += 1
+            continue
+
+        v = _finite_float(value)
+        if v is None:
+            missing_levels.append(h_from_name)
+            continue
+
         parsed.append((h, v, str(var)))
 
-    # One source represents one vertical profile. All timestamps should match.
-    iso_values = [x for x in local_iso if x]
+    # Need at least two valid levels to calculate a vertical gradient.
+    if len(parsed) < 2:
+        return None
+
+    # One source represents one vertical profile. All available timestamps
+    # should match.  Empty timestamps are ignored.
+    iso_values = [str(x) for x in local_iso if x]
     if iso_values:
         if len(set(iso_values)) != 1:
             return None
         time = pd.Timestamp(iso_values[0])
     elif local_raw:
-        # v0.9.1 adds localtime_iso, but keep defensive fallback.
-        time = pd.to_datetime(local_raw[0], unit="ms").tz_localize(TIMEZONE)
+        raw_values = [x for x in local_raw if x is not None]
+        if not raw_values:
+            return None
+        time = pd.to_datetime(raw_values[0], unit="ms").tz_localize(TIMEZONE)
     else:
         return None
 
@@ -73,6 +104,9 @@ def _temperature_source_to_profile(source):
         "time": time,
         "levels": parsed,
         "source_id": source.get("id"),
+        "missing_levels": sorted(set(missing_levels)),
+        "ignored_non_temperature_rows": ignored_non_temperature_rows,
+        "invalid_level_rows": invalid_level_rows,
     }
 
 
@@ -124,8 +158,6 @@ def _profile_metrics(profile):
         inv_base = inv_top = layer_delta = layer_depth = 0.0
 
     # Empirical mast-specific 0..5 diagnostic index.
-    # Strong short near-ground gradients are capped so that a single 2-10 m
-    # layer cannot dominate the entire score.
     grad_score = np.clip(max_gradient / 5.0, 0.0, 1.0)
     dt_score = np.clip(layer_delta / 3.0, 0.0, 1.0)
     depth_score = np.clip(layer_depth / 100.0, 0.0, 1.0)
@@ -142,6 +174,7 @@ def _profile_metrics(profile):
         "kit_inversion_deltaT_K": float(layer_delta),
         "kit_source_id": profile.get("source_id"),
         "kit_profile_levels": len(levels),
+        "kit_missing_levels": ",".join(str(x) for x in profile.get("missing_levels", [])),
     }
 
     for z, t, _ in levels:
@@ -152,9 +185,8 @@ def _profile_metrics(profile):
 
 
 def extract_kit_temperature_profiles(client_sources, selected_date, log_cb=None):
-    """
-    Extract, date-filter, sort and calculate measured KIT mast metrics.
-    """
+    """Extract, date-filter, sort and calculate measured KIT mast metrics."""
+
     def log(msg):
         if log_cb:
             log_cb(msg)
@@ -162,37 +194,54 @@ def extract_kit_temperature_profiles(client_sources, selected_date, log_cb=None)
     profiles = []
     rejected_non_temp = 0
     rejected_invalid = 0
+    incomplete_profiles = 0
 
     for source in client_sources or []:
         variables = (source.get("data", {}) or {}).get("variable", [])
-        if not variables or not all(TEMP_RX.match(str(v)) for v in variables):
+
+        # Require at least one recognizable mast-temperature variable.  Other
+        # rows in the same CDS are allowed and ignored by the parser.
+        if not variables or not any(TEMP_RX.match(str(v)) for v in variables):
             rejected_non_temp += 1
             continue
+
         profile = _temperature_source_to_profile(source)
         if profile is None:
             rejected_invalid += 1
             continue
+
+        if profile.get("missing_levels"):
+            incomplete_profiles += 1
         profiles.append(profile)
 
     profiles.sort(key=lambda x: x["time"])
-
     all_count = len(profiles)
     selected = [p for p in profiles if p["time"].date() == selected_date]
 
     rows = []
     for profile in selected:
+        missing = profile.get("missing_levels", [])
+        if missing:
+            log(
+                f"KIT {profile['time']:%H:%M}: "
+                f"fehlende Höhe(n) {','.join(str(x) + ' m' for x in missing)}; "
+                f"Profil mit {len(profile['levels'])} gültigen Höhen verwendet."
+            )
+
         row = _profile_metrics(profile)
         if row is not None:
             rows.append(row)
 
     if not rows:
         log(
-            f"KIT-Mast Temperatur: {all_count} Temperaturprofil(e) erkannt, "
-            f"aber 0 für ausgewähltes Datum {selected_date}."
+            f"KIT-Mast Temperatur: {all_count} verwendbare Temperaturprofil(e) erkannt, "
+            f"aber 0 für ausgewähltes Datum {selected_date}. "
+            f"Ungültig verworfen={rejected_invalid}, Nicht-Temperatur-CDS={rejected_non_temp}."
         )
         return None, {
             "recognized_profiles": all_count,
             "selected_profiles": 0,
+            "incomplete_profiles": incomplete_profiles,
             "rejected_non_temperature_sources": rejected_non_temp,
             "rejected_invalid_temperature_sources": rejected_invalid,
         }
@@ -200,8 +249,9 @@ def extract_kit_temperature_profiles(client_sources, selected_date, log_cb=None)
     df = pd.DataFrame(rows).sort_values("time").reset_index(drop=True)
 
     log(
-        f"KIT-Mast Temperatur: {all_count} Temperaturprofil(e) erkannt, "
-        f"{len(df)} für {selected_date} verwendet."
+        f"KIT-Mast Temperatur: {all_count} verwendbare Temperaturprofil(e) erkannt, "
+        f"{len(df)} für {selected_date} verwendet; "
+        f"davon {sum(bool(p.get('missing_levels')) for p in selected)} mit fehlender Höhe."
     )
     log(
         "KIT-Mast Zeitraum: "
@@ -216,12 +266,14 @@ def extract_kit_temperature_profiles(client_sources, selected_date, log_cb=None)
             f"Schicht={row['kit_inversion_base_m']:.0f}-"
             f"{row['kit_inversion_top_m']:.0f} m | "
             f"ΔT={row['kit_inversion_deltaT_K']:.2f} K | "
-            f"maxGrad={row['kit_max_positive_gradient_K_per_100m']:.2f} K/100m"
+            f"maxGrad={row['kit_max_positive_gradient_K_per_100m']:.2f} K/100m | "
+            f"Höhen={int(row['kit_profile_levels'])}"
         )
 
     return df, {
         "recognized_profiles": all_count,
         "selected_profiles": len(df),
+        "incomplete_profiles": incomplete_profiles,
         "rejected_non_temperature_sources": rejected_non_temp,
         "rejected_invalid_temperature_sources": rejected_invalid,
     }

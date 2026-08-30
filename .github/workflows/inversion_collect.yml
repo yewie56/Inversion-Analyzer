@@ -18,11 +18,11 @@ on:
         default: "Viernheim"
         type: string
   schedule:
-    # v0.15.18: stündlicher Check. KIT stellt online nur ein kurzes Fenster
-    # der letzten Profile bereit. Ein Stundenraster erzeugt deshalb mehrere
-    # überlappende Abrufchancen, bevor ein Profil aus dem Quellfenster fällt.
+    # v0.15.19: zweimal pro Stunde, bewusst außerhalb der vollen Stunde.
+    # KIT stellt nur ein kurzes rollierendes Profilfenster bereit. 30 Minuten
+    # verringern das Verlustrisiko bei einzelnen ausgefallenen Läufen deutlich.
     # Der Python-Server entscheidet weiterhin pro Ort, welche Quellen fällig sind.
-    - cron: "37 * * * *"
+    - cron: "7,37 * * * *"
 
 permissions:
   contents: write
