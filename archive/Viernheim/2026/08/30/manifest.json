@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "app_version": "0.15.18",
+  "app_version": "0.15.20",
   "location": {
     "name": "Viernheim",
     "slug": "Viernheim",
@@ -10,10 +10,10 @@
     "timezone": "Europe/Berlin"
   },
   "date": "2026-08-30",
-  "saved_at": "2026-08-30T10:32:15.242038+02:00",
-  "run_id": "20260830_103209",
+  "saved_at": "2026-08-30T10:42:59.663437+02:00",
+  "run_id": "20260830_104246",
   "quality_class": "B",
-  "quality_text": "DWD-Bodenmessung + vertikales Modell-/Archivprofil | ICON-D2 Historical Forecast separat",
+  "quality_text": "DWD-Bodenmessung + vertikales Modell-/Archivprofil | KIT-Mast gemessen separat | ICON-D2 Historical Forecast separat",
   "complete": true,
   "completion_sources": [
     "dwd",
@@ -26,27 +26,26 @@
     "kit_mast"
   ],
   "optional_missing_sources": [
-    "sonde",
-    "kit_mast"
+    "sonde"
   ],
   "kit_archive": {
-    "status": "NO_DATA",
-    "profile_count": 0,
-    "expected_profiles": null,
-    "coverage_percent": null,
-    "cadence_minutes": null,
-    "first_timestamp": null,
-    "last_timestamp": null,
-    "largest_gap_minutes": null,
-    "start_gap_minutes": null,
-    "end_gap_minutes": null,
-    "day_minutes": null,
+    "status": "PARTIAL",
+    "profile_count": 5,
+    "expected_profiles": 24,
+    "coverage_percent": 20.8,
+    "cadence_minutes": 60.0,
+    "first_timestamp": "2026-08-30T06:30:00+02:00",
+    "last_timestamp": "2026-08-30T10:30:00+02:00",
+    "largest_gap_minutes": 810.0,
+    "start_gap_minutes": 390.0,
+    "end_gap_minutes": 810.0,
+    "day_minutes": 1440.0,
     "complete": false
   },
-  "attempts": 2,
-  "last_attempt": "2026-08-30T01:01:35.140385+02:00",
+  "attempts": 3,
+  "last_attempt": "2026-08-30T10:42:59.663437+02:00",
   "last_auxiliary_attempt": "2026-08-30T10:32:15.242038+02:00",
-  "attempt_reason": "KIT_CONTINUOUS_ARCHIVE",
+  "attempt_reason": "EXPLICIT_UPDATE",
   "files": {
     "dwd_data": "dwd_ground.csv",
     "aemet_data": null,
@@ -54,7 +53,7 @@
     "result_data": "inversion_model.csv",
     "sonde_profile_data": null,
     "sonde_metrics": null,
-    "kit_mast_metrics": null,
+    "kit_mast_metrics": "kit_mast.csv",
     "icon_d2_data": "icon_d2.csv",
     "icon_d2_profile_data": "icon_d2_profile.csv",
     "station_info": "station_info.json",
