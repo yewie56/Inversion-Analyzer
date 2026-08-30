@@ -3,6 +3,15 @@ name: Inversion data collector
 on:
   workflow_dispatch:
     inputs:
+      mode:
+        description: "Ausfuehrungsmodus: normal, scheduled oder kit-only"
+        required: false
+        default: "normal"
+        type: choice
+        options:
+          - normal
+          - scheduled
+          - kit-only
       date:
         description: "Optionales Datum JJJJ-MM-TT; leer = heute"
         required: false
@@ -18,7 +27,7 @@ on:
         default: "Viernheim"
         type: string
   schedule:
-    # v0.15.19: zweimal pro Stunde, bewusst außerhalb der vollen Stunde.
+    # v0.15.21: zweimal pro Stunde; workflow_dispatch kann denselben scheduled-Pfad explizit starten.
     # KIT stellt nur ein kurzes rollierendes Profilfenster bereit. 30 Minuten
     # verringern das Verlustrisiko bei einzelnen ausgefallenen Läufen deutlich.
     # Der Python-Server entscheidet weiterhin pro Ort, welche Quellen fällig sind.
@@ -140,22 +149,46 @@ jobs:
         run: |
           set -euo pipefail
 
-          ARGS=()
-          if [ -n "${{ inputs.date }}" ]; then
-            ARGS+=(--date "${{ inputs.date }}")
-          else
-            ARGS+=(--today)
-          fi
-
-          if [ "${{ inputs.force }}" = "true" ]; then
-            ARGS+=(--force)
-          fi
+          MODE="${{ inputs.mode }}"
+          if [ -z "$MODE" ]; then MODE="normal"; fi
 
           while IFS= read -r LOC; do
             echo "============================================================"
-            echo "MANUAL COLLECTION: $LOC"
-            echo "============================================================"
-            INVERSION_LOCATION="$LOC" python Inversion_Server.py "${ARGS[@]}"
+
+            case "$MODE" in
+              scheduled)
+                echo "MANUAL SCHEDULED COLLECTION: $LOC"
+                echo "============================================================"
+                INVERSION_LOCATION="$LOC" python Inversion_Server.py --scheduled
+                ;;
+
+              kit-only)
+                echo "MANUAL KIT-ONLY COLLECTION: $LOC"
+                echo "============================================================"
+                INVERSION_LOCATION="$LOC" python Inversion_Server.py --kit-only
+                ;;
+
+              normal)
+                echo "MANUAL NORMAL COLLECTION: $LOC"
+                echo "============================================================"
+                ARGS=()
+                if [ -n "${{ inputs.date }}" ]; then
+                  ARGS+=(--date "${{ inputs.date }}")
+                else
+                  ARGS+=(--today)
+                fi
+                if [ "${{ inputs.force }}" = "true" ]; then
+                  ARGS+=(--force)
+                fi
+                INVERSION_LOCATION="$LOC" python Inversion_Server.py "${ARGS[@]}"
+                ;;
+
+              *)
+                echo "FEHLER: unbekannter mode '$MODE'. Erlaubt: normal, scheduled, kit-only."
+                exit 2
+                ;;
+            esac
+
             INVERSION_LOCATION="$LOC" python Inversion_Server.py --verify-archive
           done < .selected_locations.txt
 

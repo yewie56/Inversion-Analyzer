@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # Inversion Analyzer
-# Version: 0.15.20
+# Version: 0.15.21
 # Datum: 2026-08-30
 #
 # History:
+# 0.15.21 - GitHub workflow_dispatch unterstützt normal/scheduled/kit-only
 # 0.15.20 - KIT-Parser toleriert fehlende Höhenwerte; neuer --kit-only-Schalter
 # 0.15.19 - KIT robuster: 30-min GitHub-Takt, Bokeh-Timeout 20 s, 3 Versuche
 # 0.15.18 - KIT-GitHub-Abruf stündlich; heute+gestern; Tagesvollständigkeit
@@ -22,7 +23,7 @@
 # =============================================================================
 
 """
-Inversion_Server.py – v0.15.20
+Inversion_Server.py – v0.15.21
 
 Headless collector / archive repair tool.
 

@@ -29,7 +29,7 @@ def make_source():
 
 
 def main():
-    check("Version 0.15.20", VERSION == "0.15.20", VERSION)
+    check("Version >= 0.15.20", tuple(map(int, VERSION.split("."))) >= (0,15,20), VERSION)
 
     logs = []
     df, meta = extract_kit_temperature_profiles(

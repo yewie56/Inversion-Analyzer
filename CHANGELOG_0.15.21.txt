@@ -1,0 +1,26 @@
+Inversion Analyzer v0.15.21 – GitHub workflow_dispatch Modi
+Datum: 2026-08-30
+
+Aenderungen
+==========
+1. GitHub Actions workflow_dispatch hat den neuen Input mode:
+   - normal: bisheriger manueller Tagesabruf
+   - scheduled: exakt Inversion_Server.py --scheduled
+   - kit-only: exakt Inversion_Server.py --kit-only
+2. Echte schedule-Laeufe bleiben unveraendert und verwenden --scheduled.
+3. MacroDroid kann damit mode=scheduled senden. Dadurch wird KIT kontinuierlich
+   aktualisiert und gleichzeitig werden fehlende Kernquellen nach bestehender
+   Retry-Logik nachgeladen.
+4. Regressionstest test_workflow_dispatch_modes_v0_15_21.py hinzugefuegt.
+
+MacroDroid JSON
+===============
+{
+  "ref": "main",
+  "inputs": {
+    "location": "ALL",
+    "mode": "scheduled",
+    "force": "false",
+    "date": ""
+  }
+}
