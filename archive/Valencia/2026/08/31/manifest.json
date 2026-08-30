@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "app_version": "0.15.21",
+  "location": {
+    "name": "Valencia",
+    "slug": "Valencia",
+    "latitude": 39.4699,
+    "longitude": -0.3763,
+    "elevation_m": 15.0,
+    "timezone": "Europe/Madrid"
+  },
+  "date": "2026-08-31",
+  "saved_at": "2026-08-31T00:14:08.579748+02:00",
+  "run_id": "20260831_001407",
+  "quality_class": "X",
+  "quality_text": "Keine belastbare Berechnung möglich: Vertikalprofil fehlt",
+  "complete": false,
+  "completion_sources": [
+    "profile"
+  ],
+  "missing_sources": [
+    "profile"
+  ],
+  "optional_sources": [
+    "aemet"
+  ],
+  "optional_missing_sources": [
+    "aemet"
+  ],
+  "kit_archive": {
+    "status": "NO_DATA",
+    "profile_count": 0,
+    "expected_profiles": null,
+    "coverage_percent": null,
+    "cadence_minutes": null,
+    "first_timestamp": null,
+    "last_timestamp": null,
+    "largest_gap_minutes": null,
+    "start_gap_minutes": null,
+    "end_gap_minutes": null,
+    "day_minutes": null,
+    "complete": false
+  },
+  "attempts": 0,
+  "last_attempt": null,
+  "last_auxiliary_attempt": "2026-08-31T00:14:08.579748+02:00",
+  "attempt_reason": "AEMET_CONTINUOUS_ARCHIVE",
+  "files": {
+    "aemet_data": null,
+    "source_status": "source_status.json"
+  }
+}

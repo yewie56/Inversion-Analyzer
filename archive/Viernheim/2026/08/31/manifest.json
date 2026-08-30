@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "app_version": "0.15.21",
+  "location": {
+    "name": "Viernheim",
+    "slug": "Viernheim",
+    "latitude": 49.5412,
+    "longitude": 8.5785,
+    "elevation_m": 100.0,
+    "timezone": "Europe/Berlin"
+  },
+  "date": "2026-08-31",
+  "saved_at": "2026-08-31T00:13:51.779472+02:00",
+  "run_id": "20260831_001346",
+  "quality_class": "X",
+  "quality_text": "Keine belastbare Berechnung möglich: Vertikalprofil fehlt | KIT-Mast gemessen separat",
+  "complete": false,
+  "completion_sources": [
+    "dwd",
+    "profile",
+    "icon_d2"
+  ],
+  "missing_sources": [
+    "dwd",
+    "profile",
+    "icon_d2"
+  ],
+  "optional_sources": [
+    "sonde",
+    "kit_mast"
+  ],
+  "optional_missing_sources": [
+    "sonde"
+  ],
+  "kit_archive": {
+    "status": "INSUFFICIENT_FOR_CADENCE",
+    "profile_count": 1,
+    "expected_profiles": null,
+    "coverage_percent": null,
+    "cadence_minutes": null,
+    "first_timestamp": "2026-08-31T00:00:00+02:00",
+    "last_timestamp": "2026-08-31T00:00:00+02:00",
+    "largest_gap_minutes": null,
+    "start_gap_minutes": null,
+    "end_gap_minutes": null,
+    "day_minutes": 1440.0,
+    "complete": false
+  },
+  "attempts": 0,
+  "last_attempt": null,
+  "last_auxiliary_attempt": "2026-08-31T00:13:51.779472+02:00",
+  "attempt_reason": "KIT_CONTINUOUS_ARCHIVE",
+  "files": {
+    "kit_mast_metrics": "kit_mast.csv",
+    "kit_mast_info": "kit_mast_info.json",
+    "kit_mast_data": "kit_mast_data.json",
+    "source_status": "source_status.json"
+  }
+}
