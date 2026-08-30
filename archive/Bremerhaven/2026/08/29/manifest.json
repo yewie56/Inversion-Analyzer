@@ -10,8 +10,8 @@
     "timezone": "Europe/Berlin"
   },
   "date": "2026-08-29",
-  "saved_at": "2026-08-30T22:55:51.490529+02:00",
-  "run_id": "20260830_225545",
+  "saved_at": "2026-08-30T23:28:57.654628+02:00",
+  "run_id": "20260830_232852",
   "quality_class": "B",
   "quality_text": "DWD-Bodenmessung + vertikales Modell-/Archivprofil | ICON-D2 Historical Forecast separat",
   "complete": true,
@@ -45,7 +45,7 @@
   },
   "attempts": 1,
   "last_attempt": "2026-08-29T15:28:52.379784+02:00",
-  "last_auxiliary_attempt": "2026-08-30T22:55:51.490529+02:00",
+  "last_auxiliary_attempt": "2026-08-30T23:28:57.654628+02:00",
   "attempt_reason": "KIT_CONTINUOUS_ARCHIVE",
   "files": {
     "kit_mast_metrics": null,
