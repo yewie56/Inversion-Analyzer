@@ -1,0 +1,12 @@
+Inversion Analyzer v0.15.22 - 2026-08-30
+
+- Neues zentrales Tagesarchiv archive/KITMast/YYYY/MM/DD fuer den KIT 200-m-Mast Karlsruhe.
+- GitHub Scheduled und workflow_dispatch mode=scheduled aktualisieren KIT nur noch einmal global pro Lauf.
+- Viernheim und Bremerhaven lesen KIT als Referenz aus dem globalen Archiv; Valencia nicht.
+- KIT bleibt optionale Referenz und beeinflusst die Kern-Datenqualitaet A/B/C/X nicht.
+- Bestehende KIT-Bokeh-Robustheit bleibt erhalten: harter Timeout, drei Versuche standardmaessig, Retry-Pausen, Diagnose-Logging.
+- Safe-Merge nach Zeitstempel: fehlgeschlagene/leere Abrufe loeschen keine vorhandenen globalen KIT-Profile.
+- Idempotente Migration vorhandener per-Location kit_mast.csv-Dateien ins globale KITMast-Archiv. Legacy-Dateien werden nicht destruktiv geloescht.
+- --kit-only aktualisiert jetzt das globale KITMast-Archiv fuer heute und gestern.
+- MacroDroid bleibt unveraendert: location=ALL, mode=scheduled, force=false, date="".
+- Der passende Update-Batch wird ab dieser Version im Release-ZIP mitgeliefert.

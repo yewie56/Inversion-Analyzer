@@ -3,7 +3,7 @@ from pathlib import Path
 import json, os, re
 
 APP_NAME = "Inversionskurve"
-VERSION = "0.15.21"
+VERSION = "0.15.22"
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = PROJECT_DIR / "output_inversion"
 LOG_DIR = PROJECT_DIR / "logs"
@@ -80,7 +80,8 @@ LOCATION_COUNTRY_CODE=str(LOCATION.get("country_code","DE"))
 LOCATION_ADMIN1=str(LOCATION.get("admin1",""))
 DWD_ENABLED=bool(LOCATION.get("dwd_enabled", LOCATION_COUNTRY_CODE=="DE"))
 RADIOSONDE_ENABLED=bool(LOCATION.get("radiosonde_enabled", LOCATION_COUNTRY_CODE=="DE"))
-KIT_MAST_ENABLED=bool(LOCATION.get("kit_mast_enabled", LOCATION_COUNTRY_CODE=="DE"))
+KIT_REFERENCE_ENABLED=bool(LOCATION.get("kit_reference", LOCATION_COUNTRY_CODE=="DE"))
+KIT_MAST_ENABLED=bool(LOCATION.get("kit_mast_enabled", False)) and not KIT_REFERENCE_ENABLED
 ICON_D2_ENABLED=bool(LOCATION.get("icon_d2_enabled", LOCATION_COUNTRY_CODE=="DE"))
 LOCATION_COMPLETION_SOURCES=LOCATION.get("completion_sources")
 LOCATION_OPTIONAL_SOURCES=LOCATION.get("optional_sources")

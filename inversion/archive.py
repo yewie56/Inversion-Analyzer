@@ -14,7 +14,7 @@ from dataclasses import asdict
 import numpy as np
 import pandas as pd
 
-from .config import (ARCHIVE_DIR, LOCATION_NAME, LOCATION_SLUG, TIMEZONE, VERSION, ARCHIVE_CONFIG, LAT, LON, LOCATION_ELEVATION_M, LOCATION_COMPLETION_SOURCES, LOCATION_OPTIONAL_SOURCES)
+from .config import (ARCHIVE_DIR, LOCATION_NAME, LOCATION_SLUG, TIMEZONE, VERSION, ARCHIVE_CONFIG, LAT, LON, LOCATION_ELEVATION_M, LOCATION_COMPLETION_SOURCES, LOCATION_OPTIONAL_SOURCES, KIT_REFERENCE_ENABLED)
 from .models import DataBundle, SourceStatus
 from .quality import determine_quality
 
@@ -497,6 +497,10 @@ def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
     mp=d/"manifest.json"
     previous={}
 
+    # v0.15.22: configured locations consume the global KITMast reference archive.
+    if KIT_REFERENCE_ENABLED:
+        from .kit_reference_archive import attach_kit_reference
+        attach_kit_reference(bundle,selected_date)
     # v0.15.7: Coverage auf dem finalen kumulativen KIT-Bestand bestimmen.
     kit_coverage=apply_kit_archive_coverage(bundle,selected_date)
     if mp.exists():
@@ -526,7 +530,13 @@ def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
     write_source_df("profile","result_data","inversion_model.csv",bundle.result_data)
     write_source_df("sonde","sonde_profile_data","radiosonde_profile.csv",bundle.sonde_profile_data)
     write_source_df("sonde","sonde_metrics","radiosonde_metrics.csv",bundle.sonde_metrics)
-    write_source_df("kit_mast","kit_mast_metrics","kit_mast.csv",bundle.kit_mast_metrics)
+    if KIT_REFERENCE_ENABLED:
+        # v0.15.22: KIT is read from archive/KITMast, never duplicated per location.
+        files.pop("kit_mast_metrics",None)
+        files.pop("kit_mast_info",None)
+        files.pop("kit_mast_data",None)
+    else:
+        write_source_df("kit_mast","kit_mast_metrics","kit_mast.csv",bundle.kit_mast_metrics)
     write_source_df("icon_d2","icon_d2_data","icon_d2.csv",bundle.icon_d2_data)
     write_source_df("icon_d2","icon_d2_profile_data","icon_d2_profile.csv",bundle.icon_d2_profile_data)
 
@@ -539,10 +549,10 @@ def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
             "sonde_profiles":bundle.sonde_profiles,
             "sonde_flights":bundle.sonde_flights,
         },
-        "kit_mast":{
+        "kit_mast":({} if KIT_REFERENCE_ENABLED else {
             "kit_mast_info":bundle.kit_mast_info,
             "kit_mast_data":bundle.kit_mast_data,
-        },
+        }),
         "icon_d2":{
             "icon_d2_info":bundle.icon_d2_info,
         },
@@ -609,6 +619,11 @@ def save_bundle(selected_date,bundle,attempt_meta=None,touched_sources=None):
         "optional_sources":optional_sources(),
         "optional_missing_sources":optional_miss,
         "kit_archive":kit_coverage,
+        "kit_reference":({
+            "enabled":True,
+            "archive":"archive/KITMast",
+            "station":"KIT 200-m-Mast Karlsruhe"
+        } if KIT_REFERENCE_ENABLED else {"enabled":False}),
         "attempts":attempts,
         "last_attempt":retry_last_attempt,
         "last_auxiliary_attempt":aux_last_attempt,
@@ -671,4 +686,7 @@ def load_bundle(selected_date):
     b.icon_d2_info=j("icon_d2_info",{})
     raw_status=j("source_status",{})
     b.source_status={k:_status_from_dict(v) for k,v in raw_status.items() if v}
+    if KIT_REFERENCE_ENABLED:
+        from .kit_reference_archive import attach_kit_reference
+        attach_kit_reference(b,selected_date)
     return b,manifest

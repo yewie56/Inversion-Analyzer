@@ -131,6 +131,18 @@ jobs:
             INVERSION_LOCATION="$LOC" python Inversion_Server.py --verify-archive
           done < .selected_locations.txt
 
+      - name: Global KIT reference archive
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.mode == 'scheduled' || inputs.mode == 'kit-only'))
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.mode }}" = "kit-only" ]; then
+            echo "MANUAL KIT-ONLY COLLECTION: GLOBAL KITMast"
+          else
+            echo "GLOBAL KIT REFERENCE COLLECTION"
+          fi
+          python Inversion_Server.py --kit-only
+
       - name: Scheduled collection
         if: github.event_name == 'schedule'
         shell: bash
@@ -144,7 +156,7 @@ jobs:
           done < .selected_locations.txt
 
       - name: Manual collection
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.mode != 'kit-only'
         shell: bash
         run: |
           set -euo pipefail
@@ -160,12 +172,6 @@ jobs:
                 echo "MANUAL SCHEDULED COLLECTION: $LOC"
                 echo "============================================================"
                 INVERSION_LOCATION="$LOC" python Inversion_Server.py --scheduled
-                ;;
-
-              kit-only)
-                echo "MANUAL KIT-ONLY COLLECTION: $LOC"
-                echo "============================================================"
-                INVERSION_LOCATION="$LOC" python Inversion_Server.py --kit-only
                 ;;
 
               normal)

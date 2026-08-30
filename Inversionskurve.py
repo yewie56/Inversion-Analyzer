@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # Inversion Analyzer
-# Version: 0.15.21
+# Version: 0.15.22
 # Datum: 2026-08-27
 #
 # History:
+# 0.15.22 - zentrales KITMast-Referenzarchiv fuer deutsche Standorte
 # 0.15.21 - GitHub workflow_dispatch: normal/scheduled/kit-only fuer externe Trigger
 # 0.15.20 - KIT-Parser toleriert einzelne fehlende Höhenwerte; --kit-only im Headless-Collector
 # 0.15.19 - KIT robuster: 30-min GitHub-Takt, Bokeh-Timeout 20 s, 3 Versuche
@@ -25,7 +26,7 @@
 
 """
 Inversionskurve.py
-Version: 0.15.21
+Version: 0.15.22
 Datum: 2026-08-24
 
 STARTDATEI: In Spyder nur diese Datei starten.

@@ -16,9 +16,9 @@ archive=(ROOT/"inversion/archive.py").read_text(encoding="utf-8")
 
 checks=[
     ('at_least_hourly_cron', ('cron: "17 * * * *"' in workflow) or ('cron: "7,37 * * * *"' in workflow)),
-    ('today_yesterday', 'days=(now.date(), now.date()-timedelta(days=1))' in server),
-    ('kit_warning', 'WARNUNG KIT-TAGESARCHIV' in server),
-    ('kit_complete_confirmation', 'KIT-TAGESARCHIV BESTÄTIGT' in server),
+    ('today_yesterday', ('days=(now.date(), now.date()-timedelta(days=1))' in server) or ('for day in (now.date(),now.date()-timedelta(days=1))' in server)),
+    ('kit_warning', ('WARNUNG KIT-TAGESARCHIV' in server) or ('WARNUNG KIT-REFERENZ-TAGESARCHIV' in server)),
+    ('kit_complete_confirmation', ('KIT-TAGESARCHIV BESTÄTIGT' in server) or ('KIT-REFERENZ-TAGESARCHIV BESTÄTIGT' in server)),
     ('timestamp_merge', '_merge_time_df' in archive and '"kit_mast" in replace' in archive),
     ('coverage_complete', 'complete=(n>=expected and largest<=cadence*gap_factor)' in archive),
 ]

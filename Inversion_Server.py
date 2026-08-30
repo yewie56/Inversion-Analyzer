@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # Inversion Analyzer
-# Version: 0.15.21
+# Version: 0.15.22
 # Datum: 2026-08-30
 #
 # History:
+# 0.15.22 - zentrales KITMast-Referenzarchiv; ein Abruf pro Scheduled-Lauf
 # 0.15.21 - GitHub workflow_dispatch unterstützt normal/scheduled/kit-only
 # 0.15.20 - KIT-Parser toleriert fehlende Höhenwerte; neuer --kit-only-Schalter
 # 0.15.19 - KIT robuster: 30-min GitHub-Takt, Bokeh-Timeout 20 s, 3 Versuche
@@ -23,7 +24,7 @@
 # =============================================================================
 
 """
-Inversion_Server.py – v0.15.21
+Inversion_Server.py – v0.15.22
 
 Headless collector / archive repair tool.
 
@@ -49,7 +50,7 @@ from inversion.config import (
     PROJECT_DIR, ARCHIVE_DIR, LOCATIONS_FILE, ARCHIVE_CONFIG_FILE,
     ACTIVE_LOCATION_KEY, LAT, LON, LOCATION_ELEVATION_M,
     DWD_MAX_STATION_DISTANCE_KM, _LOCATIONS,
-    DWD_ENABLED, RADIOSONDE_ENABLED, KIT_MAST_ENABLED, ICON_D2_ENABLED,
+    DWD_ENABLED, RADIOSONDE_ENABLED, KIT_MAST_ENABLED, KIT_REFERENCE_ENABLED, ICON_D2_ENABLED,
     AEMET_ENABLED, AEMET_STATION_ID
 )
 from inversion.archive import (load_bundle,missing_sources,missing_optional_sources,
@@ -99,7 +100,9 @@ def show_config():
             "aemet":AEMET_ENABLED,
             "profile":True,
             "sonde":RADIOSONDE_ENABLED,
-            "kit_mast":KIT_MAST_ENABLED,
+            "kit_mast":(KIT_MAST_ENABLED or KIT_REFERENCE_ENABLED),
+            "kit_mast_fetch_local":KIT_MAST_ENABLED,
+            "kit_reference":KIT_REFERENCE_ENABLED,
             "icon_d2":ICON_D2_ENABLED
         },
         "aemet_station_id":AEMET_STATION_ID,
@@ -270,15 +273,15 @@ def selftest():
         "globale KIT-Archivierungsoption konfiguriert",
         "aktiv" if kit_global else "deaktiviert"
     )
-    if KIT_MAST_ENABLED:
-        passline("KIT für aktiven Ort aktiviert", "kontinuierliche Zusatzarchivierung möglich")
+    if KIT_REFERENCE_ENABLED:
+        passline("KIT-Referenz für aktiven Ort aktiviert", "liest globales archive/KITMast")
     else:
-        passline("KIT für aktiven Ort deaktiviert", "kein unnötiger KIT-Abruf")
+        passline("KIT-Referenz für aktiven Ort deaktiviert", "keine KIT-Referenz für diesen Ort")
 
-    if KIT_MAST_ENABLED:
+    if KIT_REFERENCE_ENABLED:
         passline(
             "KIT-Tagesarchivstrategie",
-            "Scheduled: heute + gestern, kumulativer Merge, Vollständigkeitskontrolle"
+            "global einmal pro Scheduled-Lauf: heute + gestern, Safe-Merge, Vollständigkeitskontrolle"
         )
 
     at=selftest_aemet_parser()
@@ -398,78 +401,52 @@ def run_one(day,force=False):
 
 
 def scheduled_kit_archive(now):
-    """Continuously archive KIT profiles for today and yesterday.
+    """Update the global KITMast reference archive for today and yesterday.
 
-    v0.15.18 rationale:
-    KIT's public dashboard exposes only a short rolling set of recent profiles.
-    Therefore every scheduled GitHub run fetches KIT independently of core
-    completeness and merges by timestamp.  Today and yesterday are queried:
-    shortly after midnight the rolling source window can still contain the last
-    profiles of the previous day.
-
-    This greatly reduces the chance of losing profiles, but cannot create a
-    profile that has already disappeared upstream during a prolonged outage.
-    Completeness is therefore always checked and logged explicitly.
+    The existing Bokeh client keeps its configured hard timeout, retry count and
+    retry delays. This wrapper only changes the storage target to archive/KITMast.
     """
     cfg=ARCHIVE_CONFIG.get("github_actions",{})
-    if not KIT_MAST_ENABLED:
-        log("KIT-Archiv: für diesen Ort deaktiviert; kein Abruf.")
+    if not bool(cfg.get("kit_continuous_archive",True)):
+        log("KIT-REFERENZ: kontinuierliche Sicherung deaktiviert.")
         return False
 
-    if not bool(cfg.get("kit_continuous_archive",True)):
-        log("KIT-Archiv: kontinuierliche Sicherung deaktiviert.")
-        return False
+    from inversion.kit_reference_archive import (
+        migrate_legacy_kit_archives, update_kit_reference_day, load_kit_reference
+    )
+    from inversion.models import DataBundle
+
+    migrated=migrate_legacy_kit_archives(log_cb=log)
+    log(f"KIT-REFERENZ: Legacy-Migration geprüft | Dateien verarbeitet={migrated}")
 
     did=False
-    days=(now.date(), now.date()-timedelta(days=1))
-
-    for day in days:
+    for day in (now.date(),now.date()-timedelta(days=1)):
+        log(f"KIT-REFERENZ: globaler Abruf {day}; Safe-Merge nach Zeitstempel.")
+        merged,info,status,manifest=update_kit_reference_day(day,log_cb=log)
+        b=DataBundle(); b.kit_mast_metrics=merged
+        cov=kit_archive_coverage(b,day)
         log(
-            f"KIT-ARCHIV: kontinuierlicher Abruf {day}; "
-            "kumulativer Merge nach Zeitstempel, kein Einfluss auf core-complete/Retry."
-        )
-
-        b,m,origin=update_day(
-            day,
-            log_cb=log,
-            only_missing=False,
-            requested_sources={"kit_mast"},
-            reason="KIT_CONTINUOUS_ARCHIVE",
-            increment_attempt=False,
-            affects_retry_clock=False
-        )
-
-        cov=kit_archive_coverage(b,day) if b is not None else {"status":"NO_DATA"}
-
-        log(
-            "KIT-ARCHIV ERGEBNIS | "
-            f"Datum={day} | "
-            f"status={cov.get('status')} | "
+            "KIT-REFERENZ ERGEBNIS | "
+            f"Datum={day} | status={cov.get('status')} | "
             f"profile={cov.get('profile_count')}/{cov.get('expected_profiles')} | "
             f"coverage={cov.get('coverage_percent')}% | "
             f"cadence={cov.get('cadence_minutes')} min | "
             f"largest_gap={cov.get('largest_gap_minutes')} min | "
-            f"first={cov.get('first_timestamp')} | "
-            f"last={cov.get('last_timestamp')}"
+            f"first={cov.get('first_timestamp')} | last={cov.get('last_timestamp')}"
         )
-
-        # The previous day should be final by now. Make any incompleteness
-        # unmissable in the GitHub log, without triggering core-source retries.
         if day < now.date() and cov.get("status") != "COMPLETE":
             log(
-                "WARNUNG KIT-TAGESARCHIV: "
-                f"{day} ist nach Tagesende NICHT vollständig "
-                f"(Status={cov.get('status')}, "
-                f"{cov.get('profile_count')}/{cov.get('expected_profiles')} Profile, "
-                f"größte Lücke={cov.get('largest_gap_minutes')} min)."
+                "WARNUNG KIT-REFERENZ-TAGESARCHIV: "
+                f"{day} nach Tagesende nicht vollständig "
+                f"(Status={cov.get('status')}, Profile={cov.get('profile_count')}/"
+                f"{cov.get('expected_profiles')}, größte Lücke={cov.get('largest_gap_minutes')} min)."
             )
         elif day < now.date():
             log(
-                f"KIT-TAGESARCHIV BESTÄTIGT: {day} vollständig "
+                f"KIT-REFERENZ-TAGESARCHIV BESTÄTIGT: {day} vollständig "
                 f"({cov.get('profile_count')}/{cov.get('expected_profiles')} Profile)."
             )
         did=True
-
     return did
 
 
@@ -507,7 +484,7 @@ def scheduled():
         f"Erstabruf ab {hour:02d}:00"
     )
 
-    scheduled_kit_archive(now)
+    # KIT is updated globally once by the GitHub workflow before location loops.
     scheduled_aemet_archive(now)
 
     candidates=[]
@@ -611,7 +588,7 @@ def main():
         return scheduled()
     if args.kit_only:
         now=datetime.now(ZoneInfo(TIMEZONE))
-        log(f"KIT-ONLY START | Ort={LOCATION_NAME} | lokale Zeit={now.isoformat()}")
+        log(f"KIT-ONLY START | globales KITMast-Archiv | lokale Zeit={now.isoformat()}")
         return 0 if scheduled_kit_archive(now) else 1
 
     day=(
