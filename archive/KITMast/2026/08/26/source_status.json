@@ -1,0 +1,7 @@
+{
+  "state": "KIT_TEMP_OK",
+  "rows": 25,
+  "message": "25 archivierte KIT-Temperaturprofile im globalen Referenzarchiv",
+  "last_archive_attempt": "2026-08-31T00:15:46.141909+02:00",
+  "last_archive_attempt_source": "LEGACY_MIGRATION"
+}
