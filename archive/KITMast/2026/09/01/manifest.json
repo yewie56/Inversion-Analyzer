@@ -4,14 +4,11 @@
   "archive_kind": "KITMast",
   "reference_station": "KIT 200-m-Mast Karlsruhe",
   "timezone": "Europe/Berlin",
-  "date": "2026-08-31",
-  "saved_at": "2026-09-01T00:04:46.248994+02:00",
-  "profile_count": 72,
+  "date": "2026-09-01",
+  "saved_at": "2026-09-01T00:04:40.102832+02:00",
+  "profile_count": 1,
   "last_update_source": "NETWORK",
-  "migrated_from": [
-    "Bremerhaven/2026/08/31/kit_mast.csv",
-    "Viernheim/2026/08/31/kit_mast.csv"
-  ],
+  "migrated_from": [],
   "files": {
     "kit_mast_metrics": "kit_mast.csv",
     "kit_mast_info": "kit_mast_info.json",
