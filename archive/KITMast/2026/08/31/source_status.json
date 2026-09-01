@@ -2,7 +2,7 @@
   "state": "KIT_TEMP_OK",
   "rows": 75,
   "message": "75 archivierte KIT-Temperaturprofile im globalen Referenzarchiv",
-  "last_archive_attempt": "2026-09-01T06:58:42.215640+02:00",
+  "last_archive_attempt": "2026-09-01T09:42:19.948962+02:00",
   "last_archive_attempt_source": "NETWORK",
   "name": "KIT 200-m-Meteomast",
   "last_attempt": "2026-09-01T04:01:27.845890+02:00",
