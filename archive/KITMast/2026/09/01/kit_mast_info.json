@@ -1,7 +1,7 @@
 {
   "reference_archive": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/archive/KITMast/2026/09/01",
   "archive_kind": "KITMast",
-  "run_id": "20260901_050132",
+  "run_id": "20260901_065829",
   "station": "KIT Campus Nord 200-m-Meteomast",
   "lat": 49.0925,
   "lon": 8.4258333333,
@@ -23,9 +23,9 @@
     "date": "2026-08-16"
   },
   "html_snapshots": {
-    "dashboard": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_dashboard_20260901_050132.html",
-    "profile": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_profile_20260901_050132.html",
-    "monthly": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_monthly_20260901_050132.html"
+    "dashboard": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_dashboard_20260901_065829.html",
+    "profile": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_profile_20260901_065829.html",
+    "monthly": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_monthly_20260901_065829.html"
   },
   "bokeh": {
     "dashboard": {
@@ -48,7 +48,7 @@
         {
           "name": "render_items",
           "offset": 1851,
-          "length": 614,
+          "length": 613,
           "parsed": true
         }
       ],
@@ -88,7 +88,7 @@
         {
           "name": "render_items",
           "offset": 2657,
-          "length": 675,
+          "length": 674,
           "parsed": true
         }
       ],
@@ -128,7 +128,7 @@
         {
           "name": "render_items",
           "offset": 1851,
-          "length": 614,
+          "length": 613,
           "parsed": true
         }
       ],
@@ -151,7 +151,7 @@
   },
   "bokeh_column_sources": [],
   "best_bokeh_candidates": [],
-  "diagnostic_file": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_diagnostic_20260901_050132.json",
+  "diagnostic_file": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_diagnostic_20260901_065829.json",
   "used_for_inversion_index": false,
   "numeric_data_verified": false,
   "bokeh_payload_detected": true,
@@ -159,103 +159,22 @@
     "ok": true,
     "state": "BOKEH_CLIENT_DATA",
     "message": "8 ColumnDataSource-Objekt(e) aus Bokeh-Dokument geladen",
-    "detail": "Roots=2; Rohdaten JSON=/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_sources_20260901_050132.json; CSV-Dateien=8",
+    "detail": "Roots=2; Rohdaten JSON=/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_sources_20260901_065829.json; CSV-Dateien=8",
     "roots": [
       {
-        "id": "p5110753",
+        "id": "p5134031",
         "type": "figure",
         "name": "temperature_profile"
       },
       {
-        "id": "p5110884",
+        "id": "p5134162",
         "type": "figure",
         "name": "wind_profile"
       }
     ],
     "sources": [
       {
-        "id": "p5110877",
-        "name": "ColumnDataSource",
-        "columns": [
-          "altitude",
-          "localtime",
-          "localtime_iso",
-          "value",
-          "variable"
-        ],
-        "row_count_estimate": 10,
-        "data": {
-          "variable": [
-            "ANEMO_V_VHOR_F_002_AVG",
-            "ANEMO_V_VHOR_F_020_AVG",
-            "ANEMO_V_VHOR_F_040_AVG",
-            "ANEMO_V_VHOR_F_050_AVG",
-            "ANEMO_V_VHOR_F_060_AVG",
-            "ANEMO_V_VHOR_F_080_AVG",
-            "ANEMO_V_VHOR_F_100_AVG",
-            "ANEMO_V_VHOR_F_130_AVG",
-            "ANEMO_V_VHOR_F_160_AVG",
-            "ANEMO_V_VHOR_F_200_AVG"
-          ],
-          "value": [
-            0.20247000000000223,
-            0.28440000000000293,
-            2.483598413923829,
-            3.16632149307586,
-            3.8204000367834996,
-            2.989266771682414,
-            4.836197329100955,
-            5.6339949119104515,
-            2.7901625276907405,
-            7.677828072229704
-          ],
-          "localtime": [
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0
-          ],
-          "altitude": [
-            2,
-            20,
-            40,
-            50,
-            60,
-            80,
-            100,
-            130,
-            160,
-            200
-          ],
-          "localtime_iso": [
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00"
-          ]
-        },
-        "heuristic_score": 2,
-        "time_columns": [
-          "localtime",
-          "localtime_iso"
-        ],
-        "temperature_columns": [],
-        "height_columns": []
-      },
-      {
-        "id": "p5110874",
+        "id": "p5134152",
         "name": "ColumnDataSource",
         "columns": [
           "altitude",
@@ -281,26 +200,26 @@
           "value": [
             0.20247,
             0.2844,
-            3.3447277959632826,
-            3.707731176055183,
-            4.164194006560289,
-            4.442646653660696,
-            5.869679210855974,
-            6.888784670752115,
-            4.552456106467952,
-            8.286404873982328
+            4.186920714086891,
+            4.349256809800939,
+            4.620333200651134,
+            4.808772102637931,
+            5.440701484346556,
+            4.214534537393268,
+            4.662813402826518,
+            6.000583740435225
           ],
           "localtime": [
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0
           ],
           "altitude": [
             2,
@@ -315,16 +234,16 @@
             200
           ],
           "localtime_iso": [
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00"
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00"
           ]
         },
         "heuristic_score": 2,
@@ -336,7 +255,88 @@
         "height_columns": []
       },
       {
-        "id": "p5110806",
+        "id": "p5134155",
+        "name": "ColumnDataSource",
+        "columns": [
+          "altitude",
+          "localtime",
+          "localtime_iso",
+          "value",
+          "variable"
+        ],
+        "row_count_estimate": 10,
+        "data": {
+          "variable": [
+            "ANEMO_V_VHOR_F_002_AVG",
+            "ANEMO_V_VHOR_F_020_AVG",
+            "ANEMO_V_VHOR_F_040_AVG",
+            "ANEMO_V_VHOR_F_050_AVG",
+            "ANEMO_V_VHOR_F_060_AVG",
+            "ANEMO_V_VHOR_F_080_AVG",
+            "ANEMO_V_VHOR_F_100_AVG",
+            "ANEMO_V_VHOR_F_130_AVG",
+            "ANEMO_V_VHOR_F_160_AVG",
+            "ANEMO_V_VHOR_F_200_AVG"
+          ],
+          "value": [
+            0.20247000000000223,
+            0.28440000000000293,
+            2.8460223403400495,
+            3.688718802742537,
+            4.151521959373448,
+            4.332478264448412,
+            4.8137893764017035,
+            3.6257445789777574,
+            3.3356112048902515,
+            4.9959134346245975
+          ],
+          "localtime": [
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0
+          ],
+          "altitude": [
+            2,
+            20,
+            40,
+            50,
+            60,
+            80,
+            100,
+            130,
+            160,
+            200
+          ],
+          "localtime_iso": [
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00"
+          ]
+        },
+        "heuristic_score": 2,
+        "time_columns": [
+          "localtime",
+          "localtime_iso"
+        ],
+        "temperature_columns": [],
+        "height_columns": []
+      },
+      {
+        "id": "p5134118",
         "name": "ColumnDataSource",
         "columns": [
           "altitude",
@@ -407,7 +407,7 @@
         "height_columns": []
       },
       {
-        "id": "p5110788",
+        "id": "p5134084",
         "name": "ColumnDataSource",
         "columns": [
           "altitude",
@@ -419,14 +419,14 @@
         "row_count_estimate": 8,
         "data": {
           "localtime": [
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0
+            1788241800000.0,
+            1788241800000.0,
+            1788241800000.0,
+            1788241800000.0,
+            1788241800000.0,
+            1788241800000.0,
+            1788241800000.0,
+            1788241800000.0
           ],
           "variable": [
             "PT_T_AIR_002_AVG",
@@ -439,13 +439,13 @@
             "PT_T_AIR_200_AVG"
           ],
           "value": [
-            13.463838955436735,
-            13.607747734717028,
-            15.277089196609452,
-            16.486478679356974,
-            16.720412852718944,
-            16.881470932018292,
-            16.93466579419707,
+            13.098346641632112,
+            13.073441082234682,
+            15.297724220993002,
+            16.11406521731821,
+            16.453476417037106,
+            16.53784411560642,
+            16.7011848596115,
             null
           ],
           "altitude": [
@@ -459,14 +459,14 @@
             200
           ],
           "localtime_iso": [
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00"
+            "2026-09-01T05:50:00+02:00",
+            "2026-09-01T05:50:00+02:00",
+            "2026-09-01T05:50:00+02:00",
+            "2026-09-01T05:50:00+02:00",
+            "2026-09-01T05:50:00+02:00",
+            "2026-09-01T05:50:00+02:00",
+            "2026-09-01T05:50:00+02:00",
+            "2026-09-01T05:50:00+02:00"
           ]
         },
         "heuristic_score": 2,
@@ -478,7 +478,7 @@
         "height_columns": []
       },
       {
-        "id": "p5110823",
+        "id": "p5134135",
         "name": "ColumnDataSource",
         "columns": [
           "altitude",
@@ -549,7 +549,7 @@
         "height_columns": []
       },
       {
-        "id": "p5110857",
+        "id": "p5134066",
         "name": "ColumnDataSource",
         "columns": [
           "altitude",
@@ -561,14 +561,14 @@
         "row_count_estimate": 8,
         "data": {
           "localtime": [
-            1788223800000.0,
-            1788223800000.0,
-            1788223800000.0,
-            1788223800000.0,
-            1788223800000.0,
-            1788223800000.0,
-            1788223800000.0,
-            1788223800000.0
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0
           ],
           "variable": [
             "PT_T_AIR_002_AVG",
@@ -581,13 +581,13 @@
             "PT_T_AIR_200_AVG"
           ],
           "value": [
-            15.111034743686693,
-            15.992851153631822,
-            17.028641407684294,
-            17.47938150145721,
-            17.83290253527522,
-            17.871360497000115,
-            18.10101399482219,
+            12.359189455795308,
+            12.394657500198344,
+            14.682926577362045,
+            15.764696871785475,
+            15.73500347252546,
+            15.663581802952391,
+            15.786440599449161,
             null
           ],
           "altitude": [
@@ -601,14 +601,14 @@
             200
           ],
           "localtime_iso": [
-            "2026-09-01T00:50:00+02:00",
-            "2026-09-01T00:50:00+02:00",
-            "2026-09-01T00:50:00+02:00",
-            "2026-09-01T00:50:00+02:00",
-            "2026-09-01T00:50:00+02:00",
-            "2026-09-01T00:50:00+02:00",
-            "2026-09-01T00:50:00+02:00",
-            "2026-09-01T00:50:00+02:00"
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00"
           ]
         },
         "heuristic_score": 2,
@@ -620,7 +620,7 @@
         "height_columns": []
       },
       {
-        "id": "p5110840",
+        "id": "p5134101",
         "name": "ColumnDataSource",
         "columns": [
           "altitude",
@@ -632,14 +632,14 @@
         "row_count_estimate": 8,
         "data": {
           "localtime": [
-            1788227400000.0,
-            1788227400000.0,
-            1788227400000.0,
-            1788227400000.0,
-            1788227400000.0,
-            1788227400000.0,
-            1788227400000.0,
-            1788227400000.0
+            1788238200000.0,
+            1788238200000.0,
+            1788238200000.0,
+            1788238200000.0,
+            1788238200000.0,
+            1788238200000.0,
+            1788238200000.0,
+            1788238200000.0
           ],
           "variable": [
             "PT_T_AIR_002_AVG",
@@ -652,13 +652,13 @@
             "PT_T_AIR_200_AVG"
           ],
           "value": [
-            14.809857687255887,
-            15.320557906795479,
-            16.754467795120217,
-            17.347426682136533,
-            17.593761021564536,
-            17.802170388832348,
-            17.93294621920775,
+            13.463838955436735,
+            13.607747734717028,
+            15.277089196609452,
+            16.486478679356974,
+            16.720412852718944,
+            16.881470932018292,
+            16.93466579419707,
             null
           ],
           "altitude": [
@@ -672,14 +672,14 @@
             200
           ],
           "localtime_iso": [
-            "2026-09-01T01:50:00+02:00",
-            "2026-09-01T01:50:00+02:00",
-            "2026-09-01T01:50:00+02:00",
-            "2026-09-01T01:50:00+02:00",
-            "2026-09-01T01:50:00+02:00",
-            "2026-09-01T01:50:00+02:00",
-            "2026-09-01T01:50:00+02:00",
-            "2026-09-01T01:50:00+02:00"
+            "2026-09-01T04:50:00+02:00",
+            "2026-09-01T04:50:00+02:00",
+            "2026-09-01T04:50:00+02:00",
+            "2026-09-01T04:50:00+02:00",
+            "2026-09-01T04:50:00+02:00",
+            "2026-09-01T04:50:00+02:00",
+            "2026-09-01T04:50:00+02:00",
+            "2026-09-01T04:50:00+02:00"
           ]
         },
         "heuristic_score": 2,
@@ -691,7 +691,7 @@
         "height_columns": []
       },
       {
-        "id": "p5110880",
+        "id": "p5134158",
         "name": "ColumnDataSource",
         "columns": [
           "altitude",
@@ -711,20 +711,20 @@
             "WIVA_V_WD_200_AVG"
           ],
           "value": [
-            223.88292891729225,
-            234.87447087106307,
-            246.554454056206,
-            238.19835203206128,
-            243.5256159251204,
-            241.53365792979542
+            190.5302491055452,
+            199.04737072350818,
+            212.8195031872124,
+            211.58925596005852,
+            231.68136299680145,
+            235.56148230111995
           ],
           "localtime": [
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0,
-            1788238200000.0
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0,
+            1788245400000.0
           ],
           "altitude": [
             40,
@@ -735,12 +735,12 @@
             200
           ],
           "localtime_iso": [
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00",
-            "2026-09-01T04:50:00+02:00"
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00",
+            "2026-09-01T06:50:00+02:00"
           ]
         },
         "heuristic_score": 2,
@@ -752,26 +752,26 @@
         "height_columns": []
       }
     ],
-    "json_file": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_sources_20260901_050132.json",
+    "json_file": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_sources_20260901_065829.json",
     "csv_files": [
-      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_050132_01.csv",
-      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_050132_02.csv",
-      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_050132_03.csv",
-      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_050132_04.csv",
-      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_050132_05.csv",
-      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_050132_06.csv",
-      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_050132_07.csv",
-      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_050132_08.csv"
+      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_065829_01.csv",
+      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_065829_02.csv",
+      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_065829_03.csv",
+      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_065829_04.csv",
+      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_065829_05.csv",
+      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_065829_06.csv",
+      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_065829_07.csv",
+      "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260901_065829_08.csv"
     ],
     "attempt": 1,
-    "elapsed_sec": 2.517,
+    "elapsed_sec": 2.299,
     "attempts": [
       {
         "attempt": 1,
         "state": "BOKEH_CLIENT_DATA",
         "ok": true,
-        "elapsed_sec": 2.517,
-        "detail": "Roots=2; Rohdaten JSON=/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_sources_20260901_050132.json; CSV-Dateien=8"
+        "elapsed_sec": 2.299,
+        "detail": "Roots=2; Rohdaten JSON=/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_sources_20260901_065829.json; CSV-Dateien=8"
       }
     ]
   },
