@@ -9,9 +9,9 @@
     "elevation_m": 15.0,
     "timezone": "Europe/Madrid"
   },
-  "date": "2026-09-03",
-  "saved_at": "2026-09-04T00:47:48.582766+02:00",
-  "run_id": "20260904_004747",
+  "date": "2026-09-04",
+  "saved_at": "2026-09-04T00:47:47.651187+02:00",
+  "run_id": "20260904_004746",
   "quality_class": "X",
   "quality_text": "Keine belastbare Berechnung möglich: Vertikalprofil fehlt",
   "complete": false,
@@ -42,14 +42,12 @@
   "kit_reference": {
     "enabled": false
   },
-  "attempts": 1,
-  "last_attempt": "2026-09-03T22:56:45.491175+02:00",
-  "last_auxiliary_attempt": "2026-09-04T00:47:48.582766+02:00",
+  "attempts": 0,
+  "last_attempt": null,
+  "last_auxiliary_attempt": "2026-09-04T00:47:47.651187+02:00",
   "attempt_reason": "AEMET_CONTINUOUS_ARCHIVE",
   "files": {
     "aemet_data": "aemet_ground.csv",
-    "source_status": "source_status.json",
-    "profile_data": null,
-    "result_data": null
+    "source_status": "source_status.json"
   }
 }
