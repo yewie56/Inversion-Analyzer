@@ -3,7 +3,7 @@
   "ranked_candidates": [],
   "client_sources": [
     {
-      "id": "p553303",
+      "id": "p557057",
       "name": "ColumnDataSource",
       "columns": [
         "altitude",
@@ -84,7 +84,7 @@
       "height_columns": []
     },
     {
-      "id": "p553300",
+      "id": "p557054",
       "name": "ColumnDataSource",
       "columns": [
         "altitude",
@@ -165,7 +165,7 @@
       "height_columns": []
     },
     {
-      "id": "p553214",
+      "id": "p556968",
       "name": "ColumnDataSource",
       "columns": [
         "altitude",
@@ -236,7 +236,7 @@
       "height_columns": []
     },
     {
-      "id": "p553249",
+      "id": "p557003",
       "name": "ColumnDataSource",
       "columns": [
         "altitude",
@@ -307,7 +307,7 @@
       "height_columns": []
     },
     {
-      "id": "p553283",
+      "id": "p557037",
       "name": "ColumnDataSource",
       "columns": [
         "altitude",
@@ -378,7 +378,7 @@
       "height_columns": []
     },
     {
-      "id": "p553266",
+      "id": "p557020",
       "name": "ColumnDataSource",
       "columns": [
         "altitude",
@@ -449,7 +449,7 @@
       "height_columns": []
     },
     {
-      "id": "p553232",
+      "id": "p556986",
       "name": "ColumnDataSource",
       "columns": [
         "altitude",
@@ -520,7 +520,7 @@
       "height_columns": []
     },
     {
-      "id": "p553306",
+      "id": "p557060",
       "name": "ColumnDataSource",
       "columns": [
         "altitude",
@@ -581,16 +581,16 @@
       "height_columns": []
     }
   ],
-  "client_json_file": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_sources_20260905_124932.json",
+  "client_json_file": "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_sources_20260905_125326.json",
   "client_csv_files": [
-    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_124932_01.csv",
-    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_124932_02.csv",
-    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_124932_03.csv",
-    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_124932_04.csv",
-    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_124932_05.csv",
-    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_124932_06.csv",
-    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_124932_07.csv",
-    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_124932_08.csv"
+    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_125326_01.csv",
+    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_125326_02.csv",
+    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_125326_03.csv",
+    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_125326_04.csv",
+    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_125326_05.csv",
+    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_125326_06.csv",
+    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_125326_07.csv",
+    "/home/runner/work/Inversion-Analyzer/Inversion-Analyzer/logs/kit_bokeh_source_20260905_125326_08.csv"
   ],
   "validated": false,
   "used_for_inversion_index": false
