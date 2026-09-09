@@ -10,8 +10,8 @@
     "timezone": "Europe/Madrid"
   },
   "date": "2026-09-09",
-  "saved_at": "2026-09-09T22:53:26.732531+02:00",
-  "run_id": "20260909_225256",
+  "saved_at": "2026-09-09T22:58:46.958298+02:00",
+  "run_id": "20260909_225846",
   "quality_class": "X",
   "quality_text": "Keine belastbare Berechnung möglich: Vertikalprofil fehlt",
   "complete": false,
@@ -44,8 +44,8 @@
   },
   "attempts": 1,
   "last_attempt": "2026-09-09T22:53:26.732531+02:00",
-  "last_auxiliary_attempt": "2026-09-09T22:52:55.430369+02:00",
-  "attempt_reason": "MISSING_REPAIR",
+  "last_auxiliary_attempt": "2026-09-09T22:58:46.958298+02:00",
+  "attempt_reason": "AEMET_CONTINUOUS_ARCHIVE",
   "files": {
     "aemet_data": "aemet_ground.csv",
     "source_status": "source_status.json",
