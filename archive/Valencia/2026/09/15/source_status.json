@@ -18,17 +18,17 @@
   "aemet": {
     "name": "AEMET-Bodenmessung",
     "state": "OK",
-    "message": "20 archivierte AEMET-Stundenwert(e) für den Tag (kumulativ)",
-    "last_attempt": "2026-09-15T19:38:46.160285+02:00",
-    "last_success": "2026-09-15T19:38:46.160285+02:00",
+    "message": "21 archivierte AEMET-Stundenwert(e) für den Tag (kumulativ)",
+    "last_attempt": "2026-09-15T20:49:48.195734+02:00",
+    "last_success": "2026-09-15T20:49:48.195734+02:00",
     "http_status": 200,
     "data_age_minutes": null,
-    "rows": 20,
+    "rows": 21,
     "detail": "Station VALENCIA DT; reale AEMET-Bodenmessung.",
     "expected_rows": null,
     "coverage_percent": null,
-    "first_timestamp": "2026-09-15T07:00:00+02:00",
-    "last_timestamp": "2026-09-15T19:00:00+02:00",
+    "first_timestamp": "2026-09-15T08:00:00+02:00",
+    "last_timestamp": "2026-09-15T20:00:00+02:00",
     "largest_gap_minutes": null
   },
   "profile": {
