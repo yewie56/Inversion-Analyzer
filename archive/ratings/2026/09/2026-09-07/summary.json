@@ -1,0 +1,20 @@
+{
+  "day_utc": "2026-09-07",
+  "event_count": 12,
+  "first_response_time_utc": "2026-09-07T05:16:13.122Z",
+  "last_response_time_utc": "2026-09-07T23:57:51.636Z",
+  "location_precision": [
+    "truncated_2dp"
+  ],
+  "observer_count": 1,
+  "rating_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 0,
+    "2": 2,
+    "3": 7,
+    "4": 2,
+    "5": 0
+  },
+  "schema_version": "1.0"
+}

@@ -1,0 +1,15 @@
+{
+  "archive_event_count": 265,
+  "comment_exported": false,
+  "coordinate_decimals": 2,
+  "coordinate_mode": "truncate",
+  "last_accepted_count": 265,
+  "last_fetch_count": 320,
+  "last_pending_skipped_count": 55,
+  "last_rejected_count": 0,
+  "last_successful_sync_utc": "2026-09-18T23:34:52Z",
+  "max_response_time_utc": "2026-09-18T23:15:39.748Z",
+  "query_since_utc": null,
+  "schema_version": "1.0",
+  "table": "observations"
+}
