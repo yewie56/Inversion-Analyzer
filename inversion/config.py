@@ -3,7 +3,7 @@ from pathlib import Path
 import json, os, re
 
 APP_NAME = "Inversionskurve"
-VERSION = "0.15.24"
+VERSION = "0.15.25"
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = PROJECT_DIR / "output_inversion"
 LOG_DIR = PROJECT_DIR / "logs"

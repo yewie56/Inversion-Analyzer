@@ -1,6 +1,6 @@
 # Supabase to GitHub Transfer Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Status und Ziel
 
@@ -76,3 +76,6 @@ Bevorzugtes Repository Secret: `SUPABASE_SECRET_KEY`. Legacy-Fallback: `SUPABASE
 - keine L50/L90/Leq-Berechnung,
 - kein Kommentartext-Export,
 - keine Löschung von Supabase-Daten nach erfolgreichem Transfer.
+
+## v0.15.25 – Pending-Datensätze
+Noch nicht beantwortete Datensätze ohne `response_time` werden nicht in die Bewertungs-Zeitachse übernommen, wenn `rating` leer oder `-1` ist. Sie werden als `pending_skipped` gezählt. Eine echte Bewertung 0..5 ohne `response_time` bleibt ungültig und verhindert den Commit. Es wird bewusst kein Ersatzzeitstempel aus `scheduled_time` oder `created_at` verwendet.

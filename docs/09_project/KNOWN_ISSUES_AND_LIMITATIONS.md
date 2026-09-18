@@ -1,6 +1,6 @@
 # Known Issues and Limitations
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. KIT-Rolling Window
 
@@ -21,3 +21,6 @@ Python-Abhängigkeiten sind nicht auf exakte Versionen gepinnt; zukünftige Bibl
 ## 5. Geplante Erweiterungen
 
 Seismik sowie Supabase-Audioabruf/-analyse sind noch nicht implementiert. Der Bewertungstransfer ist seit v0.15.24 implementiert; ein produktiver Live-E2E-Lauf muss nach Einrichtung des GitHub-Secrets noch verifiziert werden. Die gewünschte Repository-Sichtbarkeit (öffentlich/privat) bleibt für die Datenschutzbewertung relevant.
+
+## Live-E2E Erkenntnis v0.15.25
+Der erste produktive Vollabruf zeigte 55 Supabase-Zeilen ohne `response_time`. v0.15.25 behandelt noch unbeantwortete/verpasste Zeilen (`rating` leer oder `-1`) als erwarteten Pending-Zustand. Reale Bewertungen 0..5 benötigen weiterhin zwingend `response_time`.

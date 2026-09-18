@@ -1,6 +1,6 @@
 # Supabase Ratings Action – Einrichtung und erster Lauf
 
-Projektstand: Inversion Analyzer v0.15.24  
+Projektstand: Inversion Analyzer v0.15.25  
 Status: IMPLEMENTED
 
 ## 1. Zweck

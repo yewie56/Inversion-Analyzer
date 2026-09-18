@@ -1,7 +1,7 @@
 # Test Execution Report
 
 > Dokumentationsstand: 2026-09-19  \
-> Software-Basis: Inversion Analyzer v0.15.24  \
+> Software-Basis: Inversion Analyzer v0.15.25  \
 > Testumgebung: Python 3.13.5 im Erstellungscontainer.
 
 ## 1. Ergebnis
@@ -39,3 +39,13 @@ Ein realer Abruf aus dem produktiven Supabase wurde in der Erstellungsumgebung *
 - L50/L90/Leq und weitere Audio-Kennwerte,
 - vollständige automatische Inversionsdiagrammerstellung,
 - Seismik-Automatisierung.
+
+## v0.15.25 – Live-E2E-Fix für Pending-Bewertungen
+
+Auslöser war der erste produktive Vollabruf: 320 Supabase-Zeilen, davon 265 gültige Bewertungen und 55 Zeilen ohne `response_time`. Die neue Regression bildet diesen Fall nach: **265 accepted, 55 pending_skipped, 0 rejected**. Zusätzlich bleibt der Negativtest aktiv: eine echte Bewertung 0..5 ohne `response_time` wird abgelehnt.
+
+Verifiziert am 2026-09-19:
+- alle `test_*.py`: PASS
+- `Inversion_Server.py --selftest`: PASS
+- `.github/workflows/inversion_collect.yml`: YAML PASS
+- `.github/workflows/supabase_ratings_sync.yml`: YAML PASS

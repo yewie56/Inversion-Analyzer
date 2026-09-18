@@ -42,7 +42,7 @@ jobs:
           python-version: "3.11"
 
       - name: Regression test rating sync
-        run: python test_supabase_ratings_sync_v0_15_24.py
+        run: python test_supabase_ratings_sync_v0_15_25.py
 
       - name: Validate Supabase secret
         shell: bash

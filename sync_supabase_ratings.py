@@ -29,13 +29,14 @@ def main() -> int:
 
     print("SUPABASE RATINGS SYNC: PASS")
     print(f"  fetched      : {result.fetched}")
-    print(f"  accepted     : {result.accepted}")
-    print(f"  rejected     : {result.rejected}")
+    print(f"  accepted       : {result.accepted}")
+    print(f"  pending_skipped: {result.pending_skipped}")
+    print(f"  rejected       : {result.rejected}")
     print(f"  written_days : {result.written_days}")
     print(f"  archive_total: {result.archive_events}")
     print(f"  latest_utc   : {result.max_response_time_utc or '-'}")
     if result.rejected:
-        print("FEHLER: Mindestens ein Supabase-Datensatz wurde verworfen; Archiv-Commit wird verhindert.", file=sys.stderr)
+        print("FEHLER: Mindestens ein ungültiger Supabase-Datensatz wurde verworfen; Archiv-Commit wird verhindert.", file=sys.stderr)
         return 4
     return 0
 

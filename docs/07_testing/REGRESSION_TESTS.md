@@ -1,6 +1,6 @@
 # Regression Tests
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Vorhandene Regressionstests bis v0.15.24
 
@@ -38,3 +38,6 @@ Jeder künftig behobene Fehler erhält, soweit automatisierbar, einen Regression
 - unveränderter Sync-State wird nicht bei jedem Lauf neu geschrieben.
 
 `test_supabase_ratings_workflow_v0_15_24.py` prüft zusätzlich Schedule, Secrets, gemeinsame Concurrency-Gruppe, `--full`, ratings-only Staging sowie Rebase vor Push für beide Archiv-Writer.
+
+## v0.15.25
+`test_supabase_ratings_sync_v0_15_25.py` prüft zusätzlich: pending/missed ohne `response_time` wird übersprungen; echte Bewertung ohne `response_time` wird weiterhin abgelehnt. `test_supabase_ratings_workflow_v0_15_25.py` prüft die aktuelle Action-Verkabelung.

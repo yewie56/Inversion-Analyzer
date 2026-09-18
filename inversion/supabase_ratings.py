@@ -51,6 +51,7 @@ class RatingSyncError(RuntimeError):
 class SyncResult:
     fetched: int
     accepted: int
+    pending_skipped: int
     rejected: int
     written_days: int
     archive_events: int
@@ -217,7 +218,7 @@ def _request_json(url: str, key: str, timeout: int = 45) -> list[dict[str, Any]]
         headers={
             "Accept": "application/json",
             "apikey": key,
-            "User-Agent": "InversionAnalyzer-RatingsSync/0.15.24",
+            "User-Agent": "InversionAnalyzer-RatingsSync/0.15.25",
         },
         method="GET",
     )
@@ -339,19 +340,45 @@ def _summary(day: str, events: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _is_pending_unanswered(row: Mapping[str, Any], config: Mapping[str, Any]) -> bool:
+    """Return True for a not-yet-answered observation.
+
+    LFN-Scout can contain scheduled/missed rows without ``response_time``.  Such
+    rows are not rating events yet and therefore must not poison a full archive
+    import.  ``-1`` is the established missed/unanswered marker; an empty rating
+    is also accepted as pending.  A real rating 0..5 without response_time stays
+    invalid because its position on the common time axis would be ambiguous.
+    """
+    timestamp_column = str(config.get("timestamp_column", "response_time"))
+    response_raw = _first(row, timestamp_column, "response_time")
+    if response_raw is not None and str(response_raw).strip() != "":
+        return False
+    raw_rating = _first(row, "rating", "value")
+    if raw_rating is None or str(raw_rating).strip() == "":
+        return True
+    try:
+        return int(raw_rating) == -1
+    except (TypeError, ValueError):
+        return False
+
+
 def merge_into_archive(
     raw_rows: Iterable[Mapping[str, Any]],
     archive_root: Path,
     config: Mapping[str, Any],
-) -> tuple[int, int, int, int, str | None]:
+) -> tuple[int, int, int, int, int, str | None]:
     accepted: list[dict[str, Any]] = []
+    pending_skipped = 0
     rejected = 0
     for row in raw_rows:
+        if _is_pending_unanswered(row, config):
+            pending_skipped += 1
+            continue
         try:
             accepted.append(sanitize_observation(row, config))
         except RatingSyncError as exc:
             rejected += 1
-            print(f"WARNUNG: Datensatz verworfen: {exc}")
+            print(f"WARNUNG: Ungültiger Datensatz verworfen: {exc}")
 
     incoming_by_day: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for event in accepted:
@@ -385,7 +412,7 @@ def merge_into_archive(
             if ts and (latest is None or str(ts) > latest):
                 latest = str(ts)
 
-    return len(accepted), rejected, written_days, archive_total, latest
+    return len(accepted), pending_skipped, rejected, written_days, archive_total, latest
 
 
 def compute_since_from_state(archive_root: Path, overlap_hours: int) -> str | None:
@@ -412,6 +439,7 @@ def write_sync_state(
         "archive_event_count": result.archive_events,
         "last_fetch_count": result.fetched,
         "last_accepted_count": result.accepted,
+        "last_pending_skipped_count": result.pending_skipped,
         "last_rejected_count": result.rejected,
         "table": str(config.get("table", "observations")),
         "coordinate_mode": str(config.get("coordinate_mode", "truncate")),
@@ -441,10 +469,11 @@ def synchronize(
     since = None if full else compute_since_from_state(root, overlap)
     backend_key = key or resolve_supabase_key()
     rows = fetch_observations(config, backend_key, since_utc=since)
-    accepted, rejected, written_days, archive_total, latest = merge_into_archive(rows, root, config)
+    accepted, pending_skipped, rejected, written_days, archive_total, latest = merge_into_archive(rows, root, config)
     result = SyncResult(
         fetched=len(rows),
         accepted=accepted,
+        pending_skipped=pending_skipped,
         rejected=rejected,
         written_days=written_days,
         archive_events=archive_total,

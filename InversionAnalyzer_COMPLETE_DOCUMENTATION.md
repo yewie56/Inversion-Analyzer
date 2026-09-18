@@ -1,17 +1,16 @@
-# InversionAnalyzer – COMPLETE DOCUMENTATION
-Projektversion: **0.15.24**  
-Dokumentationsstand: 2026-09-19
-> Diese Datei ist eine kumulative Lesefassung. Verbindlich sind die einzelnen Dateien unter `docs/`.
+# Inversion Analyzer – COMPLETE DOCUMENTATION
 
+Software-Basis: v0.15.25
+Dokumentationsstand: 2026-09-19
 
 
 ---
 
-<!-- SOURCE: docs/00_overview/DOCUMENTATION_INDEX.md -->
+# Datei: docs/00_overview/DOCUMENTATION_INDEX.md
 
 # Documentation Index
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Zweck
 
@@ -80,11 +79,11 @@ Die Dokumentation beschreibt die Supabase-Bewertungssynchronisation nun als **IM
 
 ---
 
-<!-- SOURCE: docs/00_overview/STATUS_AND_SCOPE.md -->
+# Datei: docs/00_overview/STATUS_AND_SCOPE.md
 
 # Status and Scope
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Systemzweck
 
@@ -131,11 +130,11 @@ Die Bewertungssynchronisation ist seit v0.15.24 **IMPLEMENTED**. Automatische vo
 
 ---
 
-<!-- SOURCE: docs/01_requirements/SRS.md -->
+# Datei: docs/01_requirements/SRS.md
 
 # Software Requirements Specification (SRS)
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Funktionale Anforderungen – Ist-Stand
 
@@ -208,11 +207,11 @@ Die Bewertungssynchronisation ist seit v0.15.24 **IMPLEMENTED**. Automatische vo
 
 ---
 
-<!-- SOURCE: docs/01_requirements/TRACEABILITY_MATRIX.md -->
+# Datei: docs/01_requirements/TRACEABILITY_MATRIX.md
 
 # Traceability Matrix
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Ist-Stand
 
@@ -249,13 +248,14 @@ Bei Implementierung ist diese Matrix **im selben Commit** zu aktualisieren.
 | REQ-RATING-SYNC-008 | `resolve_supabase_key()` | GitHub Secrets | Workflow-Preflight | IMPLEMENTED |
 
 
+
 ---
 
-<!-- SOURCE: docs/02_architecture/AUTOMATION_ARCHITECTURE.md -->
+# Datei: docs/02_architecture/AUTOMATION_ARCHITECTURE.md
 
 # Automation Architecture
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. IMPLEMENTED v0.15.24
 
@@ -294,11 +294,11 @@ Ein Seismik- oder Supabase-Fehler darf vorhandene Inversionsarchivdaten nicht l�
 
 ---
 
-<!-- SOURCE: docs/02_architecture/AUTOMATION_DEPENDENCY_GRAPH.md -->
+# Datei: docs/02_architecture/AUTOMATION_DEPENDENCY_GRAPH.md
 
 # Automation Dependency Graph
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ```mermaid
 flowchart TD
@@ -324,11 +324,11 @@ Rohdaten-/Archivpflege ist die primäre Schicht. Der Bewertungsexport ist seit v
 
 ---
 
-<!-- SOURCE: docs/02_architecture/SAD.md -->
+# Datei: docs/02_architecture/SAD.md
 
 # System Architecture Document (SAD)
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Kontext
 
@@ -377,11 +377,11 @@ Der Supabase-Bewertungsexport ist seit v0.15.24 als separater nachgelagerter Wor
 
 ---
 
-<!-- SOURCE: docs/02_architecture/SDS.md -->
+# Datei: docs/02_architecture/SDS.md
 
 # Software Design Specification (SDS)
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Modulübersicht
 
@@ -421,11 +421,11 @@ Diese Module müssen unabhängig von Tkinter importierbar und in Actions testbar
 
 ---
 
-<!-- SOURCE: docs/03_data/ARCHIVE_SPECIFICATION.md -->
+# Datei: docs/03_data/ARCHIVE_SPECIFICATION.md
 
 # Archive Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Prinzipien
 
@@ -467,11 +467,11 @@ archive/ratings/
 
 ---
 
-<!-- SOURCE: docs/03_data/DATA_FORMAT_SPECIFICATION.md -->
+# Datei: docs/03_data/DATA_FORMAT_SPECIFICATION.md
 
 # Data and File Format Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Standort-Tagesarchiv
 
@@ -566,11 +566,11 @@ Der Kommentartext wird im Default nicht exportiert. Die genauen Supabase-Koordin
 
 ---
 
-<!-- SOURCE: docs/03_data/DATA_PRODUCTS_SPEC.md -->
+# Datei: docs/03_data/DATA_PRODUCTS_SPEC.md
 
 # Data Products Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Bestehende Datenprodukte
 
@@ -602,11 +602,11 @@ Bewertungsexporte müssen schema-versioniert, deterministisch sortierbar und ded
 
 ---
 
-<!-- SOURCE: docs/03_data/DATA_SOURCES.md -->
+# Datei: docs/03_data/DATA_SOURCES.md
 
 # Data Sources
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Implementierte Quellen
 
@@ -638,11 +638,11 @@ Supabase ist keine Messdatenquelle der Inversionsberechnung, sondern die Intake-
 
 ---
 
-<!-- SOURCE: docs/04_processing/INVERSION_ALGORITHMS.md -->
+# Datei: docs/04_processing/INVERSION_ALGORITHMS.md
 
 # Inversion Algorithms and Derivations
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Hauptprofil
 
@@ -681,11 +681,11 @@ Ohne auswertbares Vertikalprofil: Klasse X. Mit DWD- oder AEMET-Bodenmessung + V
 
 ---
 
-<!-- SOURCE: docs/04_processing/INVERSION_DIAGRAM_PIPELINE.md -->
+# Datei: docs/04_processing/INVERSION_DIAGRAM_PIPELINE.md
 
 # Inversion Diagram Pipeline
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Status
 
@@ -729,11 +729,11 @@ Erzeugung erst nach Archiv-Safe-Merge und Validierung. Bei späteren Datenverbes
 
 ---
 
-<!-- SOURCE: docs/04_processing/SEISMIC_DATA_PIPELINE.md -->
+# Datei: docs/04_processing/SEISMIC_DATA_PIPELINE.md
 
 # Seismic Data Pipeline
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Status
 
@@ -764,11 +764,11 @@ Seismik soll als isolierter Step/Job laufen. Ausfall einer Station soll andere S
 
 ---
 
-<!-- SOURCE: docs/04_processing/SUPABASE_GITHUB_TRANSFER_SPEC.md -->
+# Datei: docs/04_processing/SUPABASE_GITHUB_TRANSFER_SPEC.md
 
 # Supabase to GitHub Transfer Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Status und Ziel
 
@@ -845,14 +845,17 @@ Bevorzugtes Repository Secret: `SUPABASE_SECRET_KEY`. Legacy-Fallback: `SUPABASE
 - kein Kommentartext-Export,
 - keine Löschung von Supabase-Daten nach erfolgreichem Transfer.
 
+## v0.15.25 – Pending-Datensätze
+Noch nicht beantwortete Datensätze ohne `response_time` werden nicht in die Bewertungs-Zeitachse übernommen, wenn `rating` leer oder `-1` ist. Sie werden als `pending_skipped` gezählt. Eine echte Bewertung 0..5 ohne `response_time` bleibt ungültig und verhindert den Commit. Es wird bewusst kein Ersatzzeitstempel aus `scheduled_time` oder `created_at` verwendet.
+
 
 ---
 
-<!-- SOURCE: docs/04_processing/SYNC_STATE_SPEC.md -->
+# Datei: docs/04_processing/SYNC_STATE_SPEC.md
 
 # Synchronization State Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Ziel
 
@@ -888,11 +891,11 @@ Der State ist nur ein Beschleuniger. Konsistenz wird durch die eindeutige `event
 
 ---
 
-<!-- SOURCE: docs/05_github/GITHUB_ACTIONS_SPEC.md -->
+# Datei: docs/05_github/GITHUB_ACTIONS_SPEC.md
 
 # GitHub Actions Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Aktueller Workflow
 
@@ -986,11 +989,11 @@ Der Workflow ist bewusst vom meteorologischen Collector getrennt. Wetter/KIT sta
 
 ---
 
-<!-- SOURCE: docs/05_github/GITHUB_OPERATIONS.md -->
+# Datei: docs/05_github/GITHUB_OPERATIONS.md
 
 # GitHub Operations Guide
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Manueller Datenlauf
 
@@ -1019,11 +1022,11 @@ Actions-Lauf erneut starten oder `workflow_dispatch` mit dem betroffenen Datum a
 
 ---
 
-<!-- SOURCE: docs/05_github/GITHUB_REPOSITORY_SPEC.md -->
+# Datei: docs/05_github/GITHUB_REPOSITORY_SPEC.md
 
 # GitHub Repository Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Repository
 
@@ -1048,11 +1051,11 @@ Softwareänderungen benötigen Versionsanhebung, Changelog und Regressionstest. 
 
 ---
 
-<!-- SOURCE: docs/05_github/SUPABASE_RATINGS_ACTION_SETUP.md -->
+# Datei: docs/05_github/SUPABASE_RATINGS_ACTION_SETUP.md
 
 # Supabase Ratings Action – Einrichtung und erster Lauf
 
-Projektstand: Inversion Analyzer v0.15.24  
+Projektstand: Inversion Analyzer v0.15.25  
 Status: IMPLEMENTED
 
 ## 1. Zweck
@@ -1161,11 +1164,11 @@ Der erste reale GitHub-Lauf gilt als erfolgreich, wenn:
 
 ---
 
-<!-- SOURCE: docs/06_security/SECURITY_AND_SECRETS.md -->
+# Datei: docs/06_security/SECURITY_AND_SECRETS.md
 
 # Security and Secrets
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Aktuelle Secrets
 
@@ -1208,11 +1211,11 @@ Datenschutz-Default des GitHub-Archivs:
 
 ---
 
-<!-- SOURCE: docs/07_testing/DATA_VALIDATION_SPEC.md -->
+# Datei: docs/07_testing/DATA_VALIDATION_SPEC.md
 
 # Data Validation Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Quellvalidierung
 
@@ -1237,11 +1240,11 @@ Schema-Version, eindeutige ID, parsebarer UTC-Zeitstempel, zulässiger Bewertung
 
 ---
 
-<!-- SOURCE: docs/07_testing/REGRESSION_TESTS.md -->
+# Datei: docs/07_testing/REGRESSION_TESTS.md
 
 # Regression Tests
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Vorhandene Regressionstests bis v0.15.24
 
@@ -1280,14 +1283,17 @@ Jeder künftig behobene Fehler erhält, soweit automatisierbar, einen Regression
 
 `test_supabase_ratings_workflow_v0_15_24.py` prüft zusätzlich Schedule, Secrets, gemeinsame Concurrency-Gruppe, `--full`, ratings-only Staging sowie Rebase vor Push für beide Archiv-Writer.
 
+## v0.15.25
+`test_supabase_ratings_sync_v0_15_25.py` prüft zusätzlich: pending/missed ohne `response_time` wird übersprungen; echte Bewertung ohne `response_time` wird weiterhin abgelehnt. `test_supabase_ratings_workflow_v0_15_25.py` prüft die aktuelle Action-Verkabelung.
+
 
 ---
 
-<!-- SOURCE: docs/07_testing/SELF_TEST_SPECIFICATION.md -->
+# Datei: docs/07_testing/SELF_TEST_SPECIFICATION.md
 
 # Self-Test Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Aktueller Selftest
 
@@ -1307,11 +1313,11 @@ Selftests dürfen keine produktiven Remote-Daten verändern.
 
 ---
 
-<!-- SOURCE: docs/07_testing/TEST_AND_VALIDATION.md -->
+# Datei: docs/07_testing/TEST_AND_VALIDATION.md
 
 # Test and Validation Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Testebenen
 
@@ -1345,12 +1351,12 @@ Implementiert sind Regressionen für Deduplikation, Idempotenz, 0/-1-Trennung, S
 
 ---
 
-<!-- SOURCE: docs/07_testing/TEST_EXECUTION_REPORT.md -->
+# Datei: docs/07_testing/TEST_EXECUTION_REPORT.md
 
 # Test Execution Report
 
 > Dokumentationsstand: 2026-09-19  \
-> Software-Basis: Inversion Analyzer v0.15.24  \
+> Software-Basis: Inversion Analyzer v0.15.25  \
 > Testumgebung: Python 3.13.5 im Erstellungscontainer.
 
 ## 1. Ergebnis
@@ -1392,11 +1398,11 @@ Ein realer Abruf aus dem produktiven Supabase wurde in der Erstellungsumgebung *
 
 ---
 
-<!-- SOURCE: docs/08_operation/BACKUP_AND_RECOVERY.md -->
+# Datei: docs/08_operation/BACKUP_AND_RECOVERY.md
 
 # Backup and Recovery
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Zu sichernde Bestandteile
 
@@ -1424,11 +1430,11 @@ Backupmedien mit Bewertungs-/Nutzerdaten sind entsprechend ihrer Sensitivität z
 
 ---
 
-<!-- SOURCE: docs/08_operation/BUILD_AND_DEVELOPMENT.md -->
+# Datei: docs/08_operation/BUILD_AND_DEVELOPMENT.md
 
 # Build and Development Guide
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Zielumgebungen
 
@@ -1470,11 +1476,11 @@ Vor Release: Selftest + Regressionstests + Versions-/Changelog-Abgleich. Für ne
 
 ---
 
-<!-- SOURCE: docs/08_operation/INSTALLATION_AND_USER_MANUAL.md -->
+# Datei: docs/08_operation/INSTALLATION_AND_USER_MANUAL.md
 
 # Installation and User Manual
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Installation
 
@@ -1500,11 +1506,11 @@ PNG/CSV sind GUI-Exporte. Die geplante Actions-Diagrammerstellung ist davon getr
 
 ---
 
-<!-- SOURCE: docs/08_operation/OPERATIONS_AND_MONITORING.md -->
+# Datei: docs/08_operation/OPERATIONS_AND_MONITORING.md
 
 # Operations and Monitoring
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Betriebsindikatoren
 
@@ -1532,11 +1538,11 @@ Zu überwachen sind insbesondere: Action-Status, `archive/ratings/sync_state.jso
 
 ---
 
-<!-- SOURCE: docs/08_operation/PROJECT_RECONSTRUCTION.md -->
+# Datei: docs/08_operation/PROJECT_RECONSTRUCTION.md
 
 # Project Reconstruction Guide
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Ziel
 
@@ -1597,11 +1603,11 @@ Das System gilt als rekonstruiert, wenn GUI, Headless, Archiv, Remote-Fallback, 
 
 ---
 
-<!-- SOURCE: docs/08_operation/RETRY_AND_ERROR_HANDLING.md -->
+# Datei: docs/08_operation/RETRY_AND_ERROR_HANDLING.md
 
 # Retry and Error Handling
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Aktuelle Parameter
 
@@ -1625,14 +1631,17 @@ Frische Teildaten werden in den vorhandenen Tagesbestand gemergt. Nicht angeford
 - Seismikfehler: nur betroffene Station FAIL/STALE; keine Löschung des letzten guten Originalprodukts ohne explizite Regel.
 - Supabasefehler: Sync-State nicht fortschreiben; nächster Lauf darf wiederholen.
 
+## Supabase-Bewertungen ab v0.15.25
+`pending_skipped` ist kein Fehlerzustand und blockiert keinen Commit. `rejected > 0` bedeutet weiterhin Dateninkonsistenz und führt zu Exit Code 4, damit fehlerhafte Bewertungsdaten nicht stillschweigend archiviert werden.
+
 
 ---
 
-<!-- SOURCE: docs/09_project/ADR.md -->
+# Datei: docs/09_project/ADR.md
 
 # Architecture Decision Records (ADR)
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## ADR-001 – Gemeinsames Tagesarchiv
 
@@ -1662,11 +1671,11 @@ Frische Teildaten werden in den vorhandenen Tagesbestand gemergt. Nicht angeford
 
 ---
 
-<!-- SOURCE: docs/09_project/CHANGELOG_DOCUMENTATION.md -->
+# Datei: docs/09_project/CHANGELOG_DOCUMENTATION.md
 
 # Documentation Changelog
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## DocSet 1.0 – 2026-09-18
 
@@ -1686,11 +1695,11 @@ Die zuvor als PLANNED dokumentierte Supabase→GitHub-Übertragung ist für den 
 
 ---
 
-<!-- SOURCE: docs/09_project/CONFIGURATION_SPECIFICATION.md -->
+# Datei: docs/09_project/CONFIGURATION_SPECIFICATION.md
 
 # Configuration Specification
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. `locations.json`
 
@@ -1725,11 +1734,11 @@ Seismikstationen und spätere Audioanalyse sollen in eigenen versionierten Konfi
 
 ---
 
-<!-- SOURCE: docs/09_project/DEPENDENCIES_AND_SBOM.md -->
+# Datei: docs/09_project/DEPENDENCIES_AND_SBOM.md
 
 # Dependencies and SBOM
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Direkt installierte Python-Pakete
 
@@ -1760,11 +1769,11 @@ Aktuell sind Python-Paketversionen nicht gepinnt. Für vollständig deterministi
 
 ---
 
-<!-- SOURCE: docs/09_project/DEVELOPMENT_DIRECTIVES.md -->
+# Datei: docs/09_project/DEVELOPMENT_DIRECTIVES.md
 
 # Development Directives
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Versionsdisziplin
 
@@ -1798,11 +1807,11 @@ Secrets nie in Code, ZIP-Beispieldaten, Logs, Screenshots oder Dokumentation mit
 
 ---
 
-<!-- SOURCE: docs/09_project/KNOWN_ISSUES_AND_LIMITATIONS.md -->
+# Datei: docs/09_project/KNOWN_ISSUES_AND_LIMITATIONS.md
 
 # Known Issues and Limitations
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. KIT-Rolling Window
 
@@ -1824,10 +1833,13 @@ Python-Abhängigkeiten sind nicht auf exakte Versionen gepinnt; zukünftige Bibl
 
 Seismik sowie Supabase-Audioabruf/-analyse sind noch nicht implementiert. Der Bewertungstransfer ist seit v0.15.24 implementiert; ein produktiver Live-E2E-Lauf muss nach Einrichtung des GitHub-Secrets noch verifiziert werden. Die gewünschte Repository-Sichtbarkeit (öffentlich/privat) bleibt für die Datenschutzbewertung relevant.
 
+## Live-E2E Erkenntnis v0.15.25
+Der erste produktive Vollabruf zeigte 55 Supabase-Zeilen ohne `response_time`. v0.15.25 behandelt noch unbeantwortete/verpasste Zeilen (`rating` leer oder `-1`) als erwarteten Pending-Zustand. Reale Bewertungen 0..5 benötigen weiterhin zwingend `response_time`.
+
 
 ---
 
-<!-- SOURCE: docs/09_project/ORIGINAL_SOURCE_SHA256.md -->
+# Datei: docs/09_project/ORIGINAL_SOURCE_SHA256.md
 
 # Original v0.15.23 Source File Hashes
 
@@ -1899,11 +1911,11 @@ Generated 2026-09-18. SHA-256 values refer to the uploaded/extracted baseline be
 
 ---
 
-<!-- SOURCE: docs/09_project/SOURCE_PROVENANCE.md -->
+# Datei: docs/09_project/SOURCE_PROVENANCE.md
 
 # Source Provenance
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Baseline
 

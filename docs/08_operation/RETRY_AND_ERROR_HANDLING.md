@@ -1,6 +1,6 @@
 # Retry and Error Handling
 
-> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.24  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
+> Dokumentationsstand: 2026-09-19  \n> Software-Basis: Inversion Analyzer v0.15.25  \n> Statusbegriffe: **IMPLEMENTED** = im Quellstand nachweisbar; **PLANNED** = beschlossen/geplant, noch nicht implementiert; **OPEN** = Detailentscheidung fehlt.
 
 ## 1. Aktuelle Parameter
 
@@ -23,3 +23,6 @@ Frische Teildaten werden in den vorhandenen Tagesbestand gemergt. Nicht angeford
 - Diagrammfehler: Rohdatenarchiv bleibt gültig; Produktstatus FAIL.
 - Seismikfehler: nur betroffene Station FAIL/STALE; keine Löschung des letzten guten Originalprodukts ohne explizite Regel.
 - Supabasefehler: Sync-State nicht fortschreiben; nächster Lauf darf wiederholen.
+
+## Supabase-Bewertungen ab v0.15.25
+`pending_skipped` ist kein Fehlerzustand und blockiert keinen Commit. `rejected > 0` bedeutet weiterhin Dateninkonsistenz und führt zu Exit Code 4, damit fehlerhafte Bewertungsdaten nicht stillschweigend archiviert werden.

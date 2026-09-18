@@ -1,0 +1,19 @@
+Inversion Analyzer v0.15.25
+===========================
+Datum: 2026-09-19
+
+Supabase-Bewertungssynchronisation
+----------------------------------
+- Live-E2E-Ergebnis aus v0.15.24 berücksichtigt: 320 Datensätze gelesen, 265 gültig, 55 ohne response_time.
+- Noch unbeantwortete/verpasste Beobachtungen ohne response_time werden nicht mehr als Fehler behandelt, sofern rating leer oder -1 ist.
+- Diese Datensätze werden als pending_skipped gezählt und nicht in die Bewertungs-Zeitachse geschrieben.
+- Eine echte Bewertung 0..5 ohne response_time bleibt ein ungültiger Datensatz und blockiert weiterhin den Archiv-Commit.
+- Sync-State enthält zusätzlich last_pending_skipped_count.
+- CLI-Ausgabe trennt accepted, pending_skipped und rejected.
+- Regressionstests und Workflow-Test auf v0.15.25 aktualisiert.
+
+Sicherheit / Datenintegrität
+----------------------------
+- Keine Ersatzzeitstempel aus created_at oder scheduled_time für echte Bewertungen.
+- event_id bleibt Deduplikationsschlüssel.
+- Supabase-Secrets bleiben ausschließlich GitHub Actions Secrets.
