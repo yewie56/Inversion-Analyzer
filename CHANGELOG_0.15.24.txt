@@ -1,0 +1,22 @@
+Inversion Analyzer v0.15.24 - 2026-09-19
+
+- Erste produktive Supabase->GitHub-Synchronisation fuer subjektive Bewertungen eingefuehrt.
+- Neue GitHub Action .github/workflows/supabase_ratings_sync.yml.
+- Automatischer Lauf zweimal pro Stunde bei Minute 12 und 42; damit zeitlich versetzt zum bestehenden Wetter/KIT-Collector bei Minute 07 und 37.
+- Manueller workflow_dispatch-Lauf mit optionalem Vollabgleich (--full).
+- Supabase-Tabelle standardmaessig observations; Projekt-URL und Mapping in ratings_sync_config.json.
+- Backend-Zugriff ausschliesslich ueber GitHub Secret SUPABASE_SECRET_KEY; legacy SUPABASE_SERVICE_ROLE_KEY bleibt als Kompatibilitaetsfallback moeglich.
+- event_id ist der feste Deduplikationsschluessel. Wiederholte Action-Laeufe erzeugen keine doppelten Bewertungen.
+- Neue Bewertungen werden nach UTC-Tag unter archive/ratings/JJJJ/MM/JJJJ-MM-TT/ratings.jsonl abgelegt.
+- Pro UTC-Tag wird summary.json mit Bewertungsverteilung und Basisstatistik erzeugt.
+- archive/ratings/sync_state.json dokumentiert den letzten erfolgreichen Lauf und den letzten bekannten response_time-Zeitpunkt.
+- Inkrementelle Synchronisation liest standardmaessig ein 48-Stunden-Ueberlappungsfenster erneut und merged idempotent; dadurch werden verspaetete Uploads robuster erfasst.
+- Bewertungswert -1 (keine Antwort) bleibt strikt von 0 getrennt.
+- Datenschutz: Teilnehmer-Schluessel werden nicht exportiert. observer_id bleibt als bereits pseudonyme Kennung erhalten. Exakte GPS-Koordinaten werden standardmaessig nicht exportiert, sondern auf zwei Nachkommastellen abgeschnitten. Kommentartext bleibt in dieser Stufe in Supabase; nur has_comment wird archiviert.
+- Keine zusaetzliche Python-Abhaengigkeit: REST-Zugriff verwendet die Standardbibliothek urllib.
+- Regressionstest test_supabase_ratings_sync_v0_15_24.py prueft Deduplikation, Idempotenz, 0/-1-Trennung, Standortbehandlung, Kommentarschutz und Tagesarchivierung.
+- Neuer statischer Workflow-Regressionstest test_supabase_ratings_workflow_v0_15_24.py prueft Schedule, Secrets, Concurrency, Full-Sync, Staging und Rebase-vor-Push.
+- Audio-Synchronisation und Audio-Kennwerte bleiben fuer eine spaetere Version geplant.
+- Wetter/KIT-Workflow und Rating-Workflow verwenden gemeinsam die Concurrency-Gruppe inversion-archive-writer, damit Archiv-Commits nicht parallel erfolgen.
+- Beide Archiv-Writer führen vor dem Push ein git pull --rebase origin main aus, um zwischenzeitliche Repository-Commits sauber einzubeziehen.
+- Neue Step-by-Step-Dokumentation docs/05_github/SUPABASE_RATINGS_ACTION_SETUP.md.

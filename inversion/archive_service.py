@@ -44,6 +44,28 @@ f"KIT={diag['kit_rows']} | ICON-D2={diag['icon_rows']} | "
     log(f"Archiv: {selected_date} lokal vollständig geladen. Herkunft: {origin}.")
     return old,manifest,origin
 
+
+def refresh_missing_kit_reference_from_remote(selected_date,bundle,log_cb=None):
+    """If a KIT reference location lacks local KITMast data, fetch the central day from GitHub.
+
+    Returns (bundle, manifest, state). No network is used for locations without
+    KIT reference support or when local KIT data already exists.
+    """
+    from .config import KIT_REFERENCE_ENABLED
+    if not KIT_REFERENCE_ENABLED:
+        return bundle,None,"KIT_REFERENCE_DISABLED"
+    df=getattr(bundle,"kit_mast_metrics",None) if bundle is not None else None
+    if df is not None and hasattr(df,"empty") and not df.empty:
+        return bundle,None,"KIT_REFERENCE_ALREADY_LOCAL"
+    from .remote_archive import fetch_remote_kit_reference_day
+    ok,state=fetch_remote_kit_reference_day(selected_date,log_cb)
+    if not ok:
+        return bundle,None,state
+    reloaded,manifest=load_bundle(selected_date)
+    if reloaded is None:
+        return bundle,manifest,"KIT_REFERENCE_RELOAD_FAILED"
+    return reloaded,manifest,state
+
 def update_day(
     selected_date,log_cb=None,only_missing=False,requested_sources=None,
     reason=None,increment_attempt=True,affects_retry_clock=True
@@ -84,9 +106,30 @@ def update_day(
                 + ", ".join(sorted(wanted))
             )
 
-    fresh=load_data_for_date(selected_date,log_cb=log_cb,only_sources=wanted)
-    merge_keys=wanted if wanted is not None else None
-    merged=merge_bundles(old,fresh,merge_keys) if old is not None else fresh
+    # v0.15.23: In KIT-reference locations, an explicit KIT update refreshes
+    # the central archive/KITMast day instead of the disabled per-location source.
+    from .config import KIT_REFERENCE_ENABLED
+    kit_reference_requested=bool(
+        KIT_REFERENCE_ENABLED and wanted is not None and "kit_mast" in wanted
+    )
+    location_wanted=set(wanted) if wanted is not None else None
+    if kit_reference_requested:
+        from .kit_reference_archive import update_kit_reference_day
+        log(f"Update: zentrale KITMast-Referenz für {selected_date} abrufen.")
+        update_kit_reference_day(selected_date,log_cb=log_cb)
+        location_wanted.discard("kit_mast")
+
+    if location_wanted is not None and not location_wanted:
+        from .models import DataBundle
+        merged=old if old is not None else DataBundle()
+    else:
+        fresh=load_data_for_date(selected_date,log_cb=log_cb,only_sources=location_wanted)
+        merge_keys=location_wanted if location_wanted is not None else None
+        merged=merge_bundles(old,fresh,merge_keys) if old is not None else fresh
+
+    if KIT_REFERENCE_ENABLED:
+        from .kit_reference_archive import attach_kit_reference
+        attach_kit_reference(merged,selected_date)
 
     # Nach dem Safe-Merge ist dies die belastbare Qualitätsbewertung des
     # endgültigen Tagesbestands, nicht die des eventuell unvollständigen

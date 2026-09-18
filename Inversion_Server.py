@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # =============================================================================
 # Inversion Analyzer
-# Version: 0.15.22
+# Version: 0.15.23
 # Datum: 2026-08-30
 #
 # History:
+# 0.15.23 - GUI/Remote-KITMast-Kompatibilitaet; Collector unveraendert
 # 0.15.22 - zentrales KITMast-Referenzarchiv; ein Abruf pro Scheduled-Lauf
 # 0.15.21 - GitHub workflow_dispatch unterstützt normal/scheduled/kit-only
 # 0.15.20 - KIT-Parser toleriert fehlende Höhenwerte; neuer --kit-only-Schalter
@@ -24,7 +25,7 @@
 # =============================================================================
 
 """
-Inversion_Server.py – v0.15.22
+Inversion_Server.py – v0.15.23
 
 Headless collector / archive repair tool.
 

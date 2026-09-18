@@ -1,0 +1,231 @@
+{
+  "project_version": "0.15.24",
+  "generated": "2026-09-19",
+  "files": [
+    {
+      "path": "DOCUMENTATION_README.md",
+      "size": 550,
+      "sha256": "7f988fc0664ba9a9208867532f705900ff4133211e568058b2f0f8d96e345448"
+    },
+    {
+      "path": "InversionAnalyzer_COMPLETE_DOCUMENTATION.md",
+      "size": 87600,
+      "sha256": "f95fcda98a17b7c1abf5db8fea3eec6ce1b107ee96d4b80c0e537b1da58b67ed"
+    },
+    {
+      "path": "docs/00_overview/DOCUMENTATION_INDEX.md",
+      "size": 4827,
+      "sha256": "c29ccdb0eb8435d2a5c89663e02ea787900be917da881901f008ad5fd47de2d1"
+    },
+    {
+      "path": "docs/00_overview/STATUS_AND_SCOPE.md",
+      "size": 2742,
+      "sha256": "31aeb5a0baf910f7ac5a636422905955e72c8f906e4c92da73df9290651ce2f3"
+    },
+    {
+      "path": "docs/01_requirements/SRS.md",
+      "size": 5448,
+      "sha256": "608ba80f02b4ac00d478e648bdcfda8c7baea82c3772ab581f5e05ae1def1ff0"
+    },
+    {
+      "path": "docs/01_requirements/TRACEABILITY_MATRIX.md",
+      "size": 2841,
+      "sha256": "de3eeb832a166ac168d6435e0e43e21025d8613b3a2febd1681263b053266c4e"
+    },
+    {
+      "path": "docs/02_architecture/AUTOMATION_ARCHITECTURE.md",
+      "size": 1891,
+      "sha256": "b9c77dc2cdcbf4ac67bbac1a29e8c63a70ff9d7a040fd0e49ab07fc8d1fa14cc"
+    },
+    {
+      "path": "docs/02_architecture/AUTOMATION_DEPENDENCY_GRAPH.md",
+      "size": 1034,
+      "sha256": "01a5f87ca8d95d9412efbaff1d41f1baf7c02a6cd682538861ba0932d113089f"
+    },
+    {
+      "path": "docs/02_architecture/SAD.md",
+      "size": 2241,
+      "sha256": "0aa0dfe3d1b336d8c0d3e16d51cad58eed1228390c4d37d47b47cadc00803a63"
+    },
+    {
+      "path": "docs/02_architecture/SDS.md",
+      "size": 1956,
+      "sha256": "f56543a931db0657563dd4ada871e1f92e83998cb44b90df0dfffad83c80603d"
+    },
+    {
+      "path": "docs/03_data/ARCHIVE_SPECIFICATION.md",
+      "size": 1961,
+      "sha256": "31cfcbc7eb760d66bac5aae1551e9c19e957e9574eabe459e9315e271cb3dd62"
+    },
+    {
+      "path": "docs/03_data/DATA_FORMAT_SPECIFICATION.md",
+      "size": 2535,
+      "sha256": "a9a4eceab7e53d7cbb87341d39dc8c068c01de3cf7e96143835e60b7c390fc30"
+    },
+    {
+      "path": "docs/03_data/DATA_PRODUCTS_SPEC.md",
+      "size": 1318,
+      "sha256": "94ed3a2d77ae315513c3a7a50ce4140bec213da03f51a58f36c8349be4ef8b6c"
+    },
+    {
+      "path": "docs/03_data/DATA_SOURCES.md",
+      "size": 2352,
+      "sha256": "491c467dd310ab6cad9170cd2a632c7eac338ca4b6d3b9b93eec2937abc116b3"
+    },
+    {
+      "path": "docs/04_processing/INVERSION_ALGORITHMS.md",
+      "size": 1961,
+      "sha256": "52559f7326199f178a7ef4cecf35bc06d7a061a29bac7df649c3a728ce8f3c5a"
+    },
+    {
+      "path": "docs/04_processing/INVERSION_DIAGRAM_PIPELINE.md",
+      "size": 1505,
+      "sha256": "cfd77648f25f9c7bcb12f37b4f6daf7ad9cc13719235ccba986236fcaa6e1f4a"
+    },
+    {
+      "path": "docs/04_processing/SEISMIC_DATA_PIPELINE.md",
+      "size": 1586,
+      "sha256": "bc87e3e18be83c18056c32f56e9e42cf1bfcc7f700739bfeecc981840fa146d7"
+    },
+    {
+      "path": "docs/04_processing/SUPABASE_GITHUB_TRANSFER_SPEC.md",
+      "size": 3188,
+      "sha256": "4b2e1d8ad631eed398521bb8516e9a047bc905f5816916e7d4d6b92d736c2ef4"
+    },
+    {
+      "path": "docs/04_processing/SYNC_STATE_SPEC.md",
+      "size": 1545,
+      "sha256": "c4c74232fbb1954fa2cab7c2b16c570fee4691210b5d6a705f1c310a4ddf3b89"
+    },
+    {
+      "path": "docs/05_github/GITHUB_ACTIONS_SPEC.md",
+      "size": 3615,
+      "sha256": "f07d470516cc79a5a96147fd92687d62548642d6be90547bbee89ee5f5abdd88"
+    },
+    {
+      "path": "docs/05_github/GITHUB_OPERATIONS.md",
+      "size": 1228,
+      "sha256": "be38d10cefe46baea0c0f36da1397fd03389e032027da4681e515de121853117"
+    },
+    {
+      "path": "docs/05_github/GITHUB_REPOSITORY_SPEC.md",
+      "size": 1276,
+      "sha256": "46b9f590623374be2d68ba59a012b7e1169a7a4bb523c32a9a93c0aad34d2950"
+    },
+    {
+      "path": "docs/05_github/SUPABASE_RATINGS_ACTION_SETUP.md",
+      "size": 3396,
+      "sha256": "2a2912b53d16058e3a0057ef0ffc1d4f23a77a89f63e18b9b78534499575a2ae"
+    },
+    {
+      "path": "docs/06_security/SECURITY_AND_SECRETS.md",
+      "size": 2056,
+      "sha256": "734831b8da2c9759551b024598b7b683636da02cab323026a939c4207905ede3"
+    },
+    {
+      "path": "docs/07_testing/DATA_VALIDATION_SPEC.md",
+      "size": 1264,
+      "sha256": "4ea19c8addff22e81609784e2fb55a1fe78a4d2ecbd7c221d345bd2375a64989"
+    },
+    {
+      "path": "docs/07_testing/REGRESSION_TESTS.md",
+      "size": 1971,
+      "sha256": "22fc43b7c5223798087a9e5db9e205ae8257b8c7e199e8f5f7500860a933374f"
+    },
+    {
+      "path": "docs/07_testing/SELF_TEST_SPECIFICATION.md",
+      "size": 930,
+      "sha256": "d892d0d934eb50f9f2a78c6c9cb7208d802c1f87e03075998d8f8183243f4554"
+    },
+    {
+      "path": "docs/07_testing/TEST_AND_VALIDATION.md",
+      "size": 1573,
+      "sha256": "8ef2c4add1a80ec8da845215f8bb3e04408d92e509b11576a3122db5ba7e00c7"
+    },
+    {
+      "path": "docs/07_testing/TEST_EXECUTION_REPORT.md",
+      "size": 1899,
+      "sha256": "6251980b26408d0e4deed7c16a598351f30ace4b43cb89340c8cbfcfd8cfe211"
+    },
+    {
+      "path": "docs/08_operation/BACKUP_AND_RECOVERY.md",
+      "size": 1157,
+      "sha256": "28aadae291485e3274e2944cb2b38ba84343357fdbdac4274ecddabce0c81e49"
+    },
+    {
+      "path": "docs/08_operation/BUILD_AND_DEVELOPMENT.md",
+      "size": 1274,
+      "sha256": "5f61790f1742d93034f31a7a0a98cf5232516740f68e2de7ec6602de67a81962"
+    },
+    {
+      "path": "docs/08_operation/INSTALLATION_AND_USER_MANUAL.md",
+      "size": 1193,
+      "sha256": "bba342d083a9c70cc2023c15e6fe30d41940f0e94e19c087c60e22dfd12fb3e5"
+    },
+    {
+      "path": "docs/08_operation/OPERATIONS_AND_MONITORING.md",
+      "size": 1384,
+      "sha256": "ad5964d51ee1a7de982486823566629fbd8049ddd869e064a8b99b6d8eb39103"
+    },
+    {
+      "path": "docs/08_operation/PROJECT_RECONSTRUCTION.md",
+      "size": 2677,
+      "sha256": "55e55cda2dfc8dea4d0d0b209e182983753fe6c0230100c74afe70dda51a0e8d"
+    },
+    {
+      "path": "docs/08_operation/RETRY_AND_ERROR_HANDLING.md",
+      "size": 1075,
+      "sha256": "7c2a457dd35a5d2a44a6a5bd10a48ad02656aadd85f96f500a5b49b973a2de49"
+    },
+    {
+      "path": "docs/09_project/ADR.md",
+      "size": 1350,
+      "sha256": "f59c8f183744c37938b210ab436a8b2bd53e923b4d36b789bead9e04a1d68545"
+    },
+    {
+      "path": "docs/09_project/CHANGELOG_DOCUMENTATION.md",
+      "size": 1136,
+      "sha256": "418cd918d88fa16445ce74b5feb4c8e67a7edfeac11c1bb87947f9e2af9386ac"
+    },
+    {
+      "path": "docs/09_project/CONFIGURATION_SPECIFICATION.md",
+      "size": 1691,
+      "sha256": "2abf3408540e80ff0eb02362322f7d86c15dd8783f2c3bf12d988033aa25e255"
+    },
+    {
+      "path": "docs/09_project/DEPENDENCIES_AND_SBOM.md",
+      "size": 981,
+      "sha256": "182822bc6e785a55c41041facd0604dfcc84159ce9f453b2c71dc3f0cc22c9be"
+    },
+    {
+      "path": "docs/09_project/DEVELOPMENT_DIRECTIVES.md",
+      "size": 1366,
+      "sha256": "69d385378712e64c31b7b04b5e9de803df503d072c6ed22a47e66fde3cc7b4d9"
+    },
+    {
+      "path": "docs/09_project/KNOWN_ISSUES_AND_LIMITATIONS.md",
+      "size": 1400,
+      "sha256": "5fdbff633df7a2fa1882ac319dde87384fb0641b2aa66c87c7b2b1c400969d6c"
+    },
+    {
+      "path": "docs/09_project/ORIGINAL_SOURCE_SHA256.md",
+      "size": 6684,
+      "sha256": "3d320fe08991606daa6b0b4486d5955f75d57325258b963d4a052750c8f1fa3c"
+    },
+    {
+      "path": "docs/09_project/SOURCE_PROVENANCE.md",
+      "size": 1186,
+      "sha256": "ec1f621a865c138c7952214743f03fb33a7500437b93869d1836bd0626534bdb"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-08-30-central-kitmast-archive.md",
+      "size": 3350,
+      "sha256": "1287a3d95a79a11d5c7b47c08de58169b7058ec629432053276f9b688a624054"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-08-30-central-kitmast-archive-design.md",
+      "size": 1387,
+      "sha256": "4d5b62ad093fb354b51256a84642aeb196c33beeb3d5f8adbbe846ddf5744d53"
+    }
+  ]
+}

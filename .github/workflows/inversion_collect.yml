@@ -37,7 +37,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: inversion-data-collector
+  group: inversion-archive-writer
   cancel-in-progress: false
 
 jobs:
@@ -230,4 +230,5 @@ jobs:
 
           LOCS="$(paste -sd, .selected_locations.txt)"
           git commit -m "Update inversion archive: ${LOCS}"
+          git pull --rebase origin main
           git push

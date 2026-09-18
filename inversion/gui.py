@@ -15,7 +15,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from .config import APP_NAME,VERSION,TIMEZONE,OUTPUT_DIR,SETTINGS_FILE,PRESSURE_LEVELS
 from .pipeline import load_data_for_date
-from .archive_service import load_archive_day, update_day, bundle_has_plot_data
+from .archive_service import load_archive_day, update_day, bundle_has_plot_data, refresh_missing_kit_reference_from_remote
 from .archive import load_bundle, missing_sources, read_origin_marker, kit_archive_coverage
 from .config import LOCATION_NAME, LOCATION_SLUG, TIMEZONE, LAT, LON
 from .inversion_engine import inversion_label,calculate_profile_metrics
@@ -1059,7 +1059,7 @@ class InversionApp(tk.Tk):
     def _switch_location_runtime(self,key,settings_window=None):
         global APP_NAME,VERSION,TIMEZONE,OUTPUT_DIR,SETTINGS_FILE,PRESSURE_LEVELS
         global LOCATION_NAME,LOCATION_SLUG,LAT,LON
-        global load_data_for_date,load_archive_day,update_day,bundle_has_plot_data
+        global load_data_for_date,load_archive_day,update_day,bundle_has_plot_data,refresh_missing_kit_reference_from_remote
         global load_bundle,missing_sources,read_origin_marker,kit_archive_coverage,haversine_km
         global inversion_label,calculate_profile_metrics,fetch_remote_day
         if self.loading:
@@ -1075,6 +1075,7 @@ class InversionApp(tk.Tk):
             w=mods['weather_sources'];ie=mods['inversion_engine'];r=mods['remote_archive']
             load_data_for_date=p.load_data_for_date;load_archive_day=s.load_archive_day
             update_day=s.update_day;bundle_has_plot_data=s.bundle_has_plot_data
+            refresh_missing_kit_reference_from_remote=s.refresh_missing_kit_reference_from_remote
             load_bundle=a.load_bundle;missing_sources=a.missing_sources;read_origin_marker=a.read_origin_marker
             kit_archive_coverage=a.kit_archive_coverage
             haversine_km=w.haversine_km;inversion_label=ie.inversion_label
@@ -1179,7 +1180,22 @@ class InversionApp(tk.Tk):
                 self.selected_date,self.log
             )
 
-            # Any usable archived plot data => show immediately, no network.
+            # v0.15.23: location days no longer contain KIT files. If the
+            # configured location uses the central KITMast reference and the
+            # local reference day is missing, fetch that one reference day from
+            # GitHub before deciding that the local day is already displayable.
+            refreshed,ref_manifest,ref_state=refresh_missing_kit_reference_from_remote(
+                self.selected_date,bundle,self.log
+            )
+            if refreshed is not bundle:
+                bundle=refreshed
+                if ref_manifest is not None:
+                    manifest=manifest or ref_manifest
+                self.log(f"KITMast-Referenz aus GitHub ergänzt ({ref_state}).")
+
+            # Any usable archived plot data => show immediately. For reference
+            # locations the only automatic network access above is the missing
+            # central KITMast day.
             if bundle is not None and bundle_has_plot_data(bundle):
                 self.load_mode='archive'
                 self.after(0,self.finish_update,bundle,manifest,origin)

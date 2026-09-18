@@ -1,0 +1,89 @@
+name: Supabase ratings sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Vollbestand erneut lesen und idempotent mergen"
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    # Versetzt zum Wetter-/KIT-Collector (:07/:37).
+    - cron: "12,42 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: inversion-archive-writer
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # SUPABASE_URL ist nicht geheim, wird aber als Secret/Variable überschreibbar
+      # gehalten. Ohne Secret greift die Projekt-URL aus ratings_sync_config.json.
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Python 3.11
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Regression test rating sync
+        run: python test_supabase_ratings_sync_v0_15_24.py
+
+      - name: Validate Supabase secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPABASE_SECRET_KEY:-}" ] && [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo "FEHLER: GitHub Secret SUPABASE_SECRET_KEY fehlt."
+            echo "Alternativ wird legacy SUPABASE_SERVICE_ROLE_KEY unterstützt."
+            exit 2
+          fi
+
+      - name: Synchronize ratings
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARGS=()
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.full }}" = "true" ]; then
+            ARGS+=(--full)
+          fi
+          python sync_supabase_ratings.py "${ARGS[@]}"
+
+      - name: Show rating archive changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --short archive/ratings || true
+          git diff --stat -- archive/ratings || true
+          git diff --name-status -- archive/ratings || true
+
+      - name: Commit rating archive changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "inversion-ratings-sync"
+          git config user.email "actions@users.noreply.github.com"
+          git add archive/ratings
+          if git diff --cached --quiet; then
+            echo "Keine Bewertungsänderungen – kein Commit."
+            exit 0
+          fi
+          git diff --cached --name-status
+          git commit -m "Update Supabase ratings archive"
+          git pull --rebase origin main
+          git push

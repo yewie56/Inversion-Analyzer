@@ -1,0 +1,12 @@
+{
+  "supabase_url": "https://kbejualnruiwtnmeytif.supabase.co",
+  "table": "observations",
+  "timestamp_column": "response_time",
+  "event_id_column": "event_id",
+  "page_size": 1000,
+  "overlap_hours": 48,
+  "archive_dir": "archive/ratings",
+  "coordinate_mode": "truncate",
+  "coordinate_decimals": 2,
+  "include_comment": false
+}

@@ -1,0 +1,66 @@
+# Original v0.15.23 Source File Hashes
+
+Generated 2026-09-18. SHA-256 values refer to the uploaded/extracted baseline before adding the new documentation.
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `.gitattributes` | 365 | `99eeef94e683c53dfacf06a186dc62f99b807e109769a33e8284117ea9752622` |
+| `.github/workflows/inversion_collect.yml` | 7910 | `dadd5533a6a361571b1c1a8e2e89f8bf319ff7de7f00c8e3838a2b62c4c93e73` |
+| `.gitignore` | 85 | `1aee7fd7b0b3547c17ed515efa54ab1d225a5d7ebbffaccfbc76417ebac05a67` |
+| `CHANGELOG_0.15.10.txt` | 968 | `80e8716cecb7bb5811a58a0a2aca1d11f55d63dbd766b2dfb6ab4de49c784543` |
+| `CHANGELOG_0.15.11.txt` | 1128 | `1a0ebe08d41b865a8c73cf8c26ef1dcf68398b294715f6dfcb14886ce7d244bf` |
+| `CHANGELOG_0.15.12.txt` | 1108 | `81261fe4184a3a4be26f1e7a2a0228b1f695365378194413908f72151af094de` |
+| `CHANGELOG_0.15.13.txt` | 1033 | `cf846d4b0d8d2dcf886038ea6a37d5eda3b4a92a58fb8322705228b534f815b7` |
+| `CHANGELOG_0.15.14.txt` | 1245 | `c462c1ad53c392cb394f51504a2e2cf4c311971b8b74c22c7f9d1f537cc4b602` |
+| `CHANGELOG_0.15.15.txt` | 945 | `3589d9106a13bd7add810f03035944fcb0d1cd989b1a55c47ee8debb1d646137` |
+| `CHANGELOG_0.15.16.txt` | 1074 | `5efc91bc840cbc979cb1fafd124c27245f300a29d1e6cf840ed43efae92fd139` |
+| `CHANGELOG_0.15.17.txt` | 665 | `ebd1df92a4e5a305dc518fa07ee166d7d77f97e71db1f751410283c1adc508a0` |
+| `CHANGELOG_0.15.18.txt` | 1134 | `d7d8709c49ed259e172cb04b93789213130475879b58504299b0ef3ffc083cec` |
+| `CHANGELOG_0.15.19.txt` | 1623 | `f0e2e3c747f9fc11a5974d7c477208792a7ff6be2a4c76b73f875e0db74bd1d2` |
+| `CHANGELOG_0.15.20.txt` | 1005 | `b0513c72535a25ce5c09a1ff7b6d564fbbbc5b1183dec1d1cbf90bc7de53d4da` |
+| `CHANGELOG_0.15.21.txt` | 807 | `8e792e1f507579fd23bf545431e1de8cb171e773c72470fe36524945ae3437a4` |
+| `CHANGELOG_0.15.22.txt` | 1056 | `a1916b7e684d1d19032aee3e88f6e76b3eda75a4c192d2d01a8c79570f108b7f` |
+| `CHANGELOG_0.15.23.txt` | 1106 | `1f39fcdf4082064266e11fe76a15990c788c332a689f9cfa6be1f3bea7856fc1` |
+| `CHANGELOG_0.15.8.txt` | 872 | `ad3aa8dcaf72aa6ad403a2206bd391f80400c5b0238f00bbd7615a0ecaae74c2` |
+| `CHANGELOG_0.15.9.txt` | 624 | `480b4e9bdfeb591be25936c9c2d4a4ceb15f578141db0bbb20002610d1ce0bcf` |
+| `Inversion_Server.py` | 19988 | `c4b064286b851757a6934fb6862ae268cecd32394fa7494cd1df87b72d9cc55d` |
+| `Inversionskurve.py` | 18019 | `73c49bde5546c60263a0c8089d95d891e8b730c7cdf6eef29405b0a2d010c48c` |
+| `README.txt` | 6501 | `8960dbdf7e8e1d1033585d015c970bf4a6b5a2b924c8a1f89f4c8400bc09d43e` |
+| `README_AEMET.txt` | 1045 | `ccae305a05ca25fc7017a9330e02513f3b7e931775e05622c90a4f9abb79e951` |
+| `Update_Inversion_Analyzer_v0.15.23.bat` | 10367 | `5fbfa99aa811e291b34d90138db0662159d2ac3e99fa895640af64c8e17ba6a2` |
+| `archive_config.json` | 835 | `fa94ffbaad258c25552bf621e74d61f829d8f66c8c06ce40c9d4fc67efa1189d` |
+| `docs/superpowers/plans/2026-08-30-central-kitmast-archive.md` | 3350 | `1287a3d95a79a11d5c7b47c08de58169b7058ec629432053276f9b688a624054` |
+| `docs/superpowers/specs/2026-08-30-central-kitmast-archive-design.md` | 1387 | `4d5b62ad093fb354b51256a84642aeb196c33beeb3d5f8adbbe846ddf5744d53` |
+| `inversion/__init__.py` | 47 | `75daf4f647a7180347a6f481056e1b2191e5f2694cadc52ea72f6c7966f39533` |
+| `inversion/aemet_source.py` | 6395 | `7a222d97ce554c7cd0f81471eeb6020755e05e258b0282776500f88bbf96f1cd` |
+| `inversion/archive.py` | 27854 | `c1e91f2b0a4b61b6ff270ced2831696b548fca6e8329810eafe38b7622e7e466` |
+| `inversion/archive_service.py` | 7191 | `e5865d7682a2cb3be2d6cb904acfe11a45c4d92da1a85a59fe139f5c4ec10bd8` |
+| `inversion/bokeh_client.py` | 11759 | `b4a91a5023eac80273a7ad377c4c42e254b7052b9b685f3af2be5b35ee1bab3d` |
+| `inversion/bokeh_extract.py` | 8819 | `78709a297be542fe875c970cdbdfa17e084ff00eb274fc60b28c3f6c87ddb369` |
+| `inversion/cache.py` | 760 | `d8ccec1dcbb9735ab39d4c1e9b03e1fc709436e9483d36603de67f0ca1699ce0` |
+| `inversion/config.py` | 8435 | `6d9fc074515768a4aa2ddf56bf2d3faf0e506758571925aafd94ac76e844be4e` |
+| `inversion/gui.py` | 94757 | `1184dd3d0b44af498611df8892bbc386cb4c87f25721843bd8d9c43f2469c74d` |
+| `inversion/icon_d2_source.py` | 13611 | `c632dbabd5904b8619858edc144c4917ab53859743830d624cb98b82d27debbe` |
+| `inversion/inversion_engine.py` | 12413 | `a4d397a8c329ec47809d57ceb53c051d94ec96f14a41b55ae5bb4ad5d20b62ce` |
+| `inversion/kit_inversion.py` | 9309 | `1252f0b90298316f9bf029703493efb180a0bc4de1f3f9344bc2fa9f722b4269` |
+| `inversion/kit_mast.py` | 12662 | `a24c58b7e3414646017043542b8690d1d4c7d9e7d16cc4b787462ae84d1dc57a` |
+| `inversion/kit_reference_archive.py` | 10370 | `123acd03b5f9650604c52604323028382ce4d3b589c22b7d7f047d8ee0f2d38b` |
+| `inversion/location_service.py` | 5079 | `a7954768a83bd72bc11eecfaefbf72838d3354d271a84733d6f63ff3af368c73` |
+| `inversion/logger.py` | 635 | `3db4b64fcaf043c38a86ba413e74bee65225e4797fe3f1f3bf0aef07033c0c49` |
+| `inversion/models.py` | 1538 | `c488f20ec3f7a2760521911cb81750bf6ad3b28d4bb05d49e48350d34b97c244` |
+| `inversion/pipeline.py` | 7590 | `18bf39bc5ee3c1aa84aaf84b5191b28c4c8de0c32509ea58aea238a8ce3e79a1` |
+| `inversion/quality.py` | 1474 | `5b50c9490d315b5eba2817acd48d1fa0fe878d5336034676b39446d6a55a661c` |
+| `inversion/radiosonde.py` | 28824 | `a65e6be97ea659d740df90eabcfc851219b9729cffb1a66193ae7ec45b456d15` |
+| `inversion/remote_archive.py` | 4368 | `44eb66f66e0ad9dba3582cd33ab74252cf2c4a25f506b2cd52263a24d229767b` |
+| `inversion/runtime_location.py` | 1236 | `e2c243ca1b54d3ab53cf377b1b14f8537481ca3320b3d99ef7ca9b1eb7123243` |
+| `inversion/timestamp_validation.py` | 1486 | `45604c0dc3617f1e3bd02588f7c70d765f90078b8d3aa6581a3d38fb9671dc1c` |
+| `inversion/weather_sources.py` | 21273 | `31f0de730480917beace1e6629478648fee01bc0c939556d2001235a80f097c5` |
+| `locations.json` | 1837 | `9625c34306ce7fca2cf0c8a9507d257732a12349e85f69ad315ce4f05796efc4` |
+| `settings.json` | 417 | `9ad16b397221d6b78f5d11717400b9c41fb2ca0b6e8ae875d400d9b5f1e6c319` |
+| `test_gui_kit_reference_remote_v0_15_23.py` | 6264 | `a4b6ec954ec4b48f5201e7247993b7c92cc9498198492973e44889136b740c6b` |
+| `test_kit_github_archive_v0_15_18.py` | 1532 | `501d3e0fdf4dcd2fc118494a89fde864bed8c91e39c0309aa93b03babb0a2b02` |
+| `test_kit_missing_level_v0_15_20.py` | 2688 | `0f2f691b8a2037b801e4b2385eea1b7ef3a4155d85b30fac94b97465266e81cc` |
+| `test_kit_reference_archive_v0_15_22.py` | 2948 | `451f61581478244da993bd6b46b8c3e3c15a6a94a17b6a5b4763e1cf0d304395` |
+| `test_kit_robustness_v0_15_19.py` | 3190 | `078a5c0601c8ac4f4f95f8dc1aad1bbca94d5d725b77d1459aa85d9e5cf09e01` |
+| `test_workflow_dispatch_modes_v0_15_21.py` | 1087 | `ab1d08935b8faade2cf4a5c849d3b3a0cf8aefb8da015760a7ccc334a65aabc5` |
+| `test_workflow_global_kit_v0_15_22.py` | 1257 | `34ae5f8eb2f65aa4c92b7317e9152eb7c46b2301dca7e5bec29f7a51070b4740` |

@@ -1,1060 +1,249 @@
-Inversionskurve v0.15.18
-=========================
+Inversion Analyzer v0.15.24
+===========================
+
+ZWECK
+-----
+Der Inversion Analyzer sammelt, archiviert und visualisiert Temperatur- und
+Vertikalprofildaten fuer die Beurteilung von Inversionslagen. GUI und
+Headless-Collector verwenden dasselbe Tagesarchiv. KIT-Mast, Radiosonde und
+ICON-D2 werden als getrennte Zusatz-/Referenzreihen dargestellt und nicht
+stillschweigend mit dem Hauptmodell vermischt.
 
 START WINDOWS-GUI
 -----------------
-Nur:
+In Spyder oder aus Python:
     Inversionskurve.py
 
 HEADLESS / SERVER
 -----------------
 Ein Tagesabruf:
-    python Inversion_Server.py --date 2026-08-24
+    python Inversion_Server.py --date 2026-08-30
 
 Heute:
     python Inversion_Server.py --today
 
-Alle Quellen bewusst neu:
-    python Inversion_Server.py --date 2026-08-24 --force
+Alle aktivierten Quellen bewusst neu pruefen:
+    python Inversion_Server.py --date 2026-08-30 --force
 
-GitHub-Scheduler-Modus:
+Scheduled-Modus:
     python Inversion_Server.py --scheduled
 
-ARCHITEKTUR
------------
-1. Gemeinsame Quellen- und Rechenmodule
-2. Lokales Tagesarchiv
-3. Windows-GUI als Archiv-Browser
-4. Headless-CLI für Server/GitHub/Windows
-5. Optionales Remote-GitHub-Archiv
-6. Später kann eine Android-GUI dasselbe Archivformat verwenden.
+Nur zentrales KITMast-Archiv fuer heute + gestern:
+    python Inversion_Server.py --kit-only
 
-GUI-ABLAUF
-----------
-Beim Laden eines Tages:
-1. lokales Archiv prüfen
-2. wenn nicht vollständig: optional Remote-GitHub-Archiv prüfen
-3. fehlen weiterhin Quellen: nur fehlende Quellen online nachladen
-4. Tagespaket lokal archivieren
-5. anzeigen
+Selbsttest:
+    python Inversion_Server.py --selftest
 
-Mit "Online neu abrufen" kann bewusst ein kompletter Neuabruf erzwungen werden.
+ARCHIVSTRUKTUR
+--------------
+Standortbezogene Daten:
+    archive/<Ort>/YYYY/MM/DD/
 
-ARCHIV
-------
-archive/<Ort>/YYYY/MM/DD/
+Beispiel Viernheim:
+    archive/Viernheim/2026/08/30/manifest.json
+    archive/Viernheim/2026/08/30/dwd_ground.csv
+    archive/Viernheim/2026/08/30/openmeteo_profile.csv
+    archive/Viernheim/2026/08/30/inversion_model.csv
+    archive/Viernheim/2026/08/30/icon_d2.csv
+    archive/Viernheim/2026/08/30/icon_d2_profile.csv
+    archive/Viernheim/2026/08/30/source_status.json
 
-Beispiele:
+KIT-Mast Karlsruhe seit v0.15.22 zentral und ortsunabhaengig:
+    archive/KITMast/YYYY/MM/DD/
+
+Typische Dateien dort:
     manifest.json
-    dwd_ground.csv
-    openmeteo_profile.csv
-    inversion_model.csv
     kit_mast.csv
-    icon_d2.csv
-    station_info.json
-    sonde_profiles.json
     kit_mast_info.json
+    kit_mast_data.json
     source_status.json
 
-manifest.json enthält u.a.:
-- Ort und Datum
-- Programmversion
-- RUN-ID
-- Datenqualität
-- complete
-- missing_sources
-- attempts
-- last_attempt
-- Dateien des Tagespakets
+KIT wird NICHT mehr fuer jeden Standort dupliziert. Standorte mit
+"kit_reference": true lesen dieselbe zentrale KITMast-Tagesreihe.
 
-Vorhandene gute Quellen werden bei einem Reparaturlauf nicht stillschweigend
-überschrieben. Der Teilabruf ersetzt nur die ausdrücklich fehlenden Quellen.
+STANDORTE / KIT-REFERENZ
+------------------------
+locations.json enthaelt die Ortsprofile.
 
-ORTE
-----
-locations.json enthält Ortsprofile.
-Aktiver Ort:
-    "active": "Viernheim"
+Aktuell:
+- Viernheim: KIT-Referenz aktiv
+- Bremerhaven: KIT-Referenz aktiv
+- Valencia: KIT-Referenz aus
 
-Alternativ:
-    set INVERSION_LOCATION=Viernheim
+Die Zuordnung erfolgt explizit ueber:
+    "kit_reference": true
 
-Damit kann derselbe Code später für mehrere Orte verwendet werden.
-KIT kann pro Ort mit kit_mast_enabled ein-/ausgeschaltet werden.
+KIT bleibt eine Referenzreihe. Es beeinflusst die Kern-Datenqualitaet A/B/C/X
+nicht und darf z.B. fuer Bremerhaven nicht als lokales Vertikalprofil
+interpretiert werden.
+
+GUI-LADEVERHALTEN v0.15.23
+--------------------------
+Beim Laden eines Tages:
+1. lokales Standortarchiv lesen;
+2. bei kit_reference=true die zentrale lokale KITMast-Referenz anhaengen;
+3. fehlt nur die lokale KITMast-Referenz, wird dieser zentrale Tagesbestand
+   aus dem konfigurierten GitHub-Raw-Archiv nachgeladen;
+4. vorhandene Standort-Plotdaten bleiben dabei verwendbar;
+5. ist das Standortarchiv selbst nicht brauchbar, wird wie bisher das
+   Standort-Tagespaket aus GitHub geprueft und danach ggf. online aktualisiert.
+
+Damit ist der v0.15.22-Regressionsfehler behoben, bei dem Inversionskurve.py
+das zentrale KITMast-Archiv auf GitHub nicht nachlud.
+
+EXPLIZITES GUI-UPDATE
+---------------------
+Der Button "Update" prueft die in den Einstellungen aktivierten Quellen.
+Bei einem KIT-Referenzstandort bedeutet aktiviertes KIT seit v0.15.23:
+    zentrales archive/KITMast/<Tag> aktualisieren
+und NICHT:
+    per-Location kit_mast erneut anlegen.
+
+Vorhandene gute Daten werden durch fehlgeschlagene oder leere Abrufe nicht
+stillschweigend geloescht.
+
+KIT-RETRY / ROBUSTHEIT
+----------------------
+Die bestehende Bokeh-Robustheit bleibt erhalten. Standard aus
+archive_config.json:
+    kit_bokeh_timeout_seconds: 20
+    kit_bokeh_max_attempts: 3
+    kit_bokeh_retry_delays_seconds: [5, 15]
+
+Weitere Eigenschaften:
+- Diagnose-Logging
+- fehlende Einzelhoehen werden toleriert, wenn noch >=2 gueltige Hoehen vorliegen
+- kumulativer Safe-Merge nach Zeitstempel
+- leere/fehlgeschlagene Abrufe loeschen keine vorhandenen KIT-Profile
+- GitHub-Raw-Download des zentralen KITMast-Tages erfolgt in v0.15.23 zuerst
+  in ein Staging-Verzeichnis und wird erst nach vollstaendigem Erfolg uebernommen
 
 GITHUB ACTIONS
 --------------
 Workflow:
     .github/workflows/inversion_collect.yml
 
-Er unterstützt:
-- manuellen Start über "Run workflow"
-- optionales Datum
-- Force-Neuabruf
-- automatischen Scheduler-Check alle 3 Stunden
+workflow_dispatch unterstuetzt:
+    mode=normal
+    mode=scheduled
+    mode=kit-only
 
-Der Scheduler läuft nur kurz. Das Python-Skript entscheidet selbst, ob
-wirklich Daten abgerufen werden müssen.
+Fuer den regulaeren externen Collector wird empfohlen:
+    location=ALL
+    mode=scheduled
+    force=false
+    date=""
 
-Parameter in archive_config.json:
-    daily_fetch_local_hour
-    retry_delay_hours
-    max_retries
-    retry_only_missing
-    required_sources
+Scheduled bedeutet:
+- zentrales KITMast-Archiv kontinuierlich aktualisieren;
+- Standortarchive pruefen;
+- fehlende/faellige Kernquellen gemaess Retry-Regeln nachladen;
+- optionale KIT-/Sonden-Luecken loesen standardmaessig keinen Kern-Retry aus.
 
-Standard:
-    Tages-Erstabruf ab 22 Uhr Ortszeit
-    Retry-Abstand 3 h
-    maximal 5 Versuche
-    nur fehlende Quellen
+MACRODROID
+----------
+Fuer v0.15.23 ist KEINE Aenderung gegenueber v0.15.21/v0.15.22 erforderlich.
+Der JSON-Body bleibt:
 
-GitHub Actions benötigt kein GitHub-Passwort im Skript. Der Workflow benutzt
-das von GitHub bereitgestellte GITHUB_TOKEN und hat nur contents: write.
+{
+  "ref": "main",
+  "inputs": {
+    "location": "ALL",
+    "mode": "scheduled",
+    "force": "false",
+    "date": ""
+  }
+}
 
-REMOTE-ARCHIV IN DER GUI
-------------------------
+Der GitHub-API-Endpunkt und die bereits eingerichteten Header bleiben
+unveraendert. Zugangstoken nicht in Projektdateien oder Logs speichern.
+
+REMOTE-GITHUB-ARCHIV IN DER GUI
+-------------------------------
 archive_config.json:
 
 "remote_archive": {
   "enabled": true,
   "provider": "github_raw",
-  "owner": "DEIN_GITHUB_NAME",
-  "repository": "DEIN_REPOSITORY",
+  "owner": "yewie56",
+  "repository": "Inversion-Analyzer",
   "branch": "main",
   "archive_path": "archive"
 }
 
-Diese v0.15.18-Implementierung verwendet dafür GitHub Raw und ist daher für ein
-öffentlich lesbares Repository gedacht. Für private Repositories wird später
-der geplante laienfreundliche GitHub-Login/Setup-Assistent ergänzt.
+Das Repository muss fuer GitHub Raw ohne interaktiven Login lesbar sein.
+Fehler werden protokolliert und nicht durch erfundene Ersatzdaten kaschiert.
 
-WICHTIG ZU KIT
+DATENQUALITAET
 --------------
-Die momentan erschlossene KIT-Bokeh-Profilseite liefert nur einen aktuellen
-Ausschnitt. Das Archiv ist deshalb besonders wichtig: einmal gespeicherte
-KIT-Daten bleiben lokal/GitHub erhalten. Ein einmaliger Tagesabruf kann jedoch
-nur die KIT-Profile sichern, die zu diesem Abrufzeitpunkt auf der Seite
-verfügbar sind. Eine vollständigere KIT-Tageshistorie würde einen häufigeren
-KIT-Sammellauf oder eine weitere historische KIT-Schnittstelle erfordern.
+Kernquellen und optionale Referenzen bleiben getrennt. Fuer deutsche
+Standorte sind DWD/Vertikalprofil/ICON-D2 die Kernlogik entsprechend der
+aktuellen Konfiguration. KIT-Mast und Radiosonde sind Zusatz-/Referenzquellen
+und machen einen sonst vollstaendigen Tag nicht unvollstaendig.
 
-ABHÄNGIGKEITEN
+UPDATE / RELEASE
+----------------
+Der passende Update-Batch ist seit v0.15.22 Bestandteil jedes Versions-ZIPs.
+Fuer diese Version:
+    Update_Inversion_Analyzer_v0.15.24.bat
+
+ZIP und Batch koennen z.B. in folgendem Upload-Ordner liegen:
+    C:\Users\user\AnacondaProjects\InversionsTrendUpload
+
+Start:
+    .\Update_Inversion_Analyzer_v0.15.24.bat
+
+Der Batch sucht das eigentliche Git-Repository automatisch, prueft Repo und
+Branch, fuehrt Fetch/Rebase und Regressionstests aus, staged keine Runtime-
+Archive/Logs/Cache-Dateien und verwendet keinen Force-Push.
+
+ABHAENGIGKEITEN
 ---------------
-pip install requests pandas numpy matplotlib bokeh
-
-v0.15.18 verändert die Berechnung der bestehenden Modell-, KIT- und ICON-D2-
-Kurven nicht absichtlich. Schwerpunkt dieser Version ist Archivierung,
-Headless-Betrieb, Teil-Reparatur und GitHub-Ausführung.
-
-
-KORREKTUR v0.15.18
------------------
-GUI:
-- -7 / -1 / +1 / +7: nur lokales Archiv
-- "Archiv laden": nur lokales Archiv
-- kein automatischer Internetabruf
-- "Update": expliziter Internetabruf
-
-KIT-ARCHIVSCHUTZ:
-Vorhandene KIT-Profile werden niemals durch einen kleineren oder leeren
-Neuabruf gelöscht. Neue Profile werden nach Zeitstempel ergänzt.
-
-ARCHIV AUS v0.12.0 WEITERVERWENDEN:
-Ja. Das Format bleibt kompatibel.
-
-Wenn v0.15.18 in einen neuen Ordner entpackt wird, bitte den vorhandenen
-Ordner "archive" aus dem v0.12.0-Projekt unverändert in den
-v0.15.18-Projektordner kopieren.
-
-
-ICON-D2-KORREKTUR v0.15.18
--------------------------
-Die bisherige ICON-D2-Auswertung betrachtete nur Druckflächen untereinander.
-Dadurch konnte eine bodennahe Inversion vollständig übersehen werden.
-
-Neu:
-- temperature_2m wird als unterster Profilpunkt bei 2 m AGL verwendet.
-- Open-Meteo liefert die Punkthöhe über NN.
-- geopotential_height_<p>hPa wird in Höhe über Grund umgerechnet:
-      height_agl = geopotential_height_msl - elevation
-- Druckflächen bei/unter 2 m AGL werden nicht für die Inversionsberechnung
-  benutzt.
-- Die vollständigen Rohprofile werden zusätzlich archiviert:
-      icon_d2_profile.csv
-
-Spalten von icon_d2_profile.csv:
-- time
-- level_type
-- pressure_hPa
-- height_msl_m
-- height_agl_m
-- temperature_C
-- usable_for_inversion
-
-Damit kann jede einzelne Stunde physikalisch nachvollzogen werden.
-
-Das bestehende Archiv aus v0.12.0/v0.12.1 bleibt verwendbar.
-Für bereits archivierte Tage wird icon_d2_profile.csv erst beim nächsten
-expliziten "Update" ergänzt.
-
-
-KORREKTUR v0.15.18 – ARCHIVANZEIGE
----------------------------------
-Beim Steppen wird weiterhin ausschließlich das lokale Archiv gelesen.
-
-Neu:
-- CSV-Zeitspalten werden robust eingelesen und auf Europe/Berlin normalisiert.
-- Vor dem Plotten werden alle relevanten DataFrames noch einmal validiert.
-- Das Diagramm wird VOR Zusammenfassung und Datenquellen-Text aufgebaut.
-- Fehler in Summary oder Quellenstatus verhindern den Plot nicht mehr.
-- Im Log stehen jetzt:
-    Archivdateien gefunden: Modell=... | KIT=... | ICON-D2=...
-    Anzeige-Diagnose: Modell=... | KIT=... | ICON-D2=...
-    Plotdaten: Modell=... | KIT=... | ICON-D2=...
-    Archiv-Plot: PASS/FEHLER
-- Falls ein Archiv vorhanden, aber nicht darstellbar ist, wird dies explizit gemeldet.
-- Fehlt ein Tag ganz, bleibt der bisherige Plot zur Orientierung sichtbar.
-
-Das bestehende Archiv aus v0.12.0–v0.12.2 weiterverwenden.
-Es ist keine Archivkonvertierung erforderlich.
-
-
-STEPPING-LOGIK v0.15.18
-----------------------
-Beim Wechsel eines Tages:
-
-1. Lokales Archiv prüfen.
-
-2. Sind dort darstellbare Plotdaten vorhanden
-   (Modell oder KIT oder ICON-D2):
-       -> sofort anzeigen
-       -> kein automatischer Internetabruf
-
-3. Sind keine darstellbaren Plotdaten vorhanden:
-       -> alten Plot sofort löschen
-       -> einmal automatisch Update starten
-       -> Ergebnis archivieren
-
-4. Wenn auch nach dem Update keine darstellbaren Plotdaten vorhanden sind:
-       -> Plot bleibt leer
-       -> klare Meldung "Keine Daten für diesen Tag verfügbar"
-
-Teilarchive:
-Wenn z.B. Modell + ICON-D2 vorhanden sind, aber DWD/KIT/Sonde fehlen,
-werden die vorhandenen Kurven angezeigt. Ein automatisches Update findet
-dann NICHT statt. Fehlende Zusatzquellen können über "Update" nachgeladen
-werden.
-
-Der KIT-Archivschutz aus v0.12.1 bleibt unverändert aktiv.
-
-
-KORREKTUR v0.15.18
------------------
-Behoben:
-AttributeError:
-'_tkinter.tkapp' object has no attribute '_update_source_status'
-
-Die Quellenanzeige aktualisiert wieder:
-DWD Boden, Vertikalprofil, Idar-Oberstein, KIT 200-m-Mast und ICON-D2.
-
-
-NEU v0.15.18
------------
-DATENQUELLEN-LOG IM TAGESARCHIV
-
-Jeder Speichervorgang ergänzt im Archiv des betreffenden Tages die Datei:
-
-    sources.log
-
-Bestehende Einträge bleiben erhalten. Neue Einträge werden angehängt und mit
-langen ========-Trennzeilen abgegrenzt.
-
-Pro Eintrag werden DWD Boden, Vertikalprofil, Idar-Oberstein, KIT 200-m-Mast
-und ICON-D2 Historical mit Status, Meldung, Details, Zeilenanzahl, letztem
-Versuch und letztem Erfolg gespeichert. Datenqualität und Qualitätstext werden
-ebenfalls protokolliert.
-
-FESTE KURVENFARBEN
-
-    KIT 200-m-Mast : orange
-    ICON-D2        : grün
-
-Für KIT und ICON-D2 wird keine automatische Matplotlib-Farbe mehr verwendet.
-
-
-NEU v0.15.18 – RADIOSONDE ALS MESSKURVE
---------------------------------------
-Quelle:
-DWD CDC Radiosonden, high_resolution
-Idar-Oberstein: DWD Stations-ID 02385, WMO 10618.
-
-Aktuelle Daten:
-radiosondes/high_resolution/recent/sekundenwerte_aero_02385_akt.zip
-
-Historische Daten:
-radiosondes/high_resolution/historical/<Jahr>/
-Das konkrete Jahres-ZIP wird aus dem offiziellen DWD-Verzeichnis ermittelt.
-
-Verarbeitung:
-- große ZIP-Datei wird streamingbasiert in den lokalen Cache geladen;
-- aus dem ZIP wird nur der ausgewählte lokale Tag übernommen;
-- Zeit, Temperatur und Höhe werden tolerant anhand der DWD-Spalten erkannt;
-- einzelne Aufstiege werden durch Zeitlücken getrennt;
-- niedrigstes plausibles Startniveau wird je Aufstieg als AGL-Referenz verwendet;
-- Auswertung bis 2500 m AGL;
-- 25-m-Höhenklassen;
-- 3-Bin-Median zur Unterdrückung von Sekundenrauschen;
-- positiver Temperaturgradient, ΔT, Inversionstiefe, Basis/Obergrenze;
-- separater empirischer Radiosondenindex 0–5.
-
-Archiv:
-radiosonde_profile.csv  = gemessene Rohprofile des Tages
-radiosonde_metrics.csv  = Inversionskennwerte je Aufstieg
-
-Die Radiosonde liegt in Idar-Oberstein und ist deshalb eine räumlich entfernte
-Messreferenz. Sie wird NICHT mit dem ortsbezogenen Viernheim-Modell oder
-ICON-D2 gemittelt.
-
-Feste Farben:
-Modell-/DWD-Inversionsindex  = blau
-Modellgradient               = grau
-KIT-Mast                     = orange
-ICON-D2                      = grün
-Radiosonde Idar-Oberstein    = rot
-
-
-KORREKTUR v0.15.18 – RADIOSONDEN-PARSER/DIAGNOSE
------------------------------------------------
-Der DWD-Download selbst funktionierte in v0.13.0, aber ein reales ZIP konnte
-ohne sichtbare Parserdiagnose zu 0 Radiosondenprofilen führen.
-
-v0.15.18 protokolliert deshalb beim Radiosondenimport ausdrücklich:
-
-- Anzahl und Namen der ZIP-Member
-- Größe der Kandidaten
-- kurze Headerprobe
-- erkanntes Encoding
-- erkannten Separator
-- erkannte Header-Spalten
-- Zuordnung Zeit / Temperatur / Höhe / Druck
-- tatsächlich gewählte Messdatei
-- Gesamtzahl gelesener Datenzeilen
-- Zahl der Zeilen des ausgewählten lokalen Tages
-- gültige Messzeilen
-- erkannte Aufstiege und Rohpunkte je Aufstieg
-- abschließenden Radiosondenstatus
-
-Der Parser akzeptiert nun Semikolon, Tab, Komma, Pipe und
-Whitespace-separierte DWD-Dateien und ist nicht mehr auf .txt/.csv/.dat
-als Dateiendung beschränkt.
-
-Kann kein echtes Zeit-/Temperatur-/Höhenprofil erkannt werden, wird dies als
-FORMAT_CHANGED im Hauptlog sichtbar. Es wird keine Nullkurve erzeugt.
-
-WICHTIG:
-Der bereits vorhandene lokale Radiosonden-ZIP-Cache wird weiter benutzt.
-Beim Wechsel in einen neuen Projektordner kann der vorhandene cache-Ordner
-mit übernommen werden, damit die rund 100-MB-Datei nicht erneut geladen
-werden muss.
-
-
-KORREKTUR v0.15.18 – REALES DWD HIGH-RESOLUTION-FORMAT
------------------------------------------------------
-Die Diagnose aus v0.13.1 zeigte den echten DWD-Header:
-
-STATIONS_ID
-BEZUGSDATUM_SYNOP
-MESSZEITPUNKT
-QN_1
-AE_GB_POS
-AE_GL_POS
-AE_GPM
-AE_P
-AE_TT
-AE_TD
-AE_FF
-AE_DD
-AE_RF
-
-v0.15.18 verwendet deshalb explizit:
-
-AE_TT   = Lufttemperatur
-AE_P    = Luftdruck
-AE_GPM  = geopotentielle Höhe
-
-ZEITBILDUNG:
-BEZUGSDATUM_SYNOP enthält die synoptische Startzeit in UTC,
-z.B. 2026010106 = 01.01.2026 06:00 UTC.
-
-MESSZEITPUNKT enthält die Sekunden seit Start:
-0, 2, 4, ...
-
-Der reale Messzeitpunkt wird daher gebildet als:
-
-BEZUGSDATUM_SYNOP + MESSZEITPUNKT Sekunden
-
-und anschließend nach Europe/Berlin umgerechnet.
-
-DATEINAMEN-KURZSCHLUSS:
-Bei Dateien der Form
-
-produkt_sec_aero_20260101_20260824_02385.txt
-
-wird der enthaltene Datenzeitraum bereits aus dem Dateinamen gelesen.
-Wird z.B. 2026-08-25 angefordert, meldet das Programm sofort:
-
-NO_DATA_DATE
-
-weil diese konkrete Datei nur bis 2026-08-24 reicht.
-Dadurch muss die entpackte, sehr große Messdatei nicht unnötig vollständig
-durchlaufen werden.
-
-METADATEN:
-Wenn eine echte produkt_sec_aero-Datei vorhanden ist, wird diese direkt
-verwendet. Metadaten-Dateien werden dann nicht mehr als mögliche Messdateien
-durchprobiert.
-
-Der bestehende große Radiosonden-ZIP-Cache kann weiterverwendet werden.
-
-
-NEU v0.15.18 – DATENQUALITÄTSKLASSEN IM PLOT UND IN DER GUI
-----------------------------------------------------------
-Die Definition der Datenqualitätsklassen ist jetzt direkt in die Anzeige
-integriert.
-
-GUI:
-- eigener Bereich "Datenqualität"
-- aktuelle Klasse (A/B/C/X)
-- aktueller Tages-/Statuskommentar
-- darunter die vollständige Definition von A/B/C/X
-- klarer Hinweis:
-  KIT und Radiosonde sind nur Zusatzinformationen und unabhängig von A/B/C/X
-
-PLOT:
-- im Plot links oben eine kompakte Infobox mit
-  "Qualität A/B/C/X" + Kurzdefinition der aktuellen Klasse
-- unter dem Plot innerhalb der Figure eine vollständige Legende:
-  A = ...
-  B = ...
-  C = ...
-  X = ...
-  KIT und Radiosonde: Zusatzinformationen
-
-RÜCKSETZUNG:
-Wenn kein Archiv vorhanden ist oder nach einem Update weiterhin keine
-Plotdaten verfügbar sind, wird die Datenqualitätsanzeige sauber auf X mit
-passender Erklärung zurückgesetzt, damit keine alte Qualitätsanzeige
-irreführend stehen bleibt.
-
-
-NEU v0.15.18 – DATENQUALITÄT UNTER DER GRAFIK, KLASSENINFO PER KLICK
--------------------------------------------------------------------
-ÄNDERUNGEN:
-- Keine Legende mehr in der Grafik
-- Keine ausführliche Qualitätslegende mehr im Plot
-- Aktuelle Datenqualitätsbewertung jetzt unter der Grafik
-- Vollständige Klassendefinition nur noch per Klick in die Grafik
-
-VERHALTEN:
-- Unterhalb der Grafik steht nun:
-  - Qualitätsklasse A/B/C/X
-  - aktueller Bewertungstext
-  - Hinweis: für Klassendefinition in die Grafik klicken
-- Ein Klick in die Grafik öffnet ein neues Fenster mit:
-  - A — sehr gute Datenbasis
-  - B — gute Datenbasis
-  - C — eingeschränkte Datenbasis
-  - X — nicht ausreichend
-  - Hinweis, dass KIT und Radiosonde nur Zusatzinformationen sind
-
-RÜCKSETZUNG:
-- Wenn kein Archiv vorhanden ist oder keine Plotdaten verfügbar sind,
-  wird die Anzeige unter der Grafik wieder auf X mit passender Meldung gesetzt.
-
-
-NEU v0.15.18 – QUALITÄTSBEWERTUNG IN DER GESPEICHERTEN GRAFIK
--------------------------------------------------------------
-Die aktuelle Datenqualitätsbewertung befindet sich jetzt INNERHALB der
-Matplotlib-Figure unterhalb der X-Achse.
-
-Beispiel:
-
-    Datenqualität B — DWD-Bodenmessung + vertikales Modell-/Archivprofil
-    Klick in die Grafik: Definition der Qualitätsklassen A/B/C/X
-
-Dadurch wird dieser Text bei "PNG speichern" automatisch zusammen mit der
-Grafik gespeichert.
-
-Nicht mehr vorhanden:
-- separater Qualitätsbereich unterhalb des Canvas
-- Kurvenlegende in der Grafik
-- vollständige A/B/C/X-Erklärung dauerhaft in der Grafik
-
-Die vollständige Klassendefinition öffnet sich weiterhin ausschließlich
-durch einen Klick in die Grafik in einem eigenen Fenster.
-
-
-NEU v0.15.18 – STATUSINFO MIT IN DER GRAFIK
-------------------------------------------
-Unterhalb der X-Achse werden jetzt innerhalb der Matplotlib-Figure zwei
-Informationsbereiche mit abgespeichert:
-
-1. Datenqualität:
-   Datenqualität B — ...
-
-2. Status:
-   Status: ...
-   DWD-Station: 05906 Mannheim (4.1 km) | ...
-
-WICHTIG:
-- Das eigentliche Diagramm behält einen festen reservierten Plotbereich.
-- Wenn Qualitäts- oder Statusinfo länger werden, wird der Info-Text
-  verkleinert, statt das Diagramm wesentlich kleiner zu machen.
-- Die vollständige Klassendefinition A/B/C/X bleibt weiterhin nur über
-  Klick in die Grafik in einem separaten Fenster verfügbar.
-
-Zusätzlich:
-- Die DWD-Station wird jetzt wieder zuverlässig aus bundle.station_info
-  in die GUI-/Figure-Anzeige übernommen.
-
-
-NEU v0.15.18 – TAGESWERTE AUCH IN DER GRAFIK, LINKSBÜNDIG
---------------------------------------------------------
-Unterhalb der X-Achse werden jetzt linksbündig in der Figure angezeigt:
-
-- Datenqualität
-- Status
-- DWD-Station
-- Aktuell
-- Maximum
-- Minimum
-- Hinweis auf Klick für Klassendefinition
-
-WICHTIG:
-- Diese Informationen werden beim PNG-Speichern mitgespeichert.
-- Die Darstellung ist linksbündig.
-- Das eigentliche Diagramm behält einen festen reservierten Plotbereich.
-- Wenn der Infotext länger wird, wird die Schrift kleiner, statt das
-  Diagramm wesentlich kleiner zu machen.
-
-
-NEU v0.15.18 – PNG IMMER AKTIV
+    pip install requests pandas numpy matplotlib bokeh
+
+WICHTIG
+-------
+Der oeffentliche KIT-Bokeh-Profilserver liefert nur einen begrenzten rollenden
+Ausschnitt. Profile, die nicht rechtzeitig archiviert wurden, koennen spaeter
+nicht mehr ueber diese Quelle rekonstruierbar sein. Deshalb ist die haeufige
+kumulative KITMast-Archivierung wesentlich.
+
+SUPABASE-BEWERTUNGEN v0.15.24
 -----------------------------
-"PNG speichern" ist jetzt bewusst immer aktiv.
 
-Das gilt auch:
-- direkt nach Programmstart
-- wenn noch keine Daten geladen wurden
-- wenn für einen Tag keine Daten existieren
-- wenn ein Plot-/Datenfehler aufgetreten ist
+Neu ist ein separater GitHub-Actions-Workflow:
 
-Damit kann der sichtbare Zustand des Programms jederzeit als Diagnosebild
-gesichert werden.
+    .github/workflows/supabase_ratings_sync.yml
 
-CSV bleibt dagegen datenabhängig:
-- aktiviert, sobald mindestens eine exportierbare Datenreihe vorhanden ist
-- deaktiviert, wenn keine exportierbaren Daten vorhanden sind
+Er liest subjektive Bewertungen aus der Supabase-Tabelle observations und
+archiviert sie idempotent entlang der UTC-Zeitachse unter:
 
-Zusätzlich werden Fehler beim PNG-Speichern in das Protokoll geschrieben
-und als Fehlermeldung angezeigt.
+    archive/ratings/JJJJ/MM/JJJJ-MM-TT/ratings.jsonl
+    archive/ratings/JJJJ/MM/JJJJ-MM-TT/summary.json
+    archive/ratings/sync_state.json
 
+Automatischer Start: Minute 12 und 42 jeder Stunde. Damit liegt der Lauf jeweils
+fuenf Minuten hinter dem Wetter/KIT-Collector (:07/:37).
 
-NEU v0.15.18 – KURVENLEGENDE WIEDER DA + BREITERER INFOBEREICH
--------------------------------------------------------------
-ÄNDERUNGEN:
-- Die Kurvenlegende ist wieder sichtbar.
-- Position: oben rechts im Diagramm.
-- Der Footerbereich unterhalb der X-Achse ist etwas breiter ausgelegt.
+GitHub Repository Secret erforderlich:
 
-Die Legende zeigt – je nach Datenverfügbarkeit –:
-- Modell-/DWD-Inversionsindex
-- Modell: max. positiver Gradient
-- Radiosonde Idar-Oberstein gemessen
-- KIT-Mast gemessen (separater Index)
-- ICON-D2 Historical Forecast (separater Index)
+    SUPABASE_SECRET_KEY
 
-Der Footerbereich für:
-- Datenqualität
-- Status
-- DWD-Station
-- Aktuell
-- Maximum
-- Minimum
+Bevorzugt wird ein aktueller Supabase Secret Key (sb_secret_...). Als
+Kompatibilitaetsfallback wird SUPABASE_SERVICE_ROLE_KEY unterstuetzt. Der Key
+wird nur zur Laufzeit aus der GitHub-Secrets-Umgebung gelesen und nie
+archiviert.
 
-wurde etwas verbreitert, damit die Informationen ruhiger und besser lesbar
-dargestellt werden können.
+Datenschutz-Default:
+- kein Klartext-Teilnehmerschluessel im GitHub-Archiv
+- observer_id bleibt als pseudonyme Kennung erhalten
+- GPS wird auf zwei Nachkommastellen abgeschnitten
+- Kommentartext wird nicht exportiert; nur has_comment
+- Audio bleibt vorerst in Supabase
 
+Erster Testlauf in GitHub:
+Actions -> Supabase ratings sync -> Run workflow -> full=true
 
-NEU v0.15.18 – NORMAL / ADVANCED + ⋮-PANEL + TOUCH-GUI
-------------------------------------------------------
-NORMAL:
-- rechter Diagnosebereich ist vollständig ausgeblendet
-- große Hauptansicht für das Diagramm
-- fingerfreundliche Hauptbuttons:
-  ◀  HEUTE  ▶  UPDATE  PNG  ⋮
+Ein Full-Lauf liest den gesamten Bestand, merged aber weiterhin ueber event_id
+idempotent. Spaetere regulaere Laeufe verwenden ein 48-h-Ueberlappungsfenster.
 
-ADVANCED USER:
-- rechter Bereich mit Status, Tageswerten, Datenquellen und Protokoll
-- zusätzliche Diagnose- und Exportfunktionen über ⋮
-
-⋮ EINSTELLUNGEN:
-Display:
-- Modell-/DWD-Kurve
-- Modellgradient / rechte Achse
-- ICON-D2
-- KIT-Mast
-- Radiosonde
-- Kurvenlegende
-- Status/Qualität/Tageswerte im Figure-Footer
-
-Datenabruf:
-- ICON-D2 beim Update abrufen
-- KIT beim Update abrufen
-- Radiosonde beim Update abrufen
-
-WICHTIG:
-Abruf und Anzeige sind voneinander getrennt.
-Eine Quelle kann weiter archiviert, aber nicht angezeigt werden – oder
-vorhandene Archivdaten können angezeigt werden, obwohl neue Abrufe
-deaktiviert sind. Deaktivieren löscht keine bestehenden Archivdaten.
-
-RECHTE ACHSE:
-Der rechte Figure-Rand ist wieder fest ausreichend groß, damit
-"Modell-Inversionsgradient [K/100 m]" lesbar bleibt.
-
-ANDROID-VORBEREITUNG:
-Die Hauptaktionen sind auf große Touch-Ziele reduziert. Seltene Funktionen
-liegen im ⋮-Panel. Die Einstellungen werden unabhängig von der konkreten
-Tkinter-Oberfläche in settings.json gehalten und können später von einer
-Android-Oberfläche semantisch übernommen werden.
-
-
-NEU v0.15.18 – MAUSRAD + LONG-PRESS FÜR TAGESNAVIGATION
--------------------------------------------------------
-⋮ EINSTELLUNGEN:
-- Unter Windows kann das Einstellungsfenster jetzt mit dem Mausrad gescrollt
-  werden.
-- Linux/X11 Button-4/Button-5 werden ebenfalls unterstützt.
-
-TAGESNAVIGATION:
-- kurzer Druck auf ◀ = 1 Tag zurück
-- kurzer Druck auf ▶ = 1 Tag vor
-- langer Druck auf ◀ (ab ca. 650 ms) = 7 Tage zurück
-- langer Druck auf ▶ (ab ca. 650 ms) = 7 Tage vor
-
-WICHTIG:
-Ein langer Druck löst nicht zusätzlich noch den normalen 1-Tages-Schritt aus.
-
-Die Implementierung nutzt Press/Release-Events und ist damit bewusst bereits
-für spätere Touch-/Android-Bedienung vorbereitet.
-
-
-NEU v0.15.18 – ORTSNEUTRAL / MEHRERE ORTE
------------------------------------------
-CODE-DATEINAMEN:
-- Inversionskurve.py
-- Inversion_Server.py
-- keine Ortsnamen mehr in den eigentlichen Code-Dateinamen
-
-ORTE:
-locations.json enthält zunächst:
-- Viernheim
-- Bremerhaven
-
-Viernheim bleibt standardmäßig aktiv, damit bestehende Arbeitsabläufe und
-das vorhandene Archiv unverändert weiterlaufen.
-
-NEUEN ORT ANLEGEN:
-⋮ -> Ort -> Ortsname eingeben -> "Ort hinzufügen / aktivieren"
-
-Es genügt beispielsweise:
-    Bremerhaven
-
-Das Programm ergänzt automatisch:
-- Breiten-/Längengrad
-- Höhe
-- Zeitzone
-- Land/Region
-
-Nach dem Anlegen eines neuen aktiven Ortes ist derzeit EIN Programmneustart
-erforderlich, damit alle Python-Module mit den neuen Koordinaten geladen
-werden. Das wird ausdrücklich angezeigt.
-
-ARCHIV:
-Die bestehende Struktur ist bereits ortsgetrennt und wird weiterverwendet:
-
-    archive/
-      Viernheim/
-        2026/08/25/...
-      Bremerhaven/
-        2026/08/25/...
-
-Das Viernheim-Archiv wird weder verschoben noch gelöscht.
-
-DWD-ABFANGSTRATEGIE:
-Standardmäßig wird nur eine DWD-Bodenstation innerhalb 50 km als lokale
-Bodenbeobachtung akzeptiert.
-
-Wenn keine geeignete Station im Radius vorhanden ist:
-1. keine weit entfernte Station wird stillschweigend verwendet;
-2. die nächstgelegene bekannte Station wird im Status mit Entfernung genannt;
-3. das ortsbezogene Vertikal-/2-m-Modell bleibt nutzbar;
-4. es gibt keine lokale DWD-Korrektur;
-5. die Qualitätsbewertung fällt entsprechend auf C statt B.
-
-Der Radius kann pro Ort in locations.json über
-    dwd_max_distance_km
-angepasst werden.
-
-KIT / RADIOSONDE:
-Beide bleiben optionale Zusatzinformationen und sind nicht Teil der
-ortsunabhängigen A/B/C/X-Qualitätsgrundlage. Sie können auch bei Bremerhaven
-aktiv bleiben. Ihre räumliche Entfernung muss bei der Interpretation
-berücksichtigt werden.
-
-
-NEU v0.15.18 – ORTSNAME IM DIAGRAMMTITEL
-----------------------------------------
-Im Diagrammtitel wird jetzt der aktive Ort mit angezeigt.
-
-Beispiel:
-    Inversionsverlauf – Bremerhaven – 25.08.2026
-
-Das gilt auch für Leer-/Hinweisplots, damit ein gespeichertes PNG sofort
-erkennen lässt, für welchen Ort es erzeugt wurde.
-
-
-NEU v0.15.18 – SERVER- UND GITHUB-TESTSTUFE
-==========================================
-
-Diese Version dient bewusst zuerst der Prüfung des Headless-Servers und der
-GitHub-Archivaktualisierung, bevor weitere Länderquellen implementiert werden.
-
-SERVER-TESTOPTIONEN
--------------------
-Netzwerkfreier Selbsttest:
-    python Inversion_Server.py --selftest
-
-Aktive Konfiguration anzeigen:
-    python Inversion_Server.py --show-config
-
-Vorhandenes Archiv des aktiven Orts nur lesend prüfen:
-    python Inversion_Server.py --verify-archive
-
-Heute sammeln / nur Fehlendes nachholen:
-    python Inversion_Server.py --today
-
-Alle Quellen für heute neu anfordern:
-    python Inversion_Server.py --today --force
-
-ORT AUSWÄHLEN (Windows Anaconda Prompt / cmd.exe)
---------------------------------------------------
-Viernheim:
-    set INVERSION_LOCATION=Viernheim
-
-Bremerhaven:
-    set INVERSION_LOCATION=Bremerhaven
-
-Danach wird jeder Aufruf von Inversion_Server.py in diesem Fenster für den
-gesetzten Ort ausgeführt.
-
-Um die Variable wieder zu löschen:
-    set INVERSION_LOCATION=
-
-WICHTIG:
-Ein unbekannter Ortsname in INVERSION_LOCATION führt jetzt absichtlich zu
-einem Fehler. Es gibt keinen stillen Rückfall auf Viernheim.
-
-ARCHIVTRENNUNG
---------------
-Viernheim:
-    archive/Viernheim/YYYY/MM/DD/
-
-Bremerhaven:
-    archive/Bremerhaven/YYYY/MM/DD/
-
-Der Selftest prüft zusätzlich, dass die Slugs aller konfigurierten Orte
-eindeutig sind und keine zwei Orte denselben Archivpfad erhalten.
-
-GITHUB ACTIONS
---------------
-Der Workflow:
-    .github/workflows/inversion_collect.yml
-
-führt vor dem eigentlichen Abruf automatisch aus:
-    --selftest
-    --show-config
-    --verify-archive
-
-Bei einem geplanten schedule-Lauf werden ALLE Einträge aus locations.json
-nacheinander verarbeitet.
-
-Bei einem manuellen workflow_dispatch:
-- location = Viernheim  -> nur Viernheim
-- location = Bremerhaven -> nur Bremerhaven
-- location = ALL -> alle Orte aus locations.json
-
-Vor dem Commit zeigt der Workflow:
-- git status --short archive
-- git diff --stat -- archive
-- git diff --name-status -- archive
-
-So ist sichtbar, welcher Ortsordner wirklich verändert wurde.
-
-Der GitHub-Workflow schläft nicht zwischen Retries. Er startet weiterhin
-periodisch; Inversion_Server.py entscheidet anhand archive_config.json, ob
-für einen Tag ein Retry bereits fällig ist.
-
-
-NEU v0.15.18 – NO-TOUCH SAFE-MERGE + FINALQUALITÄT + GITHUB-CACHE
-=================================================================
-
-NO-TOUCH-ARCHIVSCHUTZ
----------------------
-Bei einem Teilabruf werden nur Dateien der tatsächlich angeforderten Quelle
-neu geschrieben.
-
-Beispiel:
-    missing_sources = ["sonde"]
-
-Dann dürfen unter anderem NICHT verändert werden:
-    icon_d2.csv
-    icon_d2_profile.csv
-    kit_mast.csv
-    dwd_ground.csv
-    openmeteo_profile.csv
-    inversion_model.csv
-
-source_status.json und manifest.json dürfen sich ändern, weil sie den neuen
-Versuch und dessen Status dokumentieren.
-
-QUALITÄTSLOG
-------------
-Ein Teillauf kann technisch Qualität X haben, wenn z.B. nur die Radiosonde
-abgerufen wurde und deshalb im Teillauf kein Vertikalprofil vorhanden ist.
-
-Das wird jetzt ausdrücklich so geloggt:
-    TEILLAUF-DATENQUALITÄT X (NICHT FINAL)
-
-Nach dem sicheren Merge mit dem bestehenden Tagesarchiv folgt:
-    FINALER TAGESBESTAND | Datenqualität ...
-
-Diese zweite Zeile ist die relevante Qualitätsbewertung.
-
-GITHUB RADIOSONDEN-CACHE
-------------------------
-Der Workflow cacht:
-    cache/radiosonde_highres
-
-Dadurch kann das ca. 103 MB große aktuelle DWD-Radiosonden-ZIP zwischen
-GitHub-Actions-Läufen wiederverwendet werden.
-
-GITHUB ACTIONS / NODE 24
-------------------------
-Aktualisiert auf:
-    actions/checkout@v6
-    actions/setup-python@v7
-    actions/cache@v6
-
-Damit werden Node-24-kompatible Action-Versionen verwendet.
-
-
-NEU v0.15.18 – DATENHERKUNFT + ORTSWECHSEL OHNE NEUSTART
-=========================================================
-Im Diagrammfooter und im Advanced-Bereich wird die Datenherkunft angezeigt.
-
-Ladereihenfolge:
-1. Lokales Archiv
-2. GitHub-Archiv yewie56/Inversion-Analyzer
-3. Direkter Online-Abruf
-
-Unter ⋮ -> Ort können vorhandene Orte sofort gewechselt werden. Auch ein
-neu geocodierter Ort wird ohne Programmneustart aktiviert.
-
-Lokale _origin.json-Dateien speichern die Herkunft, werden aber nicht in Git
-versioniert.
-
-
-NEU v0.15.18 – GUI-STARTFEHLER BEHOBEN
-======================================
-Fehler in v0.15.4:
-    NameError: name 'f' is not defined
-
-Ursache:
-Die neue Zeile Datenherkunft wurde in _status() an einen nicht existierenden
-Frame 'f' gebunden. Der Statusrahmen heißt dort 'b'.
-
-Korrektur:
-- Datenherkunft wird korrekt im Statusrahmen 'b' angezeigt.
-- Regressionstest prüft _status() auf diesen Fehler.
-
-
-NEU v0.15.18 – KERNQUELLEN UND OPTIONALE ZUSATZQUELLEN
-======================================================
-
-Kernquellen für GitHub-Vollständigkeit:
-    dwd
-    profile
-    icon_d2
-
-Optionale Zusatzquellen:
-    sonde
-    kit_mast
-
-Folgen:
-- Fehlende Radiosonde oder fehlendes KIT machen einen Tag NICHT mehr
-  unvollständig.
-- Nur wegen fehlender Radiosonde/KIT wird KEIN automatischer Retry gestartet.
-- Beim normalen Erstabruf werden die Zusatzquellen weiterhin mit abgerufen.
-- Fehlen sie, wird dies weiterhin transparent protokolliert.
-- manifest.json enthält jetzt:
-      completion_sources
-      missing_sources
-      optional_sources
-      optional_missing_sources
-- retry_optional_sources ist standardmäßig false.
-
-Rückwärtskompatibilität:
-Eine alte archive_config.json mit required_sources wird beim Einlesen
-automatisch so interpretiert, dass sonde und kit_mast nicht mehr zu den
-Kernquellen gehören.
-
-
-NEU v0.15.18 – KONTINUIERLICHE KIT-LANGZEITARCHIVIERUNG
-=======================================================
-Bei jedem Scheduled-GitHub-Lauf wird KIT für den aktuellen Tag separat
-abgerufen. Die Profile werden kumulativ nach Zeitstempel in kit_mast.csv
-zusammengeführt. Vorhandene Profile werden durch leere/kleinere Abrufe nicht
-gelöscht.
-
-Dieser KIT-Sicherungsabruf:
-- beeinflusst complete=True/False nicht,
-- erhöht den Kernquellen-Retry-Zähler nicht,
-- verschiebt die Kernquellen-Retry-Uhr nicht.
-
-24h-Prüfung:
-Die typische KIT-Messperiode wird aus den archivierten Zeitstempeln als Median
-bestimmt. Es wird NICHT starr von 24 Profilen ausgegangen. Gespeichert werden:
-- Profilzahl
-- erwartete Profilzahl
-- Abdeckung in %
-- erster/letzter Zeitstempel
-- typische Messperiode
-- größte Lücke einschließlich Tagesrändern
-
-Status COMPLETE/VOLLSTÄNDIG wird nur vergeben, wenn die erwartete Profilzahl
-erreicht ist und keine Lücke größer als 1,5 Messperioden ist.
-
-
-v0.15.18 – Valencia / AEMET-Diagramm
--------------------------------------
-Bei Valencia werden vorhandene AEMET-8416-Messwerte in einem separaten
-Temperaturfeld unter dem Inversionsindex angezeigt und unmittelbar mit der
-modellierten 2-m-Temperatur verglichen. Das Zusatzfeld erscheint nur, wenn
-für den gewählten Tag reale AEMET-Messwerte im Archiv vorhanden sind.
-
-
-v0.15.18 – Temperaturschichtung
---------------------------------
-Für Valencia zeigt das Zusatzdiagramm jetzt nicht nur die Bodentemperatur,
-sondern die vertikale Temperaturschichtung: AEMET-Bodenmessung sowie
-modellierte Temperaturen bei 100, 200 und 500 m über Grund. Zusätzlich wird
-ΔT zwischen Boden und der höchsten verfügbaren dieser Vergleichshöhen
-angezeigt. Positive ΔT-Werte bedeuten, dass es oben wärmer ist als unten und
-damit eine Inversionsschichtung vorliegt.
-
-Die festen Höhen werden aus den verfügbaren Druckflächen linear interpoliert.
-Außerhalb des vorhandenen Profilbereichs wird nicht extrapoliert.
-
-
-v0.15.18 – Lokaler Schichtungsindex
-------------------------------------
-Aus der festen Temperaturschichtung Boden / 100 / 200 / 500 m AGL wird ein
-eigener lokaler Schichtungsindex von 0 bis 5 gebildet. Er bewertet maximale
-positive Temperaturgradienten, positive Temperaturdifferenz und die vertikale
-Ausdehnung der invers geschichteten Bereiche.
-
-Der lokale Schichtungsindex ist bewusst getrennt vom bisherigen Hauptindex und
-vom KIT-Mast-Index. Bei vorhandenem AEMET-Stundenwert wird dieser als reale
-Bodenreferenz verwendet. Fehlt der Messwert, wird die Modell-2-m-Temperatur
-verwendet und der Messstatus bleibt separat erkennbar.
-
-
-v0.15.18 – Adaptiver lokaler Schichtungsindex
-----------------------------------------------
-Der lokale Schichtungsindex bewertet jetzt nicht mehr starr die Differenz
-zwischen Boden und 500 m. Stattdessen werden die Teilschichten
-Boden-100 m, 100-200 m und 200-500 m separat untersucht. Nur tatsächlich
-positive Temperaturgradienten tragen zum Index bei.
-
-Damit wird eine bodennahe Inversion auch dann erkannt, wenn die Temperatur
-bei 500 m bereits wieder unter die Bodentemperatur gefallen ist.
-
-Neue Normierung:
-  Gradient: 0.5 K pro 100 m -> voller Gradient-Score
-  positive DeltaT: 2.0 K -> voller DeltaT-Score
-  inverse Tiefe: 300 m -> voller Tiefen-Score
-
-Die Gewichtung bleibt 45/35/20 Prozent.
-
-
-v0.15.18 – Lokaler Schichtungsindex aus Vollprofil
----------------------------------------------------
-Der lokale Schichtungsindex wird nun aus allen verfügbaren Modell-Druckflächen
-bis 600 m über Grund gebildet. AEMET dient, wenn vorhanden, als reale
-Bodenreferenz. Dadurch können auch Inversionen erkannt werden, die zwischen
-den festen Visualisierungshöhen 100, 200 und 500 m liegen.
-
-Die festen 100/200/500-m-Temperaturkurven bleiben zur Darstellung erhalten,
-bestimmen den lokalen Index aber nicht mehr.
-
-
-v0.15.18 – Schichtungsdiagramm auch ohne AEMET
------------------------------------------------
-Das untere Temperaturdiagramm bleibt nun auch an Tagen sichtbar, an denen
-AEMET noch keine Messwerte geliefert hat. In diesem Fall werden die
-modellierten 2/100/200/500-m-Temperaturen dargestellt und das Diagramm
-ausdrücklich als "nur Modell" gekennzeichnet.
-
-Der lokale Schichtungsindex zeigt ebenfalls seine Herkunft:
-"AEMET + Vollprofil" bei realem Bodenanker bzw. "nur Modell", wenn die
-Modell-2-m-Temperatur als Bodenreferenz verwendet wurde.
-
-
-v0.15.18 – Eindeutige Datenherkunft in den Diagrammen
-------------------------------------------------------
-Die Legenden zeigen nun ausdrücklich, welche Größen gemessen und welche
-modelliert sind. Auch der Haupt-Inversionsindex wird stundenweise getrennt
-dargestellt, je nachdem ob eine reale Bodenmessung zur Korrektur verwendet
-wurde oder der Index ausschließlich aus dem Modell stammt.
-
-Damit ist insbesondere bei Valencia sofort erkennbar, ob AEMET tatsächlich
-als Bodenanker eingeflossen ist.
-
-
-v0.15.18 – Unteres Temperaturdiagramm abschaltbar
---------------------------------------------------
-In den Anzeigeeinstellungen gibt es nun die Option
-"Unteres Temperatur-/Schichtungsdiagramm anzeigen".
-Ist sie deaktiviert, wird das komplette untere Temperaturfeld ausgeblendet;
-der obere Inversionsplot bleibt unverändert sichtbar. Die Einstellung wird
-persistent gespeichert.
-
-
-v0.15.18 – KIT-GitHub-Tagesarchiv
-----------------------------------
-Die KIT-Mastdaten werden bei GitHub nun stündlich statt alle drei Stunden
-abgerufen. Jeder Scheduled-Lauf fragt den aktuellen Tag und zusätzlich den
-Vortag ab. Alle gefundenen Profile werden nach Zeitstempel kumulativ
-zusammengeführt.
-
-Der Vortag wird nach Tagesende ausdrücklich auf Vollständigkeit geprüft.
-Im GitHub-Log erscheint entweder "KIT-TAGESARCHIV BESTÄTIGT" oder eine
-deutliche Warnung mit Profilzahl und größter Zeitlücke.
-
-Wichtig: Da die öffentliche KIT-Quelle nur ein rollierendes Kurzzeitfenster
-bereitstellt, kann auch ein stündlicher Collector keine Daten wiederherstellen,
-die während eines länger dauernden GitHub-/KIT-Ausfalls bereits aus dem
-Quellfenster verschwunden sind. Die Kombination aus stündlichem Abruf,
-Überlappung, Vortags-Nachlauf, kumulativem Merge und Vollständigkeitsprüfung
-minimiert dieses Risiko und macht verbleibende Lücken sichtbar.

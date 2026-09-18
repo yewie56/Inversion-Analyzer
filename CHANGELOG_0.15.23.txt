@@ -1,0 +1,10 @@
+Inversion Analyzer v0.15.23 - 2026-08-31
+
+- Regression behoben: Inversionskurve.py findet das seit v0.15.22 zentrale KITMast-Archiv wieder.
+- Bei Standorten mit kit_reference=true wird ein fehlender lokaler archive/KITMast-Tagesbestand automatisch aus dem konfigurierten GitHub-Raw-Archiv geladen.
+- Der zentrale KITMast-Download erfolgt transaktional ueber ein Staging-Verzeichnis; ein HTTP-/Dateifehler ueberschreibt keine vorhandenen guten lokalen KIT-Referenzdaten.
+- Explizites GUI-Update mit aktivierter KIT-Quelle aktualisiert bei Referenzstandorten das zentrale KITMast-Archiv statt die deaktivierte per-Location KIT-Quelle aufzurufen.
+- Viernheim und Bremerhaven bleiben KIT-Referenzstandorte; Valencia bleibt ohne KIT-Referenz.
+- Scheduled Collector, MacroDroid JSON und bestehende KIT-Bokeh-Retry-Mechanismen bleiben unveraendert.
+- README auf den Stand v0.15.23 gebracht: zentrale KITMast-Struktur, GitHub-Workflow-Modi, MacroDroid, Retry/Safe-Merge, GUI-Ladeverhalten und Update-Batch.
+- Update_Inversion_Analyzer_v0.15.23.bat ist im Versions-ZIP enthalten und wird auch separat ausgeliefert.
