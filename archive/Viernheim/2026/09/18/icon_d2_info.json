@@ -1,0 +1,43 @@
+{
+  "selected_date": "2026-09-18",
+  "model_requested": "icon_d2",
+  "endpoint": "https://historical-forecast-api.open-meteo.com/v1/forecast",
+  "pressure_levels_requested_hPa": [
+    1000,
+    975,
+    950,
+    925,
+    900,
+    850
+  ],
+  "used_for_primary_index": false,
+  "used_for_kit_index": false,
+  "fallback_to_other_model": false,
+  "algorithm_version": "ICON_D2_PROFILE_AGL_2M_v1",
+  "attempt_errors": [
+    {
+      "attempt": "FULL",
+      "levels": [
+        1000,
+        975,
+        950,
+        925,
+        900,
+        850
+      ],
+      "code": "TIMEOUT",
+      "message": "Zeitüberschreitung"
+    },
+    {
+      "attempt": "CORE_RETRY",
+      "levels": [
+        1000,
+        975,
+        950,
+        850
+      ],
+      "code": "TIMEOUT",
+      "message": "Zeitüberschreitung"
+    }
+  ]
+}
