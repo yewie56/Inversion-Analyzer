@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "app_version": "0.15.22",
+  "app_version": "0.15.24",
   "archive_kind": "KITMast",
   "reference_station": "KIT 200-m-Mast Karlsruhe",
   "timezone": "Europe/Berlin",
   "date": "2026-09-18",
-  "saved_at": "2026-09-19T00:57:05.738673+02:00",
+  "saved_at": "2026-09-19T01:13:20.815600+02:00",
   "profile_count": 61,
   "last_update_source": "NETWORK",
   "migrated_from": [],
