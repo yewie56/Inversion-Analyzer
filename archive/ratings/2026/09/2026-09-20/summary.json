@@ -1,8 +1,8 @@
 {
   "day_utc": "2026-09-20",
-  "event_count": 11,
+  "event_count": 13,
   "first_response_time_utc": "2026-09-20T00:11:09.882Z",
-  "last_response_time_utc": "2026-09-20T13:45:32.687Z",
+  "last_response_time_utc": "2026-09-20T15:45:15.057Z",
   "location_precision": [
     "truncated_2dp"
   ],
@@ -10,7 +10,7 @@
   "rating_counts": {
     "-1": 0,
     "0": 1,
-    "1": 0,
+    "1": 2,
     "2": 7,
     "3": 1,
     "4": 2,
