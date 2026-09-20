@@ -1,8 +1,8 @@
 {
   "day_utc": "2026-09-19",
-  "event_count": 22,
+  "event_count": 24,
   "first_response_time_utc": "2026-09-19T02:35:12.274Z",
-  "last_response_time_utc": "2026-09-19T21:48:46.862Z",
+  "last_response_time_utc": "2026-09-19T23:15:22.855Z",
   "location_precision": [
     "truncated_2dp"
   ],
@@ -11,8 +11,8 @@
     "-1": 0,
     "0": 0,
     "1": 0,
-    "2": 3,
-    "3": 7,
+    "2": 4,
+    "3": 8,
     "4": 8,
     "5": 4
   },
