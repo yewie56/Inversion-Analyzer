@@ -10,19 +10,17 @@
     "timezone": "Europe/Berlin"
   },
   "date": "2026-09-25",
-  "saved_at": "2026-09-25T22:24:35.913487+02:00",
-  "run_id": "20260925_222432",
-  "quality_class": "C",
-  "quality_text": "Vertikalprofil + veraltete DWD-Bodenmessung | ICON-D2 Historical Forecast separat | KIT-Mast Karlsruhe Referenz separat",
-  "complete": false,
+  "saved_at": "2026-09-26T01:29:38.345394+02:00",
+  "run_id": "20260926_012935",
+  "quality_class": "B",
+  "quality_text": "DWD-Bodenmessung + vertikales Modell-/Archivprofil | KIT-Mast gemessen separat | ICON-D2 Historical Forecast separat",
+  "complete": true,
   "completion_sources": [
     "dwd",
     "profile",
     "icon_d2"
   ],
-  "missing_sources": [
-    "dwd"
-  ],
+  "missing_sources": [],
   "optional_sources": [
     "sonde",
     "kit_mast"
@@ -32,15 +30,15 @@
   ],
   "kit_archive": {
     "status": "PARTIAL",
-    "profile_count": 56,
+    "profile_count": 63,
     "expected_profiles": 72,
-    "coverage_percent": 77.8,
+    "coverage_percent": 87.5,
     "cadence_minutes": 20.0,
     "first_timestamp": "2026-09-25T00:00:00+02:00",
-    "last_timestamp": "2026-09-25T22:20:00+02:00",
-    "largest_gap_minutes": 100.0,
+    "last_timestamp": "2026-09-25T23:50:00+02:00",
+    "largest_gap_minutes": 60.0,
     "start_gap_minutes": 0.0,
-    "end_gap_minutes": 100.0,
+    "end_gap_minutes": 10.0,
     "day_minutes": 1440.0,
     "complete": false
   },
@@ -49,8 +47,8 @@
     "archive": "archive/KITMast",
     "station": "KIT 200-m-Mast Karlsruhe"
   },
-  "attempts": 1,
-  "last_attempt": "2026-09-25T22:24:35.913487+02:00",
+  "attempts": 2,
+  "last_attempt": "2026-09-26T01:29:38.345394+02:00",
   "last_auxiliary_attempt": null,
   "attempt_reason": "MISSING_REPAIR",
   "files": {
