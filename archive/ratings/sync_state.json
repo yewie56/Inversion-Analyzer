@@ -1,15 +1,15 @@
 {
-  "archive_event_count": 321,
+  "archive_event_count": 322,
   "comment_exported": false,
   "coordinate_decimals": 2,
   "coordinate_mode": "truncate",
-  "last_accepted_count": 11,
-  "last_fetch_count": 11,
+  "last_accepted_count": 12,
+  "last_fetch_count": 12,
   "last_pending_skipped_count": 0,
   "last_rejected_count": 0,
-  "last_successful_sync_utc": "2026-09-25T21:50:14Z",
-  "max_response_time_utc": "2026-09-25T21:14:12.023Z",
-  "query_since_utc": "2026-09-23T16:15:42Z",
+  "last_successful_sync_utc": "2026-09-26T00:36:58Z",
+  "max_response_time_utc": "2026-09-25T22:40:18.132Z",
+  "query_since_utc": "2026-09-23T21:14:12Z",
   "schema_version": "1.0",
   "table": "observations"
 }
