@@ -10,8 +10,8 @@
     "timezone": "Europe/Madrid"
   },
   "date": "2026-09-30",
-  "saved_at": "2026-10-01T01:07:05.405069+02:00",
-  "run_id": "20261001_010704",
+  "saved_at": "2026-10-01T02:52:51.782166+02:00",
+  "run_id": "20261001_025250",
   "quality_class": "B",
   "quality_text": "AEMET-Bodenmessung + vertikales Modell-/Archivprofil",
   "complete": true,
@@ -42,7 +42,7 @@
   },
   "attempts": 1,
   "last_attempt": "2026-09-30T22:52:49.524066+02:00",
-  "last_auxiliary_attempt": "2026-10-01T01:07:05.405069+02:00",
+  "last_auxiliary_attempt": "2026-10-01T02:52:51.782166+02:00",
   "attempt_reason": "AEMET_CONTINUOUS_ARCHIVE",
   "files": {
     "aemet_data": "aemet_ground.csv",
