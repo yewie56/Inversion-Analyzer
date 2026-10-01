@@ -10,8 +10,8 @@
     "timezone": "Europe/Berlin"
   },
   "date": "2026-09-30",
-  "saved_at": "2026-10-01T11:08:52.060791+02:00",
-  "run_id": "20261001_110849",
+  "saved_at": "2026-10-01T15:16:17.212941+02:00",
+  "run_id": "20261001_151614",
   "quality_class": "C",
   "quality_text": "Vertikalprofil vorhanden; DWD-Bodenmessung für gewählten Tag fehlt | KIT-Mast gemessen separat | ICON-D2 Historical Forecast separat",
   "complete": false,
@@ -49,8 +49,8 @@
     "archive": "archive/KITMast",
     "station": "KIT 200-m-Mast Karlsruhe"
   },
-  "attempts": 4,
-  "last_attempt": "2026-10-01T11:08:52.060791+02:00",
+  "attempts": 5,
+  "last_attempt": "2026-10-01T15:16:17.212941+02:00",
   "last_auxiliary_attempt": null,
   "attempt_reason": "MISSING_REPAIR",
   "files": {
