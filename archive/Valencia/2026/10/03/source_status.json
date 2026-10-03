@@ -19,7 +19,7 @@
     "name": "AEMET-Bodenmessung",
     "state": "HTTP_ERROR_DATA",
     "message": "AEMET-Datendownload fehlgeschlagen",
-    "last_attempt": "2026-10-03T01:03:02.599098+02:00",
+    "last_attempt": "2026-10-03T03:05:42.382427+02:00",
     "last_success": null,
     "http_status": 200,
     "data_age_minutes": null,

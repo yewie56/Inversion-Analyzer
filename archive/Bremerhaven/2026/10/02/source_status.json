@@ -66,18 +66,18 @@
   "kit_mast": {
     "name": "KIT-Mast Referenz Karlsruhe",
     "state": "KIT_TEMP_OK",
-    "message": "58 KIT-Referenzprofil(e) aus globalem Tagesarchiv",
-    "last_attempt": "2026-10-02T23:00:52.356146+02:00",
-    "last_success": "2026-10-02T23:00:59.452438+02:00",
+    "message": "61 KIT-Referenzprofil(e) aus globalem Tagesarchiv",
+    "last_attempt": "2026-10-03T03:05:33.010508+02:00",
+    "last_success": "2026-10-03T03:05:38.014215+02:00",
     "http_status": null,
     "data_age_minutes": null,
-    "rows": 58,
-    "detail": "Globales Referenzarchiv: /home/runner/work/Inversion-Analyzer/Inversion-Analyzer/archive/KITMast/2026/10/02 | KIT-Archiv: UNVOLLSTÄNDIG; 58/72 Profile, 80.6 %, Takt≈20.0 min, größte Lücke 70.0 min",
+    "rows": 61,
+    "detail": "Globales Referenzarchiv: /home/runner/work/Inversion-Analyzer/Inversion-Analyzer/archive/KITMast/2026/10/02 | KIT-Archiv: UNVOLLSTÄNDIG; 61/72 Profile, 84.7 %, Takt≈20.0 min, größte Lücke 50.0 min",
     "expected_rows": 72,
-    "coverage_percent": 80.6,
+    "coverage_percent": 84.7,
     "first_timestamp": "2026-10-02T00:00:00+02:00",
-    "last_timestamp": "2026-10-02T22:50:00+02:00",
-    "largest_gap_minutes": 70.0
+    "last_timestamp": "2026-10-02T23:50:00+02:00",
+    "largest_gap_minutes": 50.0
   },
   "icon_d2": {
     "name": "Open-Meteo ICON-D2 Historical Forecast",
