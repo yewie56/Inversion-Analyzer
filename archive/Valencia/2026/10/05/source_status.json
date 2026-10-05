@@ -72,7 +72,7 @@
     "http_status": null,
     "data_age_minutes": null,
     "rows": 0,
-    "detail": "KIT-Archiv: keine Profile für diesen Tag",
+    "detail": "KIT-Archiv: keine Profile für diesen Tag | KIT-Archiv: keine Profile für diesen Tag",
     "expected_rows": null,
     "coverage_percent": null,
     "first_timestamp": null,
