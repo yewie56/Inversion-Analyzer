@@ -2,7 +2,7 @@
   "name": "KIT 200-m-Meteomast",
   "state": "NETWORK",
   "message": "KIT-Dashboard/Profilseite nicht erreichbar",
-  "last_attempt": "2026-10-06T00:32:40.729138+02:00",
+  "last_attempt": "2026-10-07T00:53:30.953819+02:00",
   "last_success": null,
   "http_status": null,
   "data_age_minutes": null,
@@ -13,6 +13,6 @@
   "first_timestamp": null,
   "last_timestamp": null,
   "largest_gap_minutes": null,
-  "last_archive_attempt": "2026-10-07T00:54:22.699746+02:00",
+  "last_archive_attempt": "2026-10-07T00:53:57.357290+02:00",
   "last_archive_attempt_source": "NETWORK"
 }
