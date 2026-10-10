@@ -1,0 +1,18 @@
+{
+  "name": "KIT 200-m-Meteomast",
+  "state": "NETWORK",
+  "message": "KIT-Dashboard/Profilseite nicht erreichbar",
+  "last_attempt": "2026-10-11T00:49:23.887077+02:00",
+  "last_success": null,
+  "http_status": null,
+  "data_age_minutes": null,
+  "rows": null,
+  "detail": "dashboard: HTTP_502: https://tsm.atmohub.kit.edu/wm/plotserver/all-plots-weekly | profile: HTTP_502: https://tsm.atmohub.kit.edu/wm/plotserver/profile-plots | monthly: HTTP_502: https://tsm.atmohub.kit.edu/wm/plotserver/monthly",
+  "expected_rows": null,
+  "coverage_percent": null,
+  "first_timestamp": null,
+  "last_timestamp": null,
+  "largest_gap_minutes": null,
+  "last_archive_attempt": "2026-10-11T00:49:50.747160+02:00",
+  "last_archive_attempt_source": "NETWORK"
+}
