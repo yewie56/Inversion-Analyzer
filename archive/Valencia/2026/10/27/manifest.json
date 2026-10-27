@@ -10,17 +10,15 @@
     "timezone": "Europe/Madrid"
   },
   "date": "2026-10-27",
-  "saved_at": "2026-10-27T01:15:27.712064+01:00",
-  "run_id": "20261027_011526",
-  "quality_class": "X",
-  "quality_text": "Keine belastbare Berechnung möglich: Vertikalprofil fehlt",
-  "complete": false,
+  "saved_at": "2026-10-27T23:08:41.963516+01:00",
+  "run_id": "20261027_230841",
+  "quality_class": "B",
+  "quality_text": "AEMET-Bodenmessung + vertikales Modell-/Archivprofil",
+  "complete": true,
   "completion_sources": [
     "profile"
   ],
-  "missing_sources": [
-    "profile"
-  ],
+  "missing_sources": [],
   "optional_sources": [
     "aemet"
   ],
@@ -42,12 +40,14 @@
   "kit_reference": {
     "enabled": false
   },
-  "attempts": 0,
-  "last_attempt": null,
-  "last_auxiliary_attempt": "2026-10-27T01:15:27.712064+01:00",
-  "attempt_reason": "AEMET_CONTINUOUS_ARCHIVE",
+  "attempts": 1,
+  "last_attempt": "2026-10-27T23:08:41.963516+01:00",
+  "last_auxiliary_attempt": "2026-10-27T23:08:40.330702+01:00",
+  "attempt_reason": "MISSING_REPAIR",
   "files": {
     "aemet_data": "aemet_ground.csv",
-    "source_status": "source_status.json"
+    "source_status": "source_status.json",
+    "profile_data": "openmeteo_profile.csv",
+    "result_data": "inversion_model.csv"
   }
 }
