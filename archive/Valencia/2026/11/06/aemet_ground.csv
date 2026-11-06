@@ -1,2 +1,4 @@
 time,temperature_obs,temperature_source,station_id,station_name,station_altitude_m,latitude,longitude,humidity_percent,pressure_hpa,pressure_sea_level_hpa,wind_speed_ms,wind_direction_deg,precip_mm
 2026-11-06 00:00:00+01:00,14.7,AEMET,8416,VALENCIA DT,13.0,39.480556,-0.366389,90.0,1019.4,1020.9,1.2,259.0,0.0
+2026-11-06 01:00:00+01:00,15.0,AEMET,8416,VALENCIA DT,13.0,39.480556,-0.366389,92.0,1019.2,1020.7,0.7,307.0,0.0
+2026-11-06 02:00:00+01:00,14.3,AEMET,8416,VALENCIA DT,13.0,39.480556,-0.366389,93.0,1019.1,1020.6,1.4,284.0,0.0
