@@ -13,6 +13,6 @@
   "first_timestamp": null,
   "last_timestamp": null,
   "largest_gap_minutes": null,
-  "last_archive_attempt": "2026-11-18T15:11:56.789032+01:00",
+  "last_archive_attempt": "2026-11-18T16:55:54.321451+01:00",
   "last_archive_attempt_source": "NETWORK"
 }
